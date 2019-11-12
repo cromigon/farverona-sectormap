@@ -231,7 +231,7 @@ function sortTable() {
 
     for (let fac in factions) {
         if (factions.hasOwnProperty(fac) && inactive_factions.includes(fac) && fac !== "The Guild") {
-            let row = document.getElementById(factions[fac]["short"].toLowerCase() + "-row");
+            let row = document.getElementById(factions[fac]["short"] + "-row");
 
             if (show_inactive) {
                 row.style.display = "table-row";
@@ -864,83 +864,83 @@ function drawAssets() {
                 const tip_row_perm = document.getElementById("tip_row_perm");
                 const hex_overlays = document.getElementsByClassName("hex");
 
-                // const mouse_tracker = new OpenSeadragon.MouseTracker({
-                //     element: id + "_highlight",
-                //     enterHandler: () => {
-                //         if (name !== "Base Of Influence") {
-                //             tip_fac.innerHTML = faction;
-                //             tip_stats.innerHTML = type + ", " + stat + " " + stattier;
-                //             tip_name.innerHTML = name + stealth_str;
-                //             tip_hp.innerHTML = hp + "/" + max_hp;
-                //             tip_cost.innerHTML = cost;
-                //             tip_tl.innerHTML = tl;
-                //             tip_atk.innerHTML = atk.replace("None", "-");
-                //             tip_cnt.innerHTML = def.replace("None", "-");
-                //             tip_special.innerHTML = special;
-                //             tip_perm.innerHTML = "<i>" + perm + "</i>";
-                //
-                //             if (special !== "") {
-                //                 tip_row_special.style.display = "table-row";
-                //             }
-                //             else {
-                //                 tip_row_special.style.display = "none";
-                //             }
-                //             if (perm !== "") {
-                //                 tip_row_perm.style.display = "table-row";
-                //             } else {
-                //                 tip_row_perm.style.display = "none";
-                //             }
-                //         } else {
-                //             tip_fac.innerHTML = faction;
-                //             tip_stats.innerHTML = "";
-                //             tip_name.innerHTML = name + stealth_str;
-                //             tip_hp.innerHTML = hp + "/" + max_hp;
-                //             tip_cost.innerHTML = "Special";
-                //             tip_tl.innerHTML = "-";
-                //             tip_atk.innerHTML = "-";
-                //             tip_cnt.innerHTML = "-";
-                //             tip_special.innerHTML = "";
-                //             tip_perm.innerHTML = "";
-                //
-                //             tip_row_special.style.display = "none";
-                //             tip_row_perm.style.display = "none";
-                //         }
-                //
-                //         tip.style.display = "block";
-                //         tip_on = true;
-                //
-                //         if (range > 0) {
-                //             highlightHexes(hex_id, range);
-                //         }
-                //     },
-                //     exitHandler: () => {
-                //         tip.style.display = "none";
-                //         tip_fac.innerHTML = "";
-                //         tip_stats.innerHTML = "";
-                //         tip_name.innerHTML = "";
-                //         tip_hp.innerHTML = "";
-                //         tip_cost.innerHTML = "";
-                //         tip_tl.innerHTML = "";
-                //         tip_atk.innerHTML = "";
-                //         tip_cnt.innerHTML = "";
-                //         tip_special.innerHTML = "";
-                //         tip_perm.innerHTML = "";
-                //         tip_on = false;
-                //
-                //         for (let j=0; j<hex_overlays.length; j++) {
-                //             hex_overlays[j].style.opacity = "0";
-                //         }
-                //     },
-                //     clickHandler: () => {
-                //         if (tip_on) {
-                //             tip_on = false;
-                //             $("#tip").fadeOut(200);
-                //         } else {
-                //             tip_on = true;
-                //             $("#tip").fadeIn(200);
-                //         }
-                //     }
-                // });
+                const mouse_tracker = new OpenSeadragon.MouseTracker({
+                    element: id + "_highlight",
+                    enterHandler: () => {
+                        if (name !== "Base Of Influence") {
+                            tip_fac.innerHTML = faction;
+                            tip_stats.innerHTML = type + ", " + stat + " " + stattier;
+                            tip_name.innerHTML = name + stealth_str;
+                            tip_hp.innerHTML = hp + "/" + max_hp;
+                            tip_cost.innerHTML = cost;
+                            tip_tl.innerHTML = tl;
+                            tip_atk.innerHTML = atk.replace("None", "-");
+                            tip_cnt.innerHTML = def.replace("None", "-");
+                            tip_special.innerHTML = special;
+                            tip_perm.innerHTML = "<i>" + perm + "</i>";
+
+                            if (special !== "") {
+                                tip_row_special.style.display = "table-row";
+                            }
+                            else {
+                                tip_row_special.style.display = "none";
+                            }
+                            if (perm !== "") {
+                                tip_row_perm.style.display = "table-row";
+                            } else {
+                                tip_row_perm.style.display = "none";
+                            }
+                        } else {
+                            tip_fac.innerHTML = faction;
+                            tip_stats.innerHTML = "";
+                            tip_name.innerHTML = name + stealth_str;
+                            tip_hp.innerHTML = hp + "/" + max_hp;
+                            tip_cost.innerHTML = "Special";
+                            tip_tl.innerHTML = "-";
+                            tip_atk.innerHTML = "-";
+                            tip_cnt.innerHTML = "-";
+                            tip_special.innerHTML = "";
+                            tip_perm.innerHTML = "";
+
+                            tip_row_special.style.display = "none";
+                            tip_row_perm.style.display = "none";
+                        }
+
+                        tip.style.display = "block";
+                        tip_on = true;
+
+                        if (range > 0) {
+                            highlightHexes(hex_id, range);
+                        }
+                    },
+                    exitHandler: () => {
+                        tip.style.display = "none";
+                        tip_fac.innerHTML = "";
+                        tip_stats.innerHTML = "";
+                        tip_name.innerHTML = "";
+                        tip_hp.innerHTML = "";
+                        tip_cost.innerHTML = "";
+                        tip_tl.innerHTML = "";
+                        tip_atk.innerHTML = "";
+                        tip_cnt.innerHTML = "";
+                        tip_special.innerHTML = "";
+                        tip_perm.innerHTML = "";
+                        tip_on = false;
+
+                        for (let j=0; j<hex_overlays.length; j++) {
+                            hex_overlays[j].style.opacity = "0";
+                        }
+                    },
+                    clickHandler: () => {
+                        if (tip_on) {
+                            tip_on = false;
+                            $("#tip").fadeOut(200);
+                        } else {
+                            tip_on = true;
+                            $("#tip").fadeIn(200);
+                        }
+                    }
+                });
 
                 local_counter += 1;
             }
