@@ -1,13 +1,22 @@
 <!DOCTYPE html>
 <!--suppress JSCheckFunctionSignatures -->
-<html xml:lang="EN" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<html lang="en" xml:lang="EN" xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <link rel="icon" type="image/png" href="favicon.png" />
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+    <link href="favicon.png" rel="icon" type="image/png"/>
     <title>Far Verona Sector Map</title>
     <style>
-        .no-js #loader { display: none;  }
-        .js #loader { display: block; position: absolute; left: 100px; top: 0; }
+        .no-js #loader {
+            display: none;
+        }
+
+        .js #loader {
+            display: block;
+            position: absolute;
+            left: 100px;
+            top: 0;
+        }
+
         .se-pre-con {
             position: fixed;
             left: 0;
@@ -30,7 +39,9 @@
         }
 
         @-moz-document url-prefix() {
-            html,body{overflow: hidden !important;}
+            html, body {
+                overflow: hidden !important;
+            }
         }
 
         ::-webkit-scrollbar {
@@ -202,14 +213,14 @@
         /*noinspection ALL*/
         .highlight {
             opacity: 0;
-            background-color: transparent;
+            background-color: #fff;
             z-index: 2;
         }
 
         /*noinspection ALL*/
         .highlight:hover, .highlight:focus {
-            opacity:    0.3;
-            background-color: white;
+            opacity: 0.3;
+            background-color: #fff;
         }
 
         .tooltip {
@@ -302,6 +313,9 @@
     });
 
     let svg_overlay = viewer.svgOverlay();
+    $(window).resize(() => {
+        svg_overlay.resize();
+    });
     viewer.controls.topleft.style.position = 'relative';
     viewer.controls.topleft.style.width = '215px';
     viewer.controls.topleft.style.top = '1%';
@@ -311,212 +325,267 @@
 </script>
 <div class="factions">
     <div class="factions_center">
-        <table id="factionTable" class="faction_table">
+        <table class="faction_table" id="factionTable">
             <tr id="Pyxis-row">
-                <td class="faction_name" onmouseover="displayFactionInfo('House Pyxis')" onmouseout="hideFactionInfo()" onclick='window.open("https://far-verona.fandom.com/wiki/House_Pyxis")'>
+                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/House_Pyxis")' onmouseout="hideFactionInfo()"
+                    onmouseover="displayFactionInfo('House Pyxis')">
                     PYXIS
                 </td>
-                <td class="faction_color" onmouseover="displayFactionAssets('House Pyxis')" onmouseout="displayAllAssets()">
+                <td class="faction_color" onmouseout="displayAllAssets()"
+                    onmouseover="displayFactionAssets('House Pyxis')">
                     <div id="Pyxis-cell" style="width:100%;height:100%;background-color: #222"></div>
                 </td>
             </tr>
             <tr id="Eridanus-row">
-                <td class="faction_name" onmouseover="displayFactionInfo('House Eridanus')" onmouseout="hideFactionInfo()" onclick='window.open("https://far-verona.fandom.com/wiki/House_Eridanus")'>
+                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/House_Eridanus")'
+                    onmouseout="hideFactionInfo()"
+                    onmouseover="displayFactionInfo('House Eridanus')">
                     ERIDANUS
                 </td>
-                <td class="faction_color" onmouseover="displayFactionAssets('House Eridanus')" onmouseout="displayAllAssets()">
+                <td class="faction_color" onmouseout="displayAllAssets()"
+                    onmouseover="displayFactionAssets('House Eridanus')">
                     <div id="Eridanus-cell" style="width:100%;height:100%;background-color: #222"></div>
                 </td>
             </tr>
             <tr id="Triangulum-row">
-                <td class="faction_name" onmouseover="displayFactionInfo('House Triangulum')" onmouseout="hideFactionInfo()" onclick='window.open("https://far-verona.fandom.com/wiki/House_Triangulum")'>
+                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/House_Triangulum")'
+                    onmouseout="hideFactionInfo()"
+                    onmouseover="displayFactionInfo('House Triangulum')">
                     TRIANGULUM
                 </td>
-                <td class="faction_color" onmouseover="displayFactionAssets('House Triangulum')" onmouseout="displayAllAssets()">
+                <td class="faction_color" onmouseout="displayAllAssets()"
+                    onmouseover="displayFactionAssets('House Triangulum')">
                     <div id="Triangulum-cell" style="width:100%;height:100%;background-color: #222"></div>
                 </td>
             </tr>
             <tr id="Crux-row">
-                <td class="faction_name" onmouseover="displayFactionInfo('House Crux')" onmouseout="hideFactionInfo()" onclick='window.open("https://far-verona.fandom.com/wiki/House_Crux")'>
+                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/House_Crux")' onmouseout="hideFactionInfo()"
+                    onmouseover="displayFactionInfo('House Crux')">
                     CRUX
                 </td>
-                <td class="faction_color" onmouseover="displayFactionAssets('House Crux')" onmouseout="displayAllAssets()">
+                <td class="faction_color" onmouseout="displayAllAssets()"
+                    onmouseover="displayFactionAssets('House Crux')">
                     <div id="Crux-cell" style="width:100%;height:100%;background-color: #222"></div>
                 </td>
             </tr>
             <tr id="Fornax-row">
-                <td class="faction_name" onmouseover="displayFactionInfo('House Fornax')" onmouseout="hideFactionInfo()" onclick='window.open("https://far-verona.fandom.com/wiki/House_Fornax")'>
+                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/House_Fornax")' onmouseout="hideFactionInfo()"
+                    onmouseover="displayFactionInfo('House Fornax')">
                     FORNAX
                 </td>
-                <td class="faction_color" onmouseover="displayFactionAssets('House Fornax')" onmouseout="displayAllAssets()">
+                <td class="faction_color" onmouseout="displayAllAssets()"
+                    onmouseover="displayFactionAssets('House Fornax')">
                     <div id="Fornax-cell" style="width:100%;height:100%;background-color: #222"></div>
                 </td>
             </tr>
             <tr id="Lyra-row">
-                <td class="faction_name" onmouseover="displayFactionInfo('House Lyra')" onmouseout="hideFactionInfo()" onclick='window.open("https://far-verona.fandom.com/wiki/House_Lyra")'>
+                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/House_Lyra")' onmouseout="hideFactionInfo()"
+                    onmouseover="displayFactionInfo('House Lyra')">
                     LYRA
                 </td>
-                <td class="faction_color" onmouseover="displayFactionAssets('House Lyra')" onmouseout="displayAllAssets()">
+                <td class="faction_color" onmouseout="displayAllAssets()"
+                    onmouseover="displayFactionAssets('House Lyra')">
                     <div id="Lyra-cell" style="width:100%;height:100%;background-color: #222"></div>
                 </td>
             </tr>
             <tr id="Serpens-row">
-                <td class="faction_name" onmouseover="displayFactionInfo('House Serpens')" onmouseout="hideFactionInfo()" onclick='window.open("https://far-verona.fandom.com/wiki/House_Serpens")'>
+                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/House_Serpens")'
+                    onmouseout="hideFactionInfo()"
+                    onmouseover="displayFactionInfo('House Serpens')">
                     SERPENS
                 </td>
-                <td class="faction_color" onmouseover="displayFactionAssets('House Serpens')" onmouseout="displayAllAssets()">
+                <td class="faction_color" onmouseout="displayAllAssets()"
+                    onmouseover="displayFactionAssets('House Serpens')">
                     <div id="Serpens-cell" style="width:100%;height:100%;background-color: #222"></div>
                 </td>
             </tr>
             <tr id="Reticulum-row">
-                <td class="faction_name" onmouseover="displayFactionInfo('House Reticulum')" onmouseout="hideFactionInfo()" onclick='window.open("https://far-verona.fandom.com/wiki/House_Reticulum")'>
+                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/House_Reticulum")'
+                    onmouseout="hideFactionInfo()"
+                    onmouseover="displayFactionInfo('House Reticulum')">
                     RETICULUM
                 </td>
-                <td class="faction_color" onmouseover="displayFactionAssets('House Reticulum')" onmouseout="displayAllAssets()">
+                <td class="faction_color" onmouseout="displayAllAssets()"
+                    onmouseover="displayFactionAssets('House Reticulum')">
                     <div id="Reticulum-cell" style="width:100%;height:100%;background-color: #222"></div>
                 </td>
             </tr>
             <tr id="Aquila-row">
-                <td class="faction_name" onmouseover="displayFactionInfo('House Aquila')" onmouseout="hideFactionInfo()" onclick='window.open("https://far-verona.fandom.com/wiki/House_Aquila")'>
+                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/House_Aquila")' onmouseout="hideFactionInfo()"
+                    onmouseover="displayFactionInfo('House Aquila')">
                     AQUILA
                 </td>
-                <td class="faction_color" onmouseover="displayFactionAssets('House Aquila')" onmouseout="displayAllAssets()">
+                <td class="faction_color" onmouseout="displayAllAssets()"
+                    onmouseover="displayFactionAssets('House Aquila')">
                     <div id="Aquila-cell" style="width:100%;height:100%;background-color: #222"></div>
                 </td>
             </tr>
             <tr id="Trilliant-row">
-                <td class="faction_name" onmouseover="displayFactionInfo('The Trilliant Ring')" onmouseout="hideFactionInfo()" onclick='window.open("https://far-verona.fandom.com/wiki/The_Trilliant_Ring")'>
+                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/The_Trilliant_Ring")'
+                    onmouseout="hideFactionInfo()"
+                    onmouseover="displayFactionInfo('The Trilliant Ring')">
                     TRILLIANT
                 </td>
-                <td class="faction_color"  onmouseover="displayFactionAssets('The Trilliant Ring')" onmouseout="displayAllAssets()">
+                <td class="faction_color" onmouseout="displayAllAssets()"
+                    onmouseover="displayFactionAssets('The Trilliant Ring')">
                     <div id="Trilliant-cell" style="width:100%;height:100%;background-color: #222"></div>
                 </td>
             </tr>
             <tr id="Prism-row">
-                <td class="faction_name" onmouseover="displayFactionInfo('The PRISM Network')" onmouseout="hideFactionInfo()" onclick='window.open("https://far-verona.fandom.com/wiki/The_PRISM_Network")'>
+                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/The_PRISM_Network")'
+                    onmouseout="hideFactionInfo()"
+                    onmouseover="displayFactionInfo('The PRISM Network')">
                     PRISM
                 </td>
-                <td class="faction_color" onmouseover="displayFactionAssets('The PRISM Network')" onmouseout="displayAllAssets()">
+                <td class="faction_color" onmouseout="displayAllAssets()"
+                    onmouseover="displayFactionAssets('The PRISM Network')">
                     <div id="Prism-cell" style="width:100%;height:100%;background-color: #222"></div>
                 </td>
             </tr>
             <tr id="SERAPH-row">
-                <td class="faction_name" onmouseover="displayFactionInfo('SERAPH')" onmouseout="hideFactionInfo()" onclick='window.open("https://far-verona.fandom.com/wiki/Society_for_Ethical_Reform_through_Aid,_Protection,_and_Humanitarianism")'>
+                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/Society_for_Ethical_Reform_through_Aid,_Protection,_and_Humanitarianism")' onmouseout="hideFactionInfo()"
+                    onmouseover="displayFactionInfo('SERAPH')">
                     SERAPH
                 </td>
-                <td class="faction_color" onmouseover="displayFactionAssets('SERAPH')" onmouseout="displayAllAssets()">
+                <td class="faction_color" onmouseout="displayAllAssets()" onmouseover="displayFactionAssets('SERAPH')">
                     <div id="SERAPH-cell" style="width:100%;height:100%;background-color: #222"></div>
                 </td>
             </tr>
             <tr id="DCS-row">
-                <td class="faction_name" onmouseover="displayFactionInfo('The Deathless')" onmouseout="hideFactionInfo()" onclick='window.open("https://far-verona.fandom.com/wiki/The_Deathless")'>
+                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/The_Deathless")'
+                    onmouseout="hideFactionInfo()"
+                    onmouseover="displayFactionInfo('The Deathless')">
                     DCS
                 </td>
-                <td class="faction_color" onmouseover="displayFactionAssets('The Deathless')" onmouseout="displayAllAssets()">
+                <td class="faction_color" onmouseout="displayAllAssets()"
+                    onmouseover="displayFactionAssets('The Deathless')">
                     <div id="DCS-cell" style="width:100%;height:100%;background-color: #222"></div>
                 </td>
             </tr>
             <tr id="Vagrant-row">
-                <td class="faction_name" onmouseover="displayFactionInfo('Confederation of the Upright Vagrant')" onmouseout="hideFactionInfo()" onclick='window.open("https://far-verona.fandom.com/wiki/Confederation_of_the_Upright_Vagrant")'>
+                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/Confederation_of_the_Upright_Vagrant")'
+                    onmouseout="hideFactionInfo()"
+                    onmouseover="displayFactionInfo('Confederation of the Upright Vagrant')">
                     VAGRANT
                 </td>
-                <td class="faction_color" onmouseover="displayFactionAssets('Confederation of the Upright Vagrant')" onmouseout="displayAllAssets()">
+                <td class="faction_color" onmouseout="displayAllAssets()"
+                    onmouseover="displayFactionAssets('Confederation of the Upright Vagrant')">
                     <div id="Vagrant-cell" style="width:100%;height:100%;background-color: #222"></div>
                 </td>
             </tr>
             <tr id="DM-row">
-                <td class="faction_name" onmouseover="displayFactionInfo('The Democratic Mandate')" onmouseout="hideFactionInfo()" onclick='window.open("https://far-verona.fandom.com/wiki/The_Democratic_Mandate")'>
+                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/The_Democratic_Mandate")'
+                    onmouseout="hideFactionInfo()"
+                    onmouseover="displayFactionInfo('The Democratic Mandate')">
                     DM
                 </td>
-                <td class="faction_color" onmouseover="displayFactionAssets('The Democratic Mandate')" onmouseout="displayAllAssets()">
+                <td class="faction_color" onmouseout="displayAllAssets()"
+                    onmouseover="displayFactionAssets('The Democratic Mandate')">
                     <div id="DM-cell" style="width:100%;height:100%;background-color: #222"></div>
                 </td>
             </tr>
             <tr id="Vela-row">
-                <td class="faction_name" onmouseover="displayFactionInfo('The Velan Ascendency')" onmouseout="hideFactionInfo()" onclick='window.open("https://far-verona.fandom.com/wiki/The_Velan_Ascendancy")'>
+                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/The_Velan_Ascendancy")'
+                    onmouseout="hideFactionInfo()"
+                    onmouseover="displayFactionInfo('The Velan Ascendency')">
                     VELA
                 </td>
-                <td class="faction_color" onmouseover="displayFactionAssets('The Velan Ascendency')" onmouseout="displayAllAssets()">
+                <td class="faction_color" onmouseout="displayAllAssets()"
+                    onmouseover="displayFactionAssets('The Velan Ascendency')">
                     <div id="Vela-cell" style="width:100%;height:100%;background-color: #222"></div>
                 </td>
             </tr>
             <tr id="UPC-row">
-                <td class="faction_name" onmouseover="displayFactionInfo('The Unified People\'s Collective')" onmouseout="hideFactionInfo()" onclick='window.open("https://far-verona.fandom.com/wiki/Unified_People&#39;s_Collective")'>
+                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/Unified_People&#39;s_Collective")'
+                    onmouseout="hideFactionInfo()"
+                    onmouseover="displayFactionInfo('The Unified People\'s Collective')">
                     UPC
                 </td>
-                <td class="faction_color" onmouseover="displayFactionAssets('The Unified People\'s Collective')" onmouseout="displayAllAssets()">
+                <td class="faction_color" onmouseout="displayAllAssets()"
+                    onmouseover="displayFactionAssets('The Unified People\'s Collective')">
                     <div id="UPC-cell" style="width:100%;height:100%;background-color: #222"></div>
                 </td>
             </tr>
             <tr id="HM-row">
-                <td class="faction_name" onmouseover="displayFactionInfo('The Houses Minor')" onmouseout="hideFactionInfo()" onclick='window.open("https://far-verona.fandom.com/wiki/The_Houses_Minor")'>
+                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/The_Houses_Minor")'
+                    onmouseout="hideFactionInfo()"
+                    onmouseover="displayFactionInfo('The Houses Minor')">
                     HM
                 </td>
-                <td class="faction_color" onmouseover="displayFactionAssets('The Houses Minor')" onmouseout="displayAllAssets()">
+                <td class="faction_color" onmouseout="displayAllAssets()"
+                    onmouseover="displayFactionAssets('The Houses Minor')">
                     <div id="HM-cell" style="width:100%;height:100%;background-color: #222"></div>
                 </td>
             </tr>
             <tr id="HC-row">
-                <td class="faction_name" onmouseover="displayFactionInfo('The High Church of Messiah-as-Emperox')" onmouseout="hideFactionInfo()" onclick='window.open("https://far-verona.fandom.com/wiki/The_High_Church_of_Messiah-as-Emperox")'>
+                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/The_High_Church_of_Messiah-as-Emperox")'
+                    onmouseout="hideFactionInfo()"
+                    onmouseover="displayFactionInfo('The High Church of Messiah-as-Emperox')">
                     HC
                 </td>
-                <td class="faction_color" onmouseover="displayFactionAssets('The High Church of Messiah-as-Emperox')" onmouseout="displayAllAssets()">
+                <td class="faction_color" onmouseout="displayAllAssets()"
+                    onmouseover="displayFactionAssets('The High Church of Messiah-as-Emperox')">
                     <div id="HC-cell" style="width:100%;height:100%;background-color: #222"></div>
                 </td>
             </tr>
         </table>
     </div>
 </div>
-<div id="tip" class="tooltip">
-    <table border="0" cellspacing="0" cellpadding="4" width="100%" style="margin: 0; border-bottom: 1px dotted #777">
+<div class="tooltip" id="tip">
+    <table border="0" cellpadding="4" cellspacing="0" style="margin: 0; border-bottom: 1px dotted #777" width="100%">
         <tr>
             <td id="tip_fac" style="height: 10px; font-size:12px; line-height: 0; color: #fff;">
             </td>
-            <td id="tip_stats" align="right" style="height: 10px; font-size:12px; line-height: 0; color: #fff;">
+            <td align="right" id="tip_stats" style="height: 10px; font-size:12px; line-height: 0; color: #fff;">
             </td>
         </tr>
     </table>
     <p id="tip_name" style="font-size:24px; margin-top: 10px; margin-bottom: 10px; color: #fff;">
     </p>
-    <table border="0" cellspacing="0" cellpadding="0" width="100%" style="margin: 0">
+    <table border="0" cellpadding="0" cellspacing="0" style="margin: 0" width="100%">
         <tr>
-            <td id="tip_hp" width="18%" style="font-size:18px; line-height: 18px; color: #fff;" align="center" valign="bottom">
+            <td align="center" id="tip_hp" style="font-size:18px; line-height: 18px; color: #fff;" valign="bottom"
+                width="18%">
 
             </td>
-            <td id="tip_cost" width="18%" style="font-size:18px; line-height: 18px; color: #fff;" align="center" valign="bottom">
+            <td align="center" id="tip_cost" style="font-size:18px; line-height: 18px; color: #fff;" valign="bottom"
+                width="18%">
 
             </td>
-            <td id="tip_tl" width="18%" style="font-size:18px; line-height: 18px; color: #fff;" align="center" valign="bottom">
+            <td align="center" id="tip_tl" style="font-size:18px; line-height: 18px; color: #fff;" valign="bottom"
+                width="18%">
 
             </td>
-            <td id="tip_atk" width="23%" style="font-size:18px; line-height: 18px; color: #fff;" align="center" valign="bottom">
+            <td align="center" id="tip_atk" style="font-size:18px; line-height: 18px; color: #fff;" valign="bottom"
+                width="23%">
 
             </td>
-            <td id="tip_cnt" width="23%" style="font-size:18px; line-height: 18px; color: #fff;" align="center" valign="bottom">
+            <td align="center" id="tip_cnt" style="font-size:18px; line-height: 18px; color: #fff;" valign="bottom"
+                width="23%">
 
             </td>
         </tr>
         <tr>
-            <td style="font-size:12px; line-height: 12px; color: #fff; padding-top: 4px" align="center" valign="bottom">
-                <img class="icon" src="hp_icon.png" alt="" />
+            <td align="center" style="font-size:12px; line-height: 12px; color: #fff; padding-top: 4px" valign="bottom">
+                <img alt="" class="icon" src="hp_icon.png"/>
             </td>
-            <td style="font-size:12px; line-height: 12px; color: #fff; padding-top: 4px" align="center" valign="bottom">
-                <img class="icon" src="cost_icon.png" alt="" />
+            <td align="center" style="font-size:12px; line-height: 12px; color: #fff; padding-top: 4px" valign="bottom">
+                <img alt="" class="icon" src="cost_icon.png"/>
             </td>
-            <td style="font-size:12px; line-height: 12px; color: #fff; padding-top: 4px" align="center" valign="bottom">
-                <img class="icon" src="tl_icon.png" alt="" />
+            <td align="center" style="font-size:12px; line-height: 12px; color: #fff; padding-top: 4px" valign="bottom">
+                <img alt="" class="icon" src="tl_icon.png"/>
             </td>
-            <td style="font-size:12px; line-height: 12px; color: #fff; padding-top: 4px" align="center" valign="bottom">
-                <img class="icon" src="atk_icon.png" alt="" />
+            <td align="center" style="font-size:12px; line-height: 12px; color: #fff; padding-top: 4px" valign="bottom">
+                <img alt="" class="icon" src="atk_icon.png"/>
             </td>
-            <td style="font-size:12px; line-height: 12px; color: #fff; padding-top: 4px" align="center" valign="bottom">
-                <img class="icon" src="def_icon.png" alt="" />
+            <td align="center" style="font-size:12px; line-height: 12px; color: #fff; padding-top: 4px" valign="bottom">
+                <img alt="" class="icon" src="def_icon.png"/>
             </td>
         </tr>
         <tr>
-            <table width="100%" style="margin-top: 10px">
+            <table style="margin-top: 10px" width="100%">
                 <tr id="tip_row_special">
-                    <td width="42px" valign="top" style="font-size:12px; line-height: 12px; color: #fff;">
+                    <td style="font-size:12px; line-height: 12px; color: #fff;" valign="top" width="42px">
                         <b>Special:</b>
                     </td>
                     <td id="tip_special" style="font-size:12px; line-height: 12px; color: #fff;">
@@ -524,7 +593,7 @@
                     </td>
                 </tr>
                 <tr id="tip_row_perm">
-                    <td id="tip_perm" colspan="2" style="font-size:12px; line-height: 12px; color: #fff;">
+                    <td colspan="2" id="tip_perm" style="font-size:12px; line-height: 12px; color: #fff;">
 
                     </td>
                 </tr>
@@ -532,30 +601,30 @@
         </tr>
     </table>
 </div>
-<div id="planet_tip" class="tooltip">
-    <table border="0" cellspacing="0" cellpadding="4" width="100%" style="margin: 0; border-bottom: 1px dotted #777">
+<div class="tooltip" id="planet_tip">
+    <table border="0" cellpadding="4" cellspacing="0" style="margin: 0; border-bottom: 1px dotted #777" width="100%">
         <tr>
             <td id="planet_tip_fac" style="color:#fff; height: 10px; font-size: 12px; line-height: 0">
             </td>
-            <td id="planet_tip_sys" align="right" style="color:#fff; height: 10px; font-size:12px; line-height: 0">
+            <td align="right" id="planet_tip_sys" style="color:#fff; height: 10px; font-size:12px; line-height: 0">
             </td>
         </tr>
     </table>
     <p id="planet_tip_name" style="color:#fff; font-size:24px; margin-top: 10px; margin-bottom: 10px">
     </p>
-    <table border="0" cellspacing="0" cellpadding="2" width="100%" style="margin: 0">
+    <table border="0" cellpadding="2" cellspacing="0" style="margin: 0" width="100%">
         <tr>
-            <td width="80" style="color:#fff; font-size:12px; line-height: 12px">
+            <td style="color:#fff; font-size:12px; line-height: 12px" width="80">
                 <b>Population:</b>
             </td>
-            <td id="planet_tip_pop"style="color:#fff; font-size:12px; line-height: 12px">
+            <td id="planet_tip_pop" style="color:#fff; font-size:12px; line-height: 12px">
             </td>
         </tr>
         <tr>
             <td style="color:#fff; font-size:12px; line-height: 12px">
                 <b>Tech Level:</b>
             </td>
-            <td id="planet_tip_tl"style="color:#fff; font-size:12px; line-height: 12px">
+            <td id="planet_tip_tl" style="color:#fff; font-size:12px; line-height: 12px">
             </td>
         </tr>
         <tr>
@@ -662,7 +731,7 @@
 
     window.onmousemove = function (e) {
         let mouse_x = e.clientX;
-        let	mouse_y = e.clientY;
+        let mouse_y = e.clientY;
 
         if (tip_on === true || planet_tip_on === true) {
             if (x_offset) {
@@ -686,16 +755,16 @@
         }
     };
 </script>
-<div id="info" class="infobox">
-    <table width="100%" border="0" cellspacing="0" cellpadding="10">
+<div class="infobox" id="info">
+    <table border="0" cellpadding="10" cellspacing="0" width="100%">
         <tr>
             <td colspan="8">
-                <table width="100%" border="0" cellspacing="0" cellpadding="10" style="border-bottom: 1px dotted #777">
+                <table border="0" cellpadding="10" cellspacing="0" style="border-bottom: 1px dotted #777" width="100%">
                     <tr>
                         <td id="info_faction" style="font-size: 20px">
 
                         </td>
-                        <td id="info_homeworld" align="right" valign="bottom" style="font-size: 12px">
+                        <td align="right" id="info_homeworld" style="font-size: 12px" valign="bottom">
 
                         </td>
                     </tr>
@@ -703,36 +772,37 @@
             </td>
         </tr>
         <tr>
-            <td width="40" id="info_force" style="font-size:42px; line-height: 38px; padding-top: 10px" align="center" valign="bottom">
+            <td align="center" id="info_force" style="font-size:42px; line-height: 38px; padding-top: 10px" valign="bottom"
+                width="40">
 
             </td>
-            <td width="40" id="info_cunning" style="font-size:42px; line-height: 38px" align="center" valign="bottom">
+            <td align="center" id="info_cunning" style="font-size:42px; line-height: 38px" valign="bottom" width="40">
 
             </td>
-            <td width="40" id="info_wealth" style="font-size:42px; line-height: 38px" align="center" valign="bottom">
+            <td align="center" id="info_wealth" style="font-size:42px; line-height: 38px" valign="bottom" width="40">
 
             </td>
-            <td width="50" id="info_hp" style="font-size:20px" align="center" valign="bottom">
+            <td align="center" id="info_hp" style="font-size:20px" valign="bottom" width="50">
 
             </td>
-            <td width="40" id="info_income" style="font-size:20px" align="center" valign="bottom">
+            <td align="center" id="info_income" style="font-size:20px" valign="bottom" width="40">
 
             </td>
-            <td width="40" id="info_balance" style="font-size:20px" align="center" valign="bottom">
+            <td align="center" id="info_balance" style="font-size:20px" valign="bottom" width="40">
 
             </td>
-            <td width="40" id="info_exp" style="font-size:20px" align="center" valign="bottom">
+            <td align="center" id="info_exp" style="font-size:20px" valign="bottom" width="40">
 
             </td>
-            <td width="40" valign="bottom">
-                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <td valign="bottom" width="40">
+                <table border="0" cellpadding="0" cellspacing="0" width="100%">
                     <tr>
-                        <td id="info_infl_abs" style="font-size:16px" align="center" valign="bottom">
+                        <td align="center" id="info_infl_abs" style="font-size:16px" valign="bottom">
                             400
                         </td>
                     </tr>
                     <tr>
-                        <td id="info_infl_rel" style="font-size:16px" align="center" valign="bottom">
+                        <td align="center" id="info_infl_rel" style="font-size:16px" valign="bottom">
                             23.2%
                         </td>
                     </tr>
@@ -740,65 +810,66 @@
             </td>
         </tr>
         <tr style="border-bottom: 1px dotted #fff">
-            <td style="font-size:14px; padding-top: 0" align="center">
+            <td align="center" style="font-size:14px; padding-top: 0">
                 Force
             </td>
-            <td style="font-size:14px; padding-top: 0" align="center">
+            <td align="center" style="font-size:14px; padding-top: 0">
                 Cunning
             </td>
-            <td style="font-size:14px; padding-top: 0" align="center">
+            <td align="center" style="font-size:14px; padding-top: 0">
                 Wealth
             </td>
-            <td style="font-size:14px; padding-top: 0" align="center">
+            <td align="center" style="font-size:14px; padding-top: 0">
                 HP
             </td>
-            <td style="font-size:14px; padding-top: 0" align="center">
+            <td align="center" style="font-size:14px; padding-top: 0">
                 Income
             </td>
-            <td style="font-size:14px; padding-top: 0" align="center">
+            <td align="center" style="font-size:14px; padding-top: 0">
                 Balance
             </td>
-            <td style="font-size:14px; padding-top: 0" align="center">
+            <td align="center" style="font-size:14px; padding-top: 0">
                 EXP
             </td>
-            <td style="font-size:14px; padding-top: 0" align="center">
+            <td align="center" style="font-size:14px; padding-top: 0">
                 Influence
             </td>
         </tr>
     </table>
-    <table border="0" cellspacing="0" cellpadding="4" style="margin: 20px 10px 0 10px">
+    <table border="0" cellpadding="4" cellspacing="0" style="margin: 20px 10px 0 10px">
         <tr>
             <td id="info_tag" style="font-size:20px">
             </td>
         </tr>
         <tr>
-            <td id="info_tagdesc" align="justify">
+            <td align="justify" id="info_tagdesc">
             </td>
         </tr>
     </table>
-    <table border="0" cellspacing="0" cellpadding="4" style="margin: 20px 10px 0 10px">
+    <table border="0" cellpadding="4" cellspacing="0" style="margin: 20px 10px 0 10px">
         <tr>
             <td id="info_goal" style="font-size:20px">
             </td>
         </tr>
         <tr>
-            <td id="info_goaldesc" align="justify">
+            <td align="justify" id="info_goaldesc">
             </td>
         </tr>
     </table>
-    <table border="0" cellspacing="0" cellpadding="4" style="margin: 20px 10px 0 10px">
+    <table border="0" cellpadding="4" cellspacing="0" style="margin: 20px 10px 0 10px">
         <tr>
-            <td id="info_notes" align="justify">
+            <td align="justify" id="info_notes">
             </td>
         </tr>
     </table>
 </div>
 <div class="credits">
-    <a target="_blank" rel="noopener noreferrer" href="https://sea-watch.org/en/"><img src="SeaWatch.png" alt="" style="width: 50px; height: auto;"/></a>
+    <a href="https://sea-watch.org/en/" rel="noopener noreferrer" target="_blank"><img alt="" src="SeaWatch.png"
+                                                                                       style="width: 50px; height: auto;"/></a>
 </div>
 <div id="toggle-container">
     <label class="switch" style="position: fixed; right: 4px">
-        <input type="checkbox" onclick="toggleInactiveFactions()">
+        <input onclick="toggleInactiveFactions()" type="checkbox">
         <span class="slider round"></span>
     </label>
 </div>
