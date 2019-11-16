@@ -60,6 +60,24 @@
             color: #444;
         }
 
+        #factionToggle {
+            position: fixed;
+            top: 10px;
+            right: 16px;
+            width: 35px;
+            height: 35px;
+            background: url("toggle_rest.png");
+            transition: transform 0.4s ease-in-out;
+        }
+
+        #factionToggle:hover {
+            background: url("toggle_hover.png");
+        }
+
+        #factionToggle:active {
+            background: url("toggle_pressed.png");
+        }
+
         #toggle-container {
             position: absolute;
             bottom: 10px;
@@ -141,7 +159,7 @@
             transition-timing-function: ease-in-out;
         }
 
-        .factions {
+        #factionsCol {
             position: fixed;
             width: 200px;
             height: 100%;
@@ -151,21 +169,27 @@
             font-family: 'D-DIN', Helvetica, Arial, sans-serif;
             font-size: 22px;
             color: #fff;
+            /*border: 1px solid #f00*/
         }
 
-        .factions_center {
+        #factionsCenter {
             position: absolute;
             top: 50%;
+            right: 0;
             transform: translateY(-50%);
+            transition: right 0.2s;
+            transition-timing-function: ease-in-out;
+            /*border: 1px solid #0f0*/
         }
 
-        .faction_table {
+        #factionTable {
             width: 200px;
             right: 0;
             transform-origin: right center;
             border-collapse: separate;
             border-spacing: 0;
             z-index: 1;
+            /*border: 1px solid #00f*/
         }
 
         .faction_name {
@@ -288,12 +312,15 @@
         // Global variables
         let highlighted_fac = "";
         let show_inactive = false;
+        let show_factionTable = true;
         let tip_on = false;
         let planet_tip_on = false;
         let faction_tracker = {};
         let planet_tracker;
         let asset_tracker;
         let influence_tracker = {};
+        let viewport_w = window.innerWidth;
+        let viewport_h = window.innerHeight;
         let isFirefox = typeof InstallTrigger !== 'undefined';
         // let isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
 
@@ -316,19 +343,22 @@
     let svg_overlay = viewer.svgOverlay();
     $(window).resize(() => {
         svg_overlay.resize();
+        viewport_w = window.innerWidth;
+        viewport_h = window.innerHeight;
     });
     viewer.controls.topleft.style.position = 'relative';
     viewer.controls.topleft.style.width = '105px';
-    viewer.controls.topleft.style.top = '1%';
+    viewer.controls.topleft.style.top = '10px';
     viewer.controls.topleft.style.margin = '0px auto';
     viewer.addHandler("open", onViewerOpen());
 
 </script>
-<div class="factions">
-    <div class="factions_center">
-        <table class="faction_table" id="factionTable">
+<div id="factionsCol">
+    <div id="factionsCenter">
+        <table id="factionTable">
             <tr id="Pyxis-row">
-                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/House_Pyxis")' onmouseout="hideFactionInfo()"
+                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/House_Pyxis")'
+                    onmouseout="hideFactionInfo()"
                     onmouseover="displayFactionInfo('House Pyxis')">
                     PYXIS
                 </td>
@@ -360,7 +390,8 @@
                 </td>
             </tr>
             <tr id="Crux-row">
-                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/House_Crux")' onmouseout="hideFactionInfo()"
+                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/House_Crux")'
+                    onmouseout="hideFactionInfo()"
                     onmouseover="displayFactionInfo('House Crux')">
                     CRUX
                 </td>
@@ -370,7 +401,8 @@
                 </td>
             </tr>
             <tr id="Fornax-row">
-                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/House_Fornax")' onmouseout="hideFactionInfo()"
+                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/House_Fornax")'
+                    onmouseout="hideFactionInfo()"
                     onmouseover="displayFactionInfo('House Fornax')">
                     FORNAX
                 </td>
@@ -380,7 +412,8 @@
                 </td>
             </tr>
             <tr id="Lyra-row">
-                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/House_Lyra")' onmouseout="hideFactionInfo()"
+                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/House_Lyra")'
+                    onmouseout="hideFactionInfo()"
                     onmouseover="displayFactionInfo('House Lyra')">
                     LYRA
                 </td>
@@ -412,7 +445,8 @@
                 </td>
             </tr>
             <tr id="Aquila-row">
-                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/House_Aquila")' onmouseout="hideFactionInfo()"
+                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/House_Aquila")'
+                    onmouseout="hideFactionInfo()"
                     onmouseover="displayFactionInfo('House Aquila')">
                     AQUILA
                 </td>
@@ -444,7 +478,9 @@
                 </td>
             </tr>
             <tr id="SERAPH-row">
-                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/Society_for_Ethical_Reform_through_Aid,_Protection,_and_Humanitarianism")' onmouseout="hideFactionInfo()"
+                <td class="faction_name"
+                    onclick='window.open("https://far-verona.fandom.com/wiki/Society_for_Ethical_Reform_through_Aid,_Protection,_and_Humanitarianism")'
+                    onmouseout="hideFactionInfo()"
                     onmouseover="displayFactionInfo('SERAPH')">
                     SERAPH
                 </td>
@@ -464,7 +500,8 @@
                 </td>
             </tr>
             <tr id="Vagrant-row">
-                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/Confederation_of_the_Upright_Vagrant")'
+                <td class="faction_name"
+                    onclick='window.open("https://far-verona.fandom.com/wiki/Confederation_of_the_Upright_Vagrant")'
                     onmouseout="hideFactionInfo()"
                     onmouseover="displayFactionInfo('Confederation of the Upright Vagrant')">
                     VAGRANT
@@ -475,7 +512,8 @@
                 </td>
             </tr>
             <tr id="DM-row">
-                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/The_Democratic_Mandate")'
+                <td class="faction_name"
+                    onclick='window.open("https://far-verona.fandom.com/wiki/The_Democratic_Mandate")'
                     onmouseout="hideFactionInfo()"
                     onmouseover="displayFactionInfo('The Democratic Mandate')">
                     DM
@@ -486,7 +524,8 @@
                 </td>
             </tr>
             <tr id="Vela-row">
-                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/The_Velan_Ascendancy")'
+                <td class="faction_name"
+                    onclick='window.open("https://far-verona.fandom.com/wiki/The_Velan_Ascendancy")'
                     onmouseout="hideFactionInfo()"
                     onmouseover="displayFactionInfo('The Velan Ascendency')">
                     VELA
@@ -497,7 +536,8 @@
                 </td>
             </tr>
             <tr id="UPC-row">
-                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/Unified_People&#39;s_Collective")'
+                <td class="faction_name"
+                    onclick='window.open("https://far-verona.fandom.com/wiki/Unified_People&#39;s_Collective")'
                     onmouseout="hideFactionInfo()"
                     onmouseover="displayFactionInfo('The Unified People\'s Collective')">
                     UPC
@@ -519,7 +559,8 @@
                 </td>
             </tr>
             <tr id="HC-row">
-                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/The_High_Church_of_Messiah-as-Emperox")'
+                <td class="faction_name"
+                    onclick='window.open("https://far-verona.fandom.com/wiki/The_High_Church_of_Messiah-as-Emperox")'
                     onmouseout="hideFactionInfo()"
                     onmouseover="displayFactionInfo('The High Church of Messiah-as-Emperox')">
                     HC
@@ -724,8 +765,6 @@
 <script type="text/javascript">
     const ttip = document.getElementById("tip");
     const planet_ttip = document.getElementById("planet_tip");
-    let viewport_w = window.innerWidth;
-    let viewport_h = window.innerHeight;
     let x_offset = false;
     let y_offset = false;
     let elementMouseIsOver;
@@ -773,7 +812,8 @@
             </td>
         </tr>
         <tr>
-            <td align="center" id="info_force" style="font-size:42px; line-height: 38px; padding-top: 10px" valign="bottom"
+            <td align="center" id="info_force" style="font-size:42px; line-height: 38px; padding-top: 10px"
+                valign="bottom"
                 width="40">
 
             </td>
@@ -874,5 +914,7 @@
         <span class="slider round"></span>
     </label>
 </div>
+
+<div id="factionToggle" onclick="toggleFactionTable()"></div>
 </body>
 </html>

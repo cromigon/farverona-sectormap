@@ -1,7 +1,21 @@
+function toggleFactionTable() {
+    show_factionTable = !show_factionTable;
+    let col = document.getElementById("factionsCenter");
+    let toggle = document.getElementById("factionToggle");
+    if (show_factionTable) {
+        col.style.right = "0";
+        toggle.style.transform = "rotate(0deg)";
+    } else {
+        col.style.right = "-210px";
+        toggle.style.transform = "rotate(90deg)";
+    }
+}
+
+
 function replaceInactiveFactionNames(planet, fac, hw) {
     planet_tip_fac = document.getElementById("planet_tip_fac");
     if (planet === "The Guild Dyson Sphere") {
-        planet_tip_fac.innerHTML = "MY PRECIOUS";
+        planet_tip_fac.innerHTML = "🔥🔥🔥";
     } else if (inactive_factions.includes(fac) && !show_inactive) {
         planet_tip_fac.innerHTML = "Unclaimed";
     } else {
@@ -251,8 +265,7 @@ function sortTable() {
     let table_w = table.offsetWidth;
     let table_h = table.offsetHeight;
     let scale_w = Math.min(viewport_w / table_w, 4) / 4;
-    let scale_h = Math.min((viewport_h - 50) / table_h, 1);
-    console.log([scale_w, scale_h]);
+    let scale_h = Math.min((viewport_h - 120) / table_h, 1);
     let scale = Math.min(scale_w, scale_h);
     table.style.transform = "scale(" + scale + ")";
 
@@ -608,12 +621,13 @@ function drawPlanetNames() {
 
                 planet_tip_name.innerHTML = planet_name;
                 planet_tip_sys.innerHTML = hex_id.replace("hex_", "") + " / " + system_name;
-                planet_tip_tl.innerHTML = tl;
-                planet_tip_pop.innerHTML = pop;
+
                 planet_tip.style.display = "block";
                 planet_tip.style.zIndex = "3";
                 planet_tip_on = true;
                 if (planet_name === 'The Guild Dyson Sphere') {
+                    tl = "9001";
+                    pop = "ok boomer";
                     let options = {
                         labels: ["The Guild"],
                         colors: ["#f70094"],
@@ -644,6 +658,8 @@ function drawPlanetNames() {
                     };
                     updateChartOptions(opts);
                 }
+                planet_tip_tl.innerHTML = tl;
+                planet_tip_pop.innerHTML = pop;
                 replaceInactiveFactionNames(planet_name, owner_str, hw_str)
             },
             exitHandler: () => {
