@@ -1032,9 +1032,11 @@ function getInfluence() {
 
 
 function onViewerOpen() {
-    $(window).resize(() => {
-        svg_overlay.resize();
-    });
+
+    document.querySelector("#osd > div > div:nth-child(2) > div > div > div:nth-child(5)").style.display = "none";
+    let home = document.querySelector("#osd > div > div:nth-child(2) > div > div > div:nth-child(4)");
+    let zoomout = document.querySelector("#osd > div > div:nth-child(2) > div > div > div:nth-child(3)");
+    home.parentNode.insertBefore(home, zoomout);
 
     for (let key in hexes) {
         if (hexes.hasOwnProperty(key)) {

@@ -62,9 +62,9 @@
 
         #toggle-container {
             position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
+            bottom: 10px;
+            right: 50%;
+            transform: translateX(50%);
         }
 
         /* The switch - the box around the slider */
@@ -318,7 +318,7 @@
         svg_overlay.resize();
     });
     viewer.controls.topleft.style.position = 'relative';
-    viewer.controls.topleft.style.width = '215px';
+    viewer.controls.topleft.style.width = '105px';
     viewer.controls.topleft.style.top = '1%';
     viewer.controls.topleft.style.margin = '0px auto';
     viewer.addHandler("open", onViewerOpen());
@@ -869,7 +869,7 @@
                                                                                        style="width: 50px; height: auto;"/></a>
 </div>
 <div id="toggle-container">
-    <label class="switch" style="position: fixed; right: 4px">
+    <label class="switch">
         <input onclick="toggleInactiveFactions()" type="checkbox">
         <span class="slider round"></span>
     </label>
