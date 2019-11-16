@@ -1,6 +1,6 @@
 function toggleFactionTable() {
     show_factionTable = !show_factionTable;
-    let col = document.getElementById("factionsCenter");
+    let col = document.getElementById("factionsCol");
     let toggle = document.getElementById("factionToggle");
     if (show_factionTable) {
         col.style.right = "0";
