@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!--suppress JSCheckFunctionSignatures -->
 <html lang="en" xml:lang="EN" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
@@ -162,6 +161,8 @@
 
         .faction_table {
             width: 200px;
+            right: 0;
+            transform-origin: right center;
             border-collapse: separate;
             border-spacing: 0;
             z-index: 1;
@@ -272,6 +273,12 @@
             min-height: 0 !important;
             width: 65px;
             border: 0px solid #fff;
+        }
+
+        @media only screen and (max-width: 768px) {
+             {
+                width: 100%;
+            }
         }
 
     </style>

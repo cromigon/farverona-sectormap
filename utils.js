@@ -248,13 +248,13 @@ function sortTable() {
         }
     }
 
-    let scale = Math.min((viewport_h - 50) / table.offsetHeight, 1);
+    let table_w = table.offsetWidth;
+    let table_h = table.offsetHeight;
+    let scale_w = Math.min(viewport_w / table_w, 4) / 4;
+    let scale_h = Math.min((viewport_h - 50) / table_h, 1);
+    console.log([scale_w, scale_h]);
+    let scale = Math.min(scale_w, scale_h);
     table.style.transform = "scale(" + scale + ")";
-    if (scale < 1) {
-        document.getElementsByClassName("factions")[0].style.right = "-5px";
-    } else {
-        document.getElementsByClassName("factions")[0].style.right = "10px";
-    }
 
     $(".se-pre-con").fadeOut("slow");
 }

@@ -7458,7 +7458,7 @@ const assets = {
         "DEF_NUM_SIDES": null,
         "DEF_MOD": null,
         "PERM": "",
-        "SPECIAL": "As an action, a Seductress can travel to any world within one hex. As an attack, a Seductress does no damage, but an asset that has been successfully attacked immediately reveals any other Stealthed assets of that faction on the planet. Only Special Forces units can attack a Seductress.",
+        "SPECIAL": "As an action, a Seductrox can travel to any world within one hex. As an attack, a Seductrox does no damage, but an asset that has been successfully attacked immediately reveals any other Stealthed assets of that faction on the planet. Only Special Forces units can attack a Seductrox.",
         "UPKEEP": 0,
         "RANGE": 1
     },
