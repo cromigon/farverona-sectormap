@@ -1,13 +1,35 @@
+function visibilityToggleStyling(inout) {
+    let toggle = document.getElementById("visibilityToggle");
+    if (inout === "in") {
+        if (show_inactive) {
+            toggle.style.background = "url('hide_hover.png')";
+            toggle.style.backgroundSize = "35px";
+        } else {
+            toggle.style.background = "url('show_hover.png')";
+            toggle.style.backgroundSize = "35px";
+        }
+    } else {
+        if (show_inactive) {
+            toggle.style.background = "url('show_hover.png')";
+            toggle.style.backgroundSize = "35px";
+        } else {
+            toggle.style.background = "url('hide_rest.png')";
+            toggle.style.backgroundSize = "35px";
+        }
+    }
+}
+
+
 function toggleFactionTable() {
     show_factionTable = !show_factionTable;
     let col = document.getElementById("factionsCol");
     let toggle = document.getElementById("factionToggle");
     if (show_factionTable) {
-        col.style.right = "0";
+        col.style.right = "10px";
         toggle.style.transform = "rotate(0deg)";
     } else {
         col.style.right = "-210px";
-        toggle.style.transform = "rotate(90deg)";
+        toggle.style.transform = "rotate(-90deg)";
     }
 }
 
@@ -119,8 +141,8 @@ function reorderAssets() {
                 let xy_spiral = getSpiralOffset(local_counter);
                 let highlight_x = hex_x + x_offset + xy_spiral[0] * box_size - 0.5 * box_size;
                 let highlight_y = hex_y + y_offset + xy_spiral[1] * box_size - 0.5 * box_size;
-                let asset_x = highlight_x + (box_size - (1 / 1.2) * box_size) / 2;
-                let asset_y = highlight_y + (box_size - (1 / 1.2) * box_size) / 2;
+                let asset_x = highlight_x + (box_size - (1 / 1.1) * box_size) / 2;
+                let asset_y = highlight_y + (box_size - (1 / 1.1) * box_size) / 2;
 
                 overlay.update(
                     new OpenSeadragon.Rect(
@@ -162,6 +184,7 @@ function reorderAssets() {
 
 function toggleInactiveFactions() {
     show_inactive = !show_inactive;
+
     reorderAssets();
     sortTable();
     recolorPlanetNames();
@@ -566,7 +589,7 @@ function drawPlanetNames() {
             style_str = "font-size: 0.01px; font-size-adjust: 0.1";
             padding = 0.0015;
         } else {
-            style_str = "font-size: 0.0032px";
+            style_str = "font-size: 0.0035px";
             padding = 0.0005;
         }
 
@@ -580,7 +603,7 @@ function drawPlanetNames() {
             .attr("fill", planet_color)
             .attr("text-anchor", "middle")
             .attr("x", hex_x + x_offset)
-            .attr("y", hex_y + y_offset + 0.01055)
+            .attr("y", hex_y + y_offset + 0.011)
             .attr("pointer-events", "none");
         let box_width = planet_name_SVG.node().getComputedTextLength();
         d3.select(svg_overlay.node()).insert("rect", "#" + id + "_name")
@@ -588,7 +611,7 @@ function drawPlanetNames() {
             .attr("class", "planet")
             .attr("fill", box_color)
             .attr("x", hex_x + x_offset - w_factor * box_width / 2 - padding)
-            .attr("y", hex_y + y_offset + 0.00772)
+            .attr("y", hex_y + y_offset + 0.00812)
             .attr("width", (box_width + 2 * padding) * w_factor)
             .attr("height", 0.0034)
             .attr("pointer-events", "none");
@@ -602,7 +625,7 @@ function drawPlanetNames() {
             element: highlight,
             location: new OpenSeadragon.Rect(
                 hex_x + x_offset - w_factor * box_width / 2 - padding,
-                hex_y + y_offset + 0.00772,
+                hex_y + y_offset + 0.00812,
                 (box_width + 2 * padding) * w_factor,
                 0.0034
             )
@@ -690,7 +713,8 @@ function drawAssets() {
             h = document.getElementById(hex_list[j]);
             h.style.opacity = "0.05";
         }
-    };
+    }
+
 
     let system_dict = {};
 
@@ -704,7 +728,7 @@ function drawAssets() {
     }
 
     let counter = 0;
-    let asset_size = box_size / 1.2;
+    let asset_size = box_size / 1.1;
 
     for (let i = 0; i < planet_tracker.length; i++) {
         planet_tracker[i]["Local Assets"] = [];
@@ -732,10 +756,10 @@ function drawAssets() {
                 .attr("id", circle_id)
                 .attr("fill", "#222222")
                 .attr("stroke", circle_color)
-                .style("stroke-width", 0.0005)
+                .style("stroke-width", 0.00065)
                 .attr("cx", hex_x + x_offset)
                 .attr("cy", hex_y + y_offset)
-                .attr("r", 0.0105);
+                .attr("r", 0.011);
         }
 
         // System Name
@@ -781,8 +805,8 @@ function drawAssets() {
                 let xy_spiral = getSpiralOffset(local_counter);
                 let highlight_x = hex_x + x_offset + xy_spiral[0] * box_size - 0.5 * box_size;
                 let highlight_y = hex_y + y_offset + xy_spiral[1] * box_size - 0.5 * box_size;
-                let asset_x = highlight_x + (box_size - (1 / 1.2) * box_size) / 2;
-                let asset_y = highlight_y + (box_size - (1 / 1.2) * box_size) / 2;
+                let asset_x = highlight_x + (box_size - (1 / 1.1) * box_size) / 2;
+                let asset_y = highlight_y + (box_size - (1 / 1.1) * box_size) / 2;
 
                 // Asset data
                 let id = "asset_" + counter.toString().padStart(3, '0');
@@ -793,9 +817,9 @@ function drawAssets() {
                 let hp = asset["HP"];
                 let max_hp = asset["Max HP"];
                 let stealth = asset["ʘ"];
-                let stealth_str = "";
+                let name_str = name;
                 if (stealth !== "FALSE") {
-                    stealth_str = " (Stealthed)";
+                    name_str = "<mark>" + name + " (Stealthed)</mark>";
                 }
                 let type = asset["Type"];
 
@@ -904,7 +928,7 @@ function drawAssets() {
                         if (name !== "Base Of Influence") {
                             tip_fac.innerHTML = faction;
                             tip_stats.innerHTML = type + ", " + stat + " " + stattier;
-                            tip_name.innerHTML = name + stealth_str;
+                            tip_name.innerHTML = name_str;
                             tip_hp.innerHTML = hp + "/" + max_hp;
                             tip_cost.innerHTML = cost;
                             tip_tl.innerHTML = tl;
@@ -926,7 +950,7 @@ function drawAssets() {
                         } else {
                             tip_fac.innerHTML = faction;
                             tip_stats.innerHTML = "";
-                            tip_name.innerHTML = name + stealth_str;
+                            tip_name.innerHTML = name_str;
                             tip_hp.innerHTML = hp + "/" + max_hp;
                             tip_cost.innerHTML = "Special";
                             tip_tl.innerHTML = "-";
@@ -988,14 +1012,13 @@ function drawAssets() {
 function getFactions() {
     let url_faction_tracker = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRCK-QRRccgk3_twQSIyfGU3qzuqyPB6WSb4_KktKyV6AzAmm7ioUBf-wddvLuaToxr5CVWy4tRiAS7/pub?gid=1760255261&single=true&output=tsv";
     const xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function () {
+    xhttp.onreadystatechange = function() {
         if (this.readyState === 4 && this.status === 200) {
             let json = tsvJSON(this.responseText);
 
             for (let i = 0; i < json.length; i++) {
                 faction_tracker[json[i]["Faction"]] = json[i];
             }
-
             sortTable();
         }
     };
@@ -1008,7 +1031,7 @@ function getFactions() {
 function getAssets() {
     const url_asset_tracker = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRCK-QRRccgk3_twQSIyfGU3qzuqyPB6WSb4_KktKyV6AzAmm7ioUBf-wddvLuaToxr5CVWy4tRiAS7/pub?gid=2128046628&single=true&output=tsv";
     const xhttp_dyn_assets = new XMLHttpRequest();
-    xhttp_dyn_assets.onreadystatechange = function () {
+    xhttp_dyn_assets.onreadystatechange = function() {
         if (this.readyState === 4 && this.status === 200) {
             asset_tracker = tsvJSON(this.responseText);
             drawAssets();
@@ -1022,7 +1045,7 @@ function getAssets() {
 function getPlanets() {
     const url_planet_tracker = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRCK-QRRccgk3_twQSIyfGU3qzuqyPB6WSb4_KktKyV6AzAmm7ioUBf-wddvLuaToxr5CVWy4tRiAS7/pub?gid=464173844&single=true&output=tsv";
     const xhttp_dyn_planets = new XMLHttpRequest();
-    xhttp_dyn_planets.onreadystatechange = function () {
+    xhttp_dyn_planets.onreadystatechange = function() {
         if (this.readyState === 4 && this.status === 200) {
             planet_tracker = tsvJSON(this.responseText);
             getAssets();
@@ -1036,7 +1059,7 @@ function getPlanets() {
 function getInfluence() {
     let url_influence_tracker = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRCK-QRRccgk3_twQSIyfGU3qzuqyPB6WSb4_KktKyV6AzAmm7ioUBf-wddvLuaToxr5CVWy4tRiAS7/pub?gid=1919363050&single=true&output=tsv";
     const xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function () {
+    xhttp.onreadystatechange = function() {
         if (this.readyState === 4 && this.status === 200) {
             influence_tracker = processInfluenceTSV(this.responseText);
         }

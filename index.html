@@ -60,6 +60,21 @@
             color: #444;
         }
 
+        mark {
+            color: #000;
+            background-color: #3EE1F4;
+        }
+
+        #visibilityToggle {
+            position: fixed;
+            top: 10px;
+            right: 50px;
+            width: 35px;
+            height: 35px;
+            background: url("hide_rest.png");
+            background-size: 35px;
+        }
+
         #factionToggle {
             position: fixed;
             top: 10px;
@@ -67,15 +82,18 @@
             width: 35px;
             height: 35px;
             background: url("toggle_rest.png");
+            background-size: 35px;
             transition: transform 0.4s ease-in-out;
         }
 
         #factionToggle:hover {
             background: url("toggle_hover.png");
+            background-size: 35px;
         }
 
         #factionToggle:active {
             background: url("toggle_pressed.png");
+            background-size: 35px;
         }
 
         #toggle-container {
@@ -280,12 +298,23 @@
             width: auto;
         }
 
-        .credits {
+        #credits {
             position: fixed;
             bottom: 5px;
             left: 10px;
             font-family: 'D-DIN', Arial, Helvetica, sans-serif;
             font-size: 16px;
+        }
+
+        #paypal {
+            width: 30px;
+            height: auto;
+            opacity: 0.5;
+            transition: opacity 0.2s ease-in-out;
+        }
+
+        #paypal:hover {
+            opacity: 1;
         }
 
         .influence {
@@ -362,8 +391,8 @@
                     onmouseover="displayFactionInfo('House Pyxis')">
                     PYXIS
                 </td>
-                <td class="faction_color" onmouseout="displayAllAssets()"
-                    onmouseover="displayFactionAssets('House Pyxis')">
+                <td class="faction_color"
+                    onclick="displayFactionAssets('House Pyxis')">
                     <div id="Pyxis-cell" style="width:100%;height:100%;background-color: #222"></div>
                 </td>
             </tr>
@@ -373,8 +402,8 @@
                     onmouseover="displayFactionInfo('House Eridanus')">
                     ERIDANUS
                 </td>
-                <td class="faction_color" onmouseout="displayAllAssets()"
-                    onmouseover="displayFactionAssets('House Eridanus')">
+                <td class="faction_color"
+                    onclick="displayFactionAssets('House Eridanus')">
                     <div id="Eridanus-cell" style="width:100%;height:100%;background-color: #222"></div>
                 </td>
             </tr>
@@ -384,8 +413,8 @@
                     onmouseover="displayFactionInfo('House Triangulum')">
                     TRIANGULUM
                 </td>
-                <td class="faction_color" onmouseout="displayAllAssets()"
-                    onmouseover="displayFactionAssets('House Triangulum')">
+                <td class="faction_color"
+                    onclick="displayFactionAssets('House Triangulum')">
                     <div id="Triangulum-cell" style="width:100%;height:100%;background-color: #222"></div>
                 </td>
             </tr>
@@ -395,8 +424,8 @@
                     onmouseover="displayFactionInfo('House Crux')">
                     CRUX
                 </td>
-                <td class="faction_color" onmouseout="displayAllAssets()"
-                    onmouseover="displayFactionAssets('House Crux')">
+                <td class="faction_color"
+                    onclick="displayFactionAssets('House Crux')">
                     <div id="Crux-cell" style="width:100%;height:100%;background-color: #222"></div>
                 </td>
             </tr>
@@ -406,8 +435,8 @@
                     onmouseover="displayFactionInfo('House Fornax')">
                     FORNAX
                 </td>
-                <td class="faction_color" onmouseout="displayAllAssets()"
-                    onmouseover="displayFactionAssets('House Fornax')">
+                <td class="faction_color"
+                    onclick="displayFactionAssets('House Fornax')">
                     <div id="Fornax-cell" style="width:100%;height:100%;background-color: #222"></div>
                 </td>
             </tr>
@@ -417,8 +446,8 @@
                     onmouseover="displayFactionInfo('House Lyra')">
                     LYRA
                 </td>
-                <td class="faction_color" onmouseout="displayAllAssets()"
-                    onmouseover="displayFactionAssets('House Lyra')">
+                <td class="faction_color"
+                    onclick="displayFactionAssets('House Lyra')">
                     <div id="Lyra-cell" style="width:100%;height:100%;background-color: #222"></div>
                 </td>
             </tr>
@@ -428,8 +457,8 @@
                     onmouseover="displayFactionInfo('House Serpens')">
                     SERPENS
                 </td>
-                <td class="faction_color" onmouseout="displayAllAssets()"
-                    onmouseover="displayFactionAssets('House Serpens')">
+                <td class="faction_color"
+                    onclick="displayFactionAssets('House Serpens')">
                     <div id="Serpens-cell" style="width:100%;height:100%;background-color: #222"></div>
                 </td>
             </tr>
@@ -439,8 +468,8 @@
                     onmouseover="displayFactionInfo('House Reticulum')">
                     RETICULUM
                 </td>
-                <td class="faction_color" onmouseout="displayAllAssets()"
-                    onmouseover="displayFactionAssets('House Reticulum')">
+                <td class="faction_color"
+                    onclick="displayFactionAssets('House Reticulum')">
                     <div id="Reticulum-cell" style="width:100%;height:100%;background-color: #222"></div>
                 </td>
             </tr>
@@ -450,8 +479,8 @@
                     onmouseover="displayFactionInfo('House Aquila')">
                     AQUILA
                 </td>
-                <td class="faction_color" onmouseout="displayAllAssets()"
-                    onmouseover="displayFactionAssets('House Aquila')">
+                <td class="faction_color"
+                    onclick="displayFactionAssets('House Aquila')">
                     <div id="Aquila-cell" style="width:100%;height:100%;background-color: #222"></div>
                 </td>
             </tr>
@@ -461,8 +490,8 @@
                     onmouseover="displayFactionInfo('The Trilliant Ring')">
                     TRILLIANT
                 </td>
-                <td class="faction_color" onmouseout="displayAllAssets()"
-                    onmouseover="displayFactionAssets('The Trilliant Ring')">
+                <td class="faction_color"
+                    onclick="displayFactionAssets('The Trilliant Ring')">
                     <div id="Trilliant-cell" style="width:100%;height:100%;background-color: #222"></div>
                 </td>
             </tr>
@@ -472,8 +501,8 @@
                     onmouseover="displayFactionInfo('The PRISM Network')">
                     PRISM
                 </td>
-                <td class="faction_color" onmouseout="displayAllAssets()"
-                    onmouseover="displayFactionAssets('The PRISM Network')">
+                <td class="faction_color"
+                    onclick="displayFactionAssets('The PRISM Network')">
                     <div id="Prism-cell" style="width:100%;height:100%;background-color: #222"></div>
                 </td>
             </tr>
@@ -484,7 +513,7 @@
                     onmouseover="displayFactionInfo('SERAPH')">
                     SERAPH
                 </td>
-                <td class="faction_color" onmouseout="displayAllAssets()" onmouseover="displayFactionAssets('SERAPH')">
+                <td class="faction_color" onclick="displayFactionAssets('SERAPH')">
                     <div id="SERAPH-cell" style="width:100%;height:100%;background-color: #222"></div>
                 </td>
             </tr>
@@ -494,8 +523,8 @@
                     onmouseover="displayFactionInfo('The Deathless')">
                     DCS
                 </td>
-                <td class="faction_color" onmouseout="displayAllAssets()"
-                    onmouseover="displayFactionAssets('The Deathless')">
+                <td class="faction_color"
+                    onclick="displayFactionAssets('The Deathless')">
                     <div id="DCS-cell" style="width:100%;height:100%;background-color: #222"></div>
                 </td>
             </tr>
@@ -506,8 +535,8 @@
                     onmouseover="displayFactionInfo('Confederation of the Upright Vagrant')">
                     VAGRANT
                 </td>
-                <td class="faction_color" onmouseout="displayAllAssets()"
-                    onmouseover="displayFactionAssets('Confederation of the Upright Vagrant')">
+                <td class="faction_color"
+                    onclick="displayFactionAssets('Confederation of the Upright Vagrant')">
                     <div id="Vagrant-cell" style="width:100%;height:100%;background-color: #222"></div>
                 </td>
             </tr>
@@ -518,8 +547,8 @@
                     onmouseover="displayFactionInfo('The Democratic Mandate')">
                     DM
                 </td>
-                <td class="faction_color" onmouseout="displayAllAssets()"
-                    onmouseover="displayFactionAssets('The Democratic Mandate')">
+                <td class="faction_color"
+                    onclick="displayFactionAssets('The Democratic Mandate')">
                     <div id="DM-cell" style="width:100%;height:100%;background-color: #222"></div>
                 </td>
             </tr>
@@ -530,8 +559,8 @@
                     onmouseover="displayFactionInfo('The Velan Ascendency')">
                     VELA
                 </td>
-                <td class="faction_color" onmouseout="displayAllAssets()"
-                    onmouseover="displayFactionAssets('The Velan Ascendency')">
+                <td class="faction_color"
+                    onclick="displayFactionAssets('The Velan Ascendency')">
                     <div id="Vela-cell" style="width:100%;height:100%;background-color: #222"></div>
                 </td>
             </tr>
@@ -542,8 +571,8 @@
                     onmouseover="displayFactionInfo('The Unified People\'s Collective')">
                     UPC
                 </td>
-                <td class="faction_color" onmouseout="displayAllAssets()"
-                    onmouseover="displayFactionAssets('The Unified People\'s Collective')">
+                <td class="faction_color"
+                    onclick="displayFactionAssets('The Unified People\'s Collective')">
                     <div id="UPC-cell" style="width:100%;height:100%;background-color: #222"></div>
                 </td>
             </tr>
@@ -553,8 +582,8 @@
                     onmouseover="displayFactionInfo('The Houses Minor')">
                     HM
                 </td>
-                <td class="faction_color" onmouseout="displayAllAssets()"
-                    onmouseover="displayFactionAssets('The Houses Minor')">
+                <td class="faction_color"
+                    onclick="displayFactionAssets('The Houses Minor')">
                     <div id="HM-cell" style="width:100%;height:100%;background-color: #222"></div>
                 </td>
             </tr>
@@ -565,8 +594,8 @@
                     onmouseover="displayFactionInfo('The High Church of Messiah-as-Emperox')">
                     HC
                 </td>
-                <td class="faction_color" onmouseout="displayAllAssets()"
-                    onmouseover="displayFactionAssets('The High Church of Messiah-as-Emperox')">
+                <td class="faction_color"
+                    onclick="displayFactionAssets('The High Church of Messiah-as-Emperox')">
                     <div id="HC-cell" style="width:100%;height:100%;background-color: #222"></div>
                 </td>
             </tr>
@@ -904,17 +933,29 @@
         </tr>
     </table>
 </div>
-<div class="credits">
+<div id="credits">
     <a href="https://sea-watch.org/en/" rel="noopener noreferrer" target="_blank"><img alt="" src="SeaWatch.png"
                                                                                        style="width: 50px; height: auto;"/></a>
 </div>
-<div id="toggle-container">
-    <label class="switch">
-        <input onclick="toggleInactiveFactions()" type="checkbox">
-        <span class="slider round"></span>
-    </label>
-</div>
 
+<!--<div id="credits">-->
+<!--<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">-->
+<!--    <input type="hidden" name="cmd" value="_s-xclick" />-->
+<!--    <input type="hidden" name="hosted_button_id" value="WX3JZ8L29ZJDE" />-->
+<!--    <input id="paypal" type="image" src="https://742617000027.de/img/paypal.png" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />-->
+<!--    <img alt="" border="0" src="https://www.paypal.com/en_DE/i/scr/pixel.gif" width="1" height="1" />-->
+<!--</form>-->
+<!--</div>-->
+
+<!--<div id="toggle-container">-->
+<!--    <label class="switch">-->
+<!--        <input onclick="toggleInactiveFactions()" type="checkbox">-->
+<!--        <span class="slider round"></span>-->
+<!--    </label>-->
+<!--</div>-->
+
+<div id="visibilityToggle" onclick="toggleInactiveFactions()" onmouseenter="visibilityToggleStyling('in')"
+     onmouseleave="visibilityToggleStyling('out')"></div>
 <div id="factionToggle" onclick="toggleFactionTable()"></div>
 </body>
 </html>

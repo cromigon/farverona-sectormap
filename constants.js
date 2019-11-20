@@ -8900,4 +8900,5 @@ const planet_to_hex_offsets = {
         }
     }
 };
-const box_size = 0.011334;
+// const box_size = 0.011334;
+const box_size = 0.01;
