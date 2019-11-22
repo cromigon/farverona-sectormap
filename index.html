@@ -23,7 +23,7 @@
             width: 100%;
             height: 100%;
             z-index: 9999;
-            background: url("loading.gif") center/10% no-repeat #141414;
+            background: url("img/loading.gif") center/10% no-repeat #141414;
         }
 
         @font-face {
@@ -71,7 +71,7 @@
             right: 50px;
             width: 35px;
             height: 35px;
-            background: url("hide_rest.png");
+            background: url("img/hide_rest.png");
             background-size: 35px;
         }
 
@@ -81,18 +81,18 @@
             right: 16px;
             width: 35px;
             height: 35px;
-            background: url("toggle_rest.png");
+            background: url("img/toggle_rest.png");
             background-size: 35px;
             transition: transform 0.4s ease-in-out;
         }
 
         #factionToggle:hover {
-            background: url("toggle_hover.png");
+            background: url("img/toggle_hover.png");
             background-size: 35px;
         }
 
         #factionToggle:active {
-            background: url("toggle_pressed.png");
+            background: url("img/toggle_pressed.png");
             background-size: 35px;
         }
 
@@ -330,12 +330,12 @@
 
     </style>
     <script src="openseadragon/openseadragon.min.js"></script>
-    <script src="openseadragon-svg-overlay.js"></script>
+    <script src="scripts/openseadragon-svg-overlay.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="//d3js.org/d3.v5.min.js"></script>
-    <script src="jquery-3.4.1.min.js"></script>
-    <script src="modernizr.js"></script>
-    <script src="constants.js"></script>
+    <script src="scripts/jquery-3.4.1.min.js"></script>
+    <script src="scripts/modernizr.js"></script>
+    <script src="scripts/constants.js"></script>
     <script type="text/javascript">
 
         // Global variables
@@ -347,6 +347,7 @@
         let faction_tracker = {};
         let planet_tracker;
         let asset_tracker;
+        let asset_objects = {};
         let influence_tracker = {};
         let viewport_w = window.innerWidth;
         let viewport_h = window.innerHeight;
@@ -354,7 +355,7 @@
         // let isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
 
     </script>
-    <script src="utils.js"></script>
+    <script src="scripts/utils.js"></script>
 </head>
 <body>
 <div class="se-pre-con"></div>
@@ -365,7 +366,7 @@
     const viewer = OpenSeadragon({
         id: "osd",
         prefixUrl: "openseadragon/images/",
-        tileSources: "map_blank.dzi",
+        tileSources: "scripts/map_blank.dzi",
         navigationControlAnchor: OpenSeadragon.ControlAnchor.TOP_LEFT
     });
 
@@ -638,19 +639,19 @@
         </tr>
         <tr>
             <td align="center" style="font-size:12px; line-height: 12px; color: #fff; padding-top: 4px" valign="bottom">
-                <img alt="" class="icon" src="hp_icon.png"/>
+                <img alt="" class="icon" src="img/hp_icon.png"/>
             </td>
             <td align="center" style="font-size:12px; line-height: 12px; color: #fff; padding-top: 4px" valign="bottom">
-                <img alt="" class="icon" src="cost_icon.png"/>
+                <img alt="" class="icon" src="img/cost_icon.png"/>
             </td>
             <td align="center" style="font-size:12px; line-height: 12px; color: #fff; padding-top: 4px" valign="bottom">
-                <img alt="" class="icon" src="tl_icon.png"/>
+                <img alt="" class="icon" src="img/tl_icon.png"/>
             </td>
             <td align="center" style="font-size:12px; line-height: 12px; color: #fff; padding-top: 4px" valign="bottom">
-                <img alt="" class="icon" src="atk_icon.png"/>
+                <img alt="" class="icon" src="img/atk_icon.png"/>
             </td>
             <td align="center" style="font-size:12px; line-height: 12px; color: #fff; padding-top: 4px" valign="bottom">
-                <img alt="" class="icon" src="def_icon.png"/>
+                <img alt="" class="icon" src="img/def_icon.png"/>
             </td>
         </tr>
         <tr>
@@ -934,7 +935,7 @@
     </table>
 </div>
 <div id="credits">
-    <a href="https://sea-watch.org/en/" rel="noopener noreferrer" target="_blank"><img alt="" src="SeaWatch.png"
+    <a href="https://sea-watch.org/en/" rel="noopener noreferrer" target="_blank"><img alt="" src="img/SeaWatch.png"
                                                                                        style="width: 50px; height: auto;"/></a>
 </div>
 

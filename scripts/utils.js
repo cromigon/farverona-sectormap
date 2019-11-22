@@ -1,3 +1,239 @@
+class Asset {
+    constructor(id, name, faction, hp, max_hp, stealth, type,
+                cost, tl, atk, def, stat, stat_tier, perm,
+                special, range, hex_id, asset_x, asset_y, highlight_x, highlight_y) {
+        this.id = id;
+        this.name = name;
+        this.faction = faction;
+        this.hp = hp;
+        this.max_hp = max_hp;
+        this.stealth = stealth !== "FALSE";
+        this.type = type;
+        this.cost = cost;
+        this.tl = tl;
+        this.atk = atk;
+        this.def = def;
+        this.stat = stat;
+        this.stat_tier = stat_tier;
+        this.perm = perm;
+        this.special = special;
+        this.range = range;
+        this.hex_id = hex_id;
+        this.x = asset_x;
+        this.y = asset_y;
+        this.size = box_size / 1.1;
+
+        let stealth_str = "";
+        if (this.stealth) {
+            stealth_str = " (Stealthed)";
+        }
+
+        this.highlightHexes = function (hex_id, range) {
+            let hex_list = hexes[hex_id][range];
+
+            for (let j = 0; j < hex_list.length; j++) {
+                let h = document.getElementById(hex_list[j]);
+                h.style.opacity = "0.05";
+            }
+        };
+
+        // Render asset
+        d3.select(svg_overlay.node()).append("rect")
+            .attr("id", this.id + "_color")
+            .attr("class", "asset " + factions[this.faction]["short"].toLowerCase())
+            .attr("fill", factions[this.faction]["color"])
+            .attr("x", this.x)
+            .attr("y", this.y)
+            .attr("width", this.size)
+            .attr("height", this.size);
+        this.color_box = document.getElementById(this.id + "_color");
+
+        d3.select(svg_overlay.node()).append("svg:image")
+            .attr("id", this.id + "_alpha")
+            .attr("class", "asset " + factions[this.faction]["short"].toLowerCase())
+            .attr("xlink:href", "assets_alpha/" + this.name + ".png")
+            .attr("x", this.x)
+            .attr("y", this.y)
+            .attr("width", this.size)
+            .attr("height", this.size);
+        this.alpha_box = document.getElementById(this.id + "_alpha");
+
+
+        if (this.stealth) {
+            d3.select(svg_overlay.node()).append("svg:image")
+                .attr("id", this.id + "_stealth")
+                .attr("class", "asset " + factions[this.faction]["short"].toLowerCase())
+                .attr("xlink:href", "assets_alpha/Stealth.png")
+                .attr("x", this.x)
+                .attr("y", this.y)
+                .attr("width", this.size)
+                .attr("height", this.size);
+        }
+        this.stealth_box = document.getElementById(this.id + "_stealth");
+
+
+        if (inactive_factions.includes(this.faction)) {
+            d3.select(svg_overlay.node()).append("svg:image")
+                .attr("id", this.id + "_inactive")
+                .attr("class", "asset " + factions[this.faction]["short"].toLowerCase())
+                .attr("xlink:href", "assets_alpha/Inactive.png")
+                .attr("x", this.x)
+                .attr("y", this.y)
+                .attr("width", this.size)
+                .attr("height", this.size);
+        }
+        this.inactive_box = document.getElementById(this.id + "_inactive");
+
+        // Add highlight
+        new AssetHighlight(this.id, this.faction, highlight_x, highlight_y);
+        this.highlight_box = viewer.getOverlayById(id + "_highlight");
+
+
+        // Get tooltip
+        const tip = document.getElementById("tip");
+        const tip_fac = document.getElementById("tip_fac");
+        const tip_stats = document.getElementById("tip_stats");
+        const tip_name = document.getElementById("tip_name");
+        const tip_hp = document.getElementById("tip_hp");
+        const tip_cost = document.getElementById("tip_cost");
+        const tip_tl = document.getElementById("tip_tl");
+        const tip_atk = document.getElementById("tip_atk");
+        const tip_cnt = document.getElementById("tip_cnt");
+        const tip_special = document.getElementById("tip_special");
+        const tip_perm = document.getElementById("tip_perm");
+        const tip_row_special = document.getElementById("tip_row_special");
+        const tip_row_perm = document.getElementById("tip_row_perm");
+        const hex_overlays = document.getElementsByClassName("hex");
+
+        new OpenSeadragon.MouseTracker({
+            element: id + "_highlight",
+            enterHandler: () => {
+                tip_fac.innerHTML = this.faction;
+                tip_stats.innerHTML = this.type + ", " + this.stat + " " + this.stat_tier;
+                tip_name.innerHTML = this.name + stealth_str;
+                tip_hp.innerHTML = this.hp + "/" + this.max_hp;
+                tip_cost.innerHTML = this.cost;
+                tip_tl.innerHTML = this.tl;
+                tip_atk.innerHTML = this.atk;
+                tip_cnt.innerHTML = this.def;
+
+                if (this.special !== "") {
+                    tip_special.innerHTML = this.special;
+                    tip_row_special.style.display = "table-row";
+                } else {
+                    tip_row_special.style.display = "none";
+                }
+                if (this.perm !== "") {
+                    tip_perm.innerHTML = "<i>" + this.perm + "</i>";
+                    tip_row_perm.style.display = "table-row";
+                } else {
+                    tip_row_perm.style.display = "none";
+                }
+
+                tip.style.display = "block";
+                tip_on = true;
+
+                if (this.range > 0) {
+                    this.highlightHexes(this.hex_id, this.range);
+                }
+            },
+            exitHandler: () => {
+                tip.style.display = "none";
+                tip_fac.innerHTML = "";
+                tip_stats.innerHTML = "";
+                tip_name.innerHTML = "";
+                tip_hp.innerHTML = "";
+                tip_cost.innerHTML = "";
+                tip_tl.innerHTML = "";
+                tip_atk.innerHTML = "";
+                tip_cnt.innerHTML = "";
+                tip_special.innerHTML = "";
+                tip_perm.innerHTML = "";
+                tip_on = false;
+
+                for (let j = 0; j < hex_overlays.length; j++) {
+                    hex_overlays[j].style.opacity = "0";
+                }
+            },
+            clickHandler: () => {
+                if (tip_on) {
+                    tip_on = false;
+                    $("#tip").fadeOut(200);
+                } else {
+                    tip_on = true;
+                    $("#tip").fadeIn(200);
+                }
+            }
+        });
+    }
+
+
+    update(asset_x, asset_y, highlight_x, highlight_y) {
+        if (!show_inactive && inactive_factions.includes(this.faction)) {
+            this.highlight_box.style.display = "none";
+            this.color_box.style.display = "none";
+            this.alpha_box.style.display = "none";
+            if (this.stealth_box) {
+                this.stealth_box.style.display = "none";
+            }
+            if (this.inactive_box) {
+                this.inactive_box.style.display = "none";
+            }
+        } else {
+
+            this.highlight_box.update(
+                new OpenSeadragon.Rect(
+                    highlight_x,
+                    highlight_y,
+                    box_size,
+                    box_size
+                )
+            );
+            this.color_box.setAttribute("x", asset_x);
+            this.color_box.setAttribute("y", asset_y);
+            this.color_box.style.display = "block";
+            this.alpha_box.setAttribute("x", asset_x);
+            this.alpha_box.setAttribute("y", asset_y);
+            this.alpha_box.style.display = "block";
+            if (this.stealth_box) {
+                this.stealth_box.setAttribute("x", asset_x);
+                this.stealth_box.setAttribute("y", asset_y);
+                this.stealth_box.style.display = "block";
+            }
+            if (this.inactive_box) {
+                this.inactive_box.setAttribute("x", asset_x);
+                this.inactive_box.setAttribute("y", asset_y);
+                this.inactive_box.style.display = "block";
+            }
+        }
+    }
+}
+
+
+class AssetHighlight {
+    constructor(id, faction, x, y) {
+        this.id = id;
+        this.faction = faction;
+        this.x = x;
+        this.y = y;
+
+        let highlight = document.createElement("div");
+        highlight.id = this.id + "_highlight";
+        highlight.className = "highlight " + factions[this.faction]["short"].toLowerCase();
+
+        viewer.addOverlay({
+            element: highlight,
+            location: new OpenSeadragon.Rect(
+                this.x,
+                this.y,
+                box_size,
+                box_size
+            )
+        });
+    }
+}
+
+
 function visibilityToggleStyling(inout) {
     let toggle = document.getElementById("visibilityToggle");
     if (inout === "in") {
@@ -47,7 +283,6 @@ function replaceInactiveFactionNames(planet, fac, hw) {
 
 
 function recolorPlanetNames() {
-
     let num_planets = planet_tracker.length;
     let planet_dict = {};
 
@@ -80,15 +315,6 @@ function recolorPlanetNames() {
 
 
 function reorderAssets() {
-
-    let inactive_shorts = [];
-
-    for (let fac in factions) {
-        if (factions.hasOwnProperty(fac) && inactive_factions.includes(fac)) {
-            inactive_shorts.push(factions[fac]["short"].toLowerCase());
-        }
-    }
-
     let system_dict = {};
 
     for (let i = 0; i < planet_tracker.length; i++) {
@@ -107,31 +333,11 @@ function reorderAssets() {
         system_dict[hex_id]["current"] += 1;
 
         if (local_assets) {
-
             let local_counter = 0;
 
             for (let j = 0; j < local_assets.length; j++) {
                 let id = local_assets[j];
-                let highlight = document.getElementById(id + "_highlight");
-                let overlay = viewer.getOverlayById(id + "_highlight");
-                let short = highlight.getAttribute("class").replace("highlight ", "");
-                let color_box = document.getElementById(id + "_color");
-                let alpha = document.getElementById(id + "_alpha");
-                let stealth = document.getElementById(id + "_stealth");
-                let inactive = document.getElementById(id + "_inactive");
-
-                if (!show_inactive && inactive_shorts.includes(short)) {
-                    highlight.style.display = "none";
-                    color_box.style.display = "none";
-                    alpha.style.display = "none";
-                    if (stealth) {
-                        stealth.style.display = "none";
-                    }
-                    if (inactive) {
-                        inactive.style.display = "none";
-                    }
-                    continue
-                }
+                let asset_obj = asset_objects[id];
 
                 let hex_x = hexes[hex_id]["X"];
                 let hex_y = hexes[hex_id]["Y"];
@@ -144,34 +350,10 @@ function reorderAssets() {
                 let asset_x = highlight_x + (box_size - (1 / 1.1) * box_size) / 2;
                 let asset_y = highlight_y + (box_size - (1 / 1.1) * box_size) / 2;
 
-                overlay.update(
-                    new OpenSeadragon.Rect(
-                        highlight_x,
-                        highlight_y,
-                        box_size,
-                        box_size
-                    ));
-                color_box.setAttribute("x", asset_x);
-                color_box.setAttribute("y", asset_y);
-                alpha.setAttribute("x", asset_x);
-                alpha.setAttribute("y", asset_y);
-                if (stealth) {
-                    stealth.setAttribute("x", asset_x);
-                    stealth.setAttribute("y", asset_y);
-                }
-                if (inactive) {
-                    inactive.setAttribute("x", asset_x);
-                    inactive.setAttribute("y", asset_y);
-                }
+                asset_obj.update(asset_x, asset_y, highlight_x, highlight_y);
 
-                highlight.style.display = "block";
-                color_box.style.display = "block";
-                alpha.style.display = "block";
-                if (stealth) {
-                    stealth.style.display = "block";
-                }
-                if (inactive) {
-                    inactive.style.display = "block";
+                if (!show_inactive && inactive_factions.includes(asset_obj.faction)) {
+                    continue
                 }
 
                 local_counter++;
@@ -706,16 +888,6 @@ function drawPlanetNames() {
 
 function drawAssets() {
 
-    let highlightHexes = function (hex, range) {
-        let hex_list = hexes[hex][range];
-
-        for (let j = 0; j < hex_list.length; j++) {
-            h = document.getElementById(hex_list[j]);
-            h.style.opacity = "0.05";
-        }
-    }
-
-
     let system_dict = {};
 
     for (let i = 0; i < planet_tracker.length; i++) {
@@ -728,7 +900,6 @@ function drawAssets() {
     }
 
     let counter = 0;
-    let asset_size = box_size / 1.1;
 
     for (let i = 0; i < planet_tracker.length; i++) {
         planet_tracker[i]["Local Assets"] = [];
@@ -823,15 +994,15 @@ function drawAssets() {
                 }
                 let type = asset["Type"];
 
-                let cost;
-                let tl;
-                let atk;
-                let def;
-                let stat;
-                let stattier;
-                let perm;
-                let special;
-                let range;
+                let cost = "Special";
+                let tl = "-";
+                let atk = "-";
+                let def = "-";
+                let stat = "";
+                let stat_tier = "";
+                let perm = "";
+                let special = "";
+                let range = 0;
 
                 if (name !== "Base Of Influence") {
                     cost = asset["Cost"];
@@ -839,7 +1010,7 @@ function drawAssets() {
                     atk = asset["Attack"].replace("None", "-");
                     def = asset["Counter"].replace("None", "-");
                     stat = asset["W/C/F"];
-                    stattier = assets[name]["STAT_TIER"];
+                    stat_tier = assets[name]["STAT_TIER"];
                     perm = assets[name]["PERM"];
                     if (perm !== "") {
                         perm = "Needs governmental permission."
@@ -851,153 +1022,9 @@ function drawAssets() {
                     }
                 }
 
-                // Image Overlay
-                d3.select(svg_overlay.node()).append("rect")
-                    .attr("id", id + "_color")
-                    .attr("class", "asset " + factions[faction]["short"].toLowerCase())
-                    .attr("fill", factions[faction]["color"])
-                    .attr("x", asset_x)
-                    .attr("y", asset_y)
-                    .attr("width", asset_size)
-                    .attr("height", asset_size);
-
-                d3.select(svg_overlay.node()).append("svg:image")
-                    .attr("id", id + "_alpha")
-                    .attr("class", "asset " + factions[faction]["short"].toLowerCase())
-                    .attr("xlink:href", "assets_alpha/" + name + ".png")
-                    .attr("x", asset_x)
-                    .attr("y", asset_y)
-                    .attr("width", asset_size)
-                    .attr("height", asset_size);
-
-                if (stealth !== "FALSE") {
-                    d3.select(svg_overlay.node()).append("svg:image")
-                        .attr("id", id + "_stealth")
-                        .attr("class", "asset " + factions[faction]["short"].toLowerCase())
-                        .attr("xlink:href", "assets_alpha/Stealth.png")
-                        .attr("x", asset_x)
-                        .attr("y", asset_y)
-                        .attr("width", asset_size)
-                        .attr("height", asset_size);
-                }
-
-                if (inactive_factions.includes(faction)) {
-                    d3.select(svg_overlay.node()).append("svg:image")
-                        .attr("id", id + "_inactive")
-                        .attr("class", "asset " + factions[faction]["short"].toLowerCase())
-                        .attr("xlink:href", "assets_alpha/Inactive.png")
-                        .attr("x", asset_x)
-                        .attr("y", asset_y)
-                        .attr("width", asset_size)
-                        .attr("height", asset_size);
-                }
-
-                // Highlight Overlay
-                let highlight = document.createElement("div");
-                highlight.id = id + "_highlight";
-                highlight.className = "highlight " + factions[faction]["short"].toLowerCase();
-
-                viewer.addOverlay({
-                    element: highlight,
-                    location: new OpenSeadragon.Rect(
-                        highlight_x,
-                        highlight_y,
-                        box_size,
-                        box_size
-                    )
-                });
-
-                const tip = document.getElementById("tip");
-                const tip_fac = document.getElementById("tip_fac");
-                const tip_stats = document.getElementById("tip_stats");
-                const tip_name = document.getElementById("tip_name");
-                const tip_hp = document.getElementById("tip_hp");
-                const tip_cost = document.getElementById("tip_cost");
-                const tip_tl = document.getElementById("tip_tl");
-                const tip_atk = document.getElementById("tip_atk");
-                const tip_cnt = document.getElementById("tip_cnt");
-                const tip_special = document.getElementById("tip_special");
-                const tip_perm = document.getElementById("tip_perm");
-                const tip_row_special = document.getElementById("tip_row_special");
-                const tip_row_perm = document.getElementById("tip_row_perm");
-                const hex_overlays = document.getElementsByClassName("hex");
-
-                new OpenSeadragon.MouseTracker({
-                    element: id + "_highlight",
-                    enterHandler: () => {
-                        if (name !== "Base Of Influence") {
-                            tip_fac.innerHTML = faction;
-                            tip_stats.innerHTML = type + ", " + stat + " " + stattier;
-                            tip_name.innerHTML = name_str;
-                            tip_hp.innerHTML = hp + "/" + max_hp;
-                            tip_cost.innerHTML = cost;
-                            tip_tl.innerHTML = tl;
-                            tip_atk.innerHTML = atk.replace("None", "-");
-                            tip_cnt.innerHTML = def.replace("None", "-");
-                            tip_special.innerHTML = special;
-                            tip_perm.innerHTML = "<i>" + perm + "</i>";
-
-                            if (special !== "") {
-                                tip_row_special.style.display = "table-row";
-                            } else {
-                                tip_row_special.style.display = "none";
-                            }
-                            if (perm !== "") {
-                                tip_row_perm.style.display = "table-row";
-                            } else {
-                                tip_row_perm.style.display = "none";
-                            }
-                        } else {
-                            tip_fac.innerHTML = faction;
-                            tip_stats.innerHTML = "";
-                            tip_name.innerHTML = name_str;
-                            tip_hp.innerHTML = hp + "/" + max_hp;
-                            tip_cost.innerHTML = "Special";
-                            tip_tl.innerHTML = "-";
-                            tip_atk.innerHTML = "-";
-                            tip_cnt.innerHTML = "-";
-                            tip_special.innerHTML = "";
-                            tip_perm.innerHTML = "";
-
-                            tip_row_special.style.display = "none";
-                            tip_row_perm.style.display = "none";
-                        }
-
-                        tip.style.display = "block";
-                        tip_on = true;
-
-                        if (range > 0) {
-                            highlightHexes(hex_id, range);
-                        }
-                    },
-                    exitHandler: () => {
-                        tip.style.display = "none";
-                        tip_fac.innerHTML = "";
-                        tip_stats.innerHTML = "";
-                        tip_name.innerHTML = "";
-                        tip_hp.innerHTML = "";
-                        tip_cost.innerHTML = "";
-                        tip_tl.innerHTML = "";
-                        tip_atk.innerHTML = "";
-                        tip_cnt.innerHTML = "";
-                        tip_special.innerHTML = "";
-                        tip_perm.innerHTML = "";
-                        tip_on = false;
-
-                        for (let j = 0; j < hex_overlays.length; j++) {
-                            hex_overlays[j].style.opacity = "0";
-                        }
-                    },
-                    clickHandler: () => {
-                        if (tip_on) {
-                            tip_on = false;
-                            $("#tip").fadeOut(200);
-                        } else {
-                            tip_on = true;
-                            $("#tip").fadeIn(200);
-                        }
-                    }
-                });
+                asset_objects[id] = new Asset(id, name, faction, hp, max_hp, stealth, type,
+                    cost, tl, atk, def, stat, stat_tier, perm, special,
+                    range, hex_id, asset_x, asset_y, highlight_x, highlight_y);
 
                 local_counter += 1;
             }
@@ -1012,7 +1039,7 @@ function drawAssets() {
 function getFactions() {
     let url_faction_tracker = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRCK-QRRccgk3_twQSIyfGU3qzuqyPB6WSb4_KktKyV6AzAmm7ioUBf-wddvLuaToxr5CVWy4tRiAS7/pub?gid=1760255261&single=true&output=tsv";
     const xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
+    xhttp.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
             let json = tsvJSON(this.responseText);
 
@@ -1031,7 +1058,7 @@ function getFactions() {
 function getAssets() {
     const url_asset_tracker = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRCK-QRRccgk3_twQSIyfGU3qzuqyPB6WSb4_KktKyV6AzAmm7ioUBf-wddvLuaToxr5CVWy4tRiAS7/pub?gid=2128046628&single=true&output=tsv";
     const xhttp_dyn_assets = new XMLHttpRequest();
-    xhttp_dyn_assets.onreadystatechange = function() {
+    xhttp_dyn_assets.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
             asset_tracker = tsvJSON(this.responseText);
             drawAssets();
@@ -1045,7 +1072,7 @@ function getAssets() {
 function getPlanets() {
     const url_planet_tracker = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRCK-QRRccgk3_twQSIyfGU3qzuqyPB6WSb4_KktKyV6AzAmm7ioUBf-wddvLuaToxr5CVWy4tRiAS7/pub?gid=464173844&single=true&output=tsv";
     const xhttp_dyn_planets = new XMLHttpRequest();
-    xhttp_dyn_planets.onreadystatechange = function() {
+    xhttp_dyn_planets.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
             planet_tracker = tsvJSON(this.responseText);
             getAssets();
@@ -1059,7 +1086,7 @@ function getPlanets() {
 function getInfluence() {
     let url_influence_tracker = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRCK-QRRccgk3_twQSIyfGU3qzuqyPB6WSb4_KktKyV6AzAmm7ioUBf-wddvLuaToxr5CVWy4tRiAS7/pub?gid=1919363050&single=true&output=tsv";
     const xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
+    xhttp.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
             influence_tracker = processInfluenceTSV(this.responseText);
         }
