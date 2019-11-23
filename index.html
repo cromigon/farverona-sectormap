@@ -1,962 +1,959 @@
 <!DOCTYPE html>
 <html lang="en" xml:lang="EN" xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
-    <link href="favicon.png" rel="icon" type="image/png"/>
-    <title>Far Verona Sector Map</title>
-    <style>
-        .no-js #loader {
-            display: none;
-        }
-
-        .js #loader {
-            display: block;
-            position: absolute;
-            left: 100px;
-            top: 0;
-        }
-
-        .se-pre-con {
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 9999;
-            background: url("img/loading.gif") center/10% no-repeat #141414;
-        }
-
-        @font-face {
-            font-family: 'D-DIN';
-            src: url("./fonts/D-DIN.otf");
-        }
-
-        @font-face {
-            font-family: 'D-DIN';
-            src: url("./fonts/D-DIN-Bold.otf");
-            font-weight: bold;
-        }
-
-        @-moz-document url-prefix() {
-            html, body {
-                overflow: hidden !important;
+    <head>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+        <link href="favicon.png" rel="icon" type="image/png" />
+        <title>Far Verona Sector Map</title>
+        <style>
+            .se-pre-con {
+                position: fixed;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 9999;
+                background: url('img/loading.gif') center/10% no-repeat #141414;
             }
-        }
 
-        ::-webkit-scrollbar {
-            display: none;
-        }
+            @font-face {
+                font-family: 'D-DIN';
+                src: url('./fonts/D-DIN.otf');
+            }
 
-        body {
-            background-color: #141414;
-        }
+            @font-face {
+                font-family: 'D-DIN';
+                src: url('./fonts/D-DIN-Bold.otf');
+                font-weight: bold;
+            }
 
-        img {
-            max-width: 100%;
-            max-height: 100%;
-        }
+            @-moz-document url-prefix() {
+                html,
+                body {
+                    overflow: hidden !important;
+                }
+            }
 
-        a {
-            color: #444;
-        }
+            ::-webkit-scrollbar {
+                display: none;
+            }
 
-        mark {
-            color: #000;
-            background-color: #3EE1F4;
-        }
+            body {
+                background-color: #141414;
+            }
 
-        #visibilityToggle {
-            position: fixed;
-            top: 10px;
-            right: 50px;
-            width: 35px;
-            height: 35px;
-            background: url("img/hide_rest.png");
-            background-size: 35px;
-        }
+            img {
+                max-width: 100%;
+                max-height: 100%;
+            }
 
-        #factionToggle {
-            position: fixed;
-            top: 10px;
-            right: 16px;
-            width: 35px;
-            height: 35px;
-            background: url("img/toggle_rest.png");
-            background-size: 35px;
-            transition: transform 0.4s ease-in-out;
-        }
+            a {
+                color: #444;
+            }
 
-        #factionToggle:hover {
-            background: url("img/toggle_hover.png");
-            background-size: 35px;
-        }
+            mark {
+                color: #000;
+                background-color: #3ee1f4;
+            }
 
-        #factionToggle:active {
-            background: url("img/toggle_pressed.png");
-            background-size: 35px;
-        }
+            #visibilityToggle {
+                position: fixed;
+                top: 10px;
+                right: 50px;
+                width: 35px;
+                height: 35px;
+                background: url('img/hide_rest.png');
+                background-size: 35px;
+            }
 
-        #toggle-container {
-            position: absolute;
-            bottom: 10px;
-            right: 50%;
-            transform: translateX(50%);
-        }
+            #factionToggle {
+                position: fixed;
+                top: 10px;
+                right: 16px;
+                width: 35px;
+                height: 35px;
+                background: url('img/toggle_rest.png');
+                background-size: 35px;
+                transition: transform 0.4s ease-in-out;
+            }
 
-        /* The switch - the box around the slider */
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 40px;
-            height: 16px;
-        }
+            #factionToggle:hover {
+                background: url('img/toggle_hover.png');
+                background-size: 35px;
+            }
 
-        /* Hide default HTML checkbox */
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
+            #factionToggle:active {
+                background: url('img/toggle_pressed.png');
+                background-size: 35px;
+            }
 
-        /* The slider */
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            -webkit-transition: .4s;
-            transition: .4s;
-        }
+            .asset {
+                transition: opacity 0.1s;
+                transition-timing-function: ease-in-out;
+            }
 
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 12px;
-            width: 12px;
-            left: 2px;
-            bottom: 2px;
-            background-color: white;
-            -webkit-transition: .4s;
-            transition: .4s;
-        }
+            .planet {
+                z-index: 3;
+                transition: opacity 0.1s;
+                transition-timing-function: ease-in-out;
+            }
 
-        input:checked + .slider {
-            background-color: #f70094;
-        }
+            #factionsCol {
+                position: fixed;
+                width: 200px;
+                height: 100%;
+                top: 0;
+                right: 10px;
+                margin: 0;
+                font-family: 'D-DIN', Helvetica, Arial, sans-serif;
+                font-size: 22px;
+                color: #fff;
+                transition: right 0.2s;
+                transition-timing-function: ease-in-out;
+                /*border: 1px solid #f00*/
+            }
 
-        input:focus + .slider {
-            box-shadow: 0 0 1px #f70094;
-        }
+            #factionsCenter {
+                position: absolute;
+                top: 50%;
+                right: 0;
+                transform: translateY(-50%);
+                /*border: 1px solid #0f0*/
+            }
 
-        input:checked + .slider:before {
-            -webkit-transform: translateX(24px);
-            -ms-transform: translateX(24px);
-            transform: translateX(24px);
-        }
+            #factionTable {
+                width: 200px;
+                right: 0;
+                transform-origin: right center;
+                border-collapse: separate;
+                border-spacing: 0;
+                z-index: 1;
+                /*border: 1px solid #00f*/
+            }
 
-        /* Rounded sliders */
-        .slider.round {
-            border-radius: 34px;
-        }
+            .faction_name {
+                text-align: right;
+                padding-right: 10px;
+                cursor: pointer;
+            }
 
-        .slider.round:before {
-            border-radius: 50%;
-        }
+            .faction_name:hover {
+                background-color: rgba(255, 255, 255, 0.1);
+            }
 
-        .asset {
-            transition: opacity 0.1s;
-            transition-timing-function: ease-in-out;
-        }
+            .faction_color {
+                width: 40px;
+                height: 40px;
+                background-color: #222;
+                padding: 2px 4px 2px 4px;
+                margin: 0;
+                cursor: pointer;
+            }
 
-        .planet {
-            z-index: 3;
-            transition: opacity 0.1s;
-            transition-timing-function: ease-in-out;
-        }
+            td img {
+                display: block;
+                margin-top: auto;
+                margin-bottom: auto;
+            }
 
-        #factionsCol {
-            position: fixed;
-            width: 200px;
-            height: 100%;
-            top: 0;
-            right: 10px;
-            margin: 0;
-            font-family: 'D-DIN', Helvetica, Arial, sans-serif;
-            font-size: 22px;
-            color: #fff;
-            transition: right 0.2s;
-            transition-timing-function: ease-in-out;
-            /*border: 1px solid #f00*/
-        }
+            .viewer {
+                position: fixed;
+                width: 100%;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 100%;
+                margin: 0;
+                z-index: -1;
+            }
 
-        #factionsCenter {
-            position: absolute;
-            top: 50%;
-            right: 0;
-            transform: translateY(-50%);
-            /*border: 1px solid #0f0*/
-        }
+            .hex {
+                opacity: 0;
+                transition: opacity 0.2s;
+                transition-timing-function: ease-in-out;
+            }
 
-        #factionTable {
-            width: 200px;
-            right: 0;
-            transform-origin: right center;
-            border-collapse: separate;
-            border-spacing: 0;
-            z-index: 1;
-            /*border: 1px solid #00f*/
-        }
+            /*noinspection ALL*/
+            .highlight {
+                opacity: 0;
+                background-color: #fff;
+                z-index: 2;
+            }
 
-        .faction_name {
-            text-align: right;
-            padding-right: 10px;
-            cursor: pointer;
-        }
+            /*noinspection ALL*/
+            .highlight:hover,
+            .highlight:focus {
+                opacity: 0.3;
+                background-color: #fff;
+            }
 
-        .faction_name:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
+            .tooltip {
+                position: absolute;
+                width: 420px;
+                padding: 10px;
+                display: none;
+                background-color: rgba(20, 20, 20, 1);
+                font-family: 'D-DIN', Helvetica, Arial, sans-serif;
+                border: 1px solid #777;
+            }
 
-        .faction_color {
-            width: 40px;
-            height: 40px;
-            background-color: #222;
-            padding: 2px 4px 2px 4px;
-            margin: 0;
-            cursor: pointer;
-        }
+            .infobox {
+                position: fixed;
+                margin: auto;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                width: 600px;
+                max-height: 420px;
+                font-family: 'D-DIN', Helvetica, Arial, sans-serif;
+                color: #fff;
+                border: 1px solid #777;
+                background-color: rgba(20, 20, 20, 1);
+                z-index: -2;
+                opacity: 0;
+            }
 
-        td img {
-            display: block;
-            margin-top: auto;
-            margin-bottom: auto;
-        }
+            .icon {
+                height: 15px;
+                width: auto;
+            }
 
-        .viewer {
-            position: fixed;
-            width: 100%;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 100%;
-            margin: 0;
-            z-index: -1;
-        }
+            #credits {
+                position: fixed;
+                bottom: 5px;
+                left: 10px;
+                font-family: 'D-DIN', Arial, Helvetica, sans-serif;
+                font-size: 16px;
+            }
 
-        .hex {
-            opacity: 0;
-            transition: opacity 0.2s;
-            transition-timing-function: ease-in-out;
-        }
+            #paypal {
+                width: 30px;
+                height: auto;
+                opacity: 0.5;
+                transition: opacity 0.2s ease-in-out;
+            }
 
-        /*noinspection ALL*/
-        .highlight {
-            opacity: 0;
-            background-color: #fff;
-            z-index: 2;
-        }
+            #paypal:hover {
+                opacity: 1;
+            }
 
-        /*noinspection ALL*/
-        .highlight:hover, .highlight:focus {
-            opacity: 0.3;
-            background-color: #fff;
-        }
+            .influence {
+                position: fixed;
+                top: 50%;
+                left: 10px;
+                transform: translateY(-50%);
+                height: 65px;
+                min-height: 0 !important;
+                width: 65px;
+                /*border: 0px solid #fff;*/
+            }
+        </style>
+        <script src="openseadragon/openseadragon.min.js"></script>
+        <script src="scripts/openseadragon-svg-overlay.js"></script>
+        <script src="scripts/apexcharts.js"></script>
+        <script src="scripts/d3.v5.min.js"></script>
+        <script src="scripts/jquery-3.4.1.min.js"></script>
+        <script src="scripts/constants.js"></script>
+        <script type="text/javascript">
+            // Global variables
+            let highlighted_fac = '';
+            let show_inactive = false;
+            let show_factionTable = true;
+            let tip_on = false;
+            let planet_tip_on = false;
+            let faction_tracker = {};
+            let planet_tracker;
+            let asset_tracker;
+            let asset_objects = {};
+            let influence_tracker = {};
+            let viewport_w = window.innerWidth;
+            let viewport_h = window.innerHeight;
+            let isFirefox = typeof InstallTrigger !== 'undefined';
+            // let isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
+        </script>
+        <script src="scripts/utils.js"></script>
+    </head>
+    <body>
+        <div class="se-pre-con"></div>
+        <div class="viewer">
+            <div id="osd" style="width: 100%; height: 100%"></div>
+        </div>
+        <script type="text/javascript">
+            const viewer = OpenSeadragon({
+                id: 'osd',
+                prefixUrl: 'openseadragon/images/',
+                tileSources: 'map_blank.dzi',
+                navigationControlAnchor: OpenSeadragon.ControlAnchor.TOP_LEFT
+            });
 
-        .tooltip {
-            position: absolute;
-            width: 420px;
-            padding: 10px;
-            display: none;
-            background-color: rgba(20, 20, 20, 1);
-            font-family: 'D-DIN', Helvetica, Arial, sans-serif;
-            border: 1px solid #777;
-        }
+            let svg_overlay = viewer.svgOverlay();
+            $(window).resize(() => {
+                svg_overlay.resize();
+                viewport_w = window.innerWidth;
+                viewport_h = window.innerHeight;
+            });
+            viewer.controls.topleft.style.position = 'relative';
+            viewer.controls.topleft.style.width = '105px';
+            viewer.controls.topleft.style.top = '10px';
+            viewer.controls.topleft.style.margin = '0px auto';
+            viewer.addHandler('open', onViewerOpen());
+        </script>
+        <div id="factionsCol">
+            <div id="factionsCenter">
+                <table id="factionTable">
+                    <tr id="Pyxis-row">
+                        <td
+                            class="faction_name"
+                            onclick='window.open("https://far-verona.fandom.com/wiki/House_Pyxis")'
+                            onmouseout="hideFactionInfo()"
+                            onmouseover="displayFactionInfo('House Pyxis')"
+                        >
+                            PYXIS
+                        </td>
+                        <td class="faction_color" onclick="displayFactionAssets('House Pyxis')">
+                            <div id="Pyxis-cell" style="width:100%;height:100%;background-color: #222"></div>
+                        </td>
+                    </tr>
+                    <tr id="Eridanus-row">
+                        <td
+                            class="faction_name"
+                            onclick='window.open("https://far-verona.fandom.com/wiki/House_Eridanus")'
+                            onmouseout="hideFactionInfo()"
+                            onmouseover="displayFactionInfo('House Eridanus')"
+                        >
+                            ERIDANUS
+                        </td>
+                        <td class="faction_color" onclick="displayFactionAssets('House Eridanus')">
+                            <div id="Eridanus-cell" style="width:100%;height:100%;background-color: #222"></div>
+                        </td>
+                    </tr>
+                    <tr id="Triangulum-row">
+                        <td
+                            class="faction_name"
+                            onclick='window.open("https://far-verona.fandom.com/wiki/House_Triangulum")'
+                            onmouseout="hideFactionInfo()"
+                            onmouseover="displayFactionInfo('House Triangulum')"
+                        >
+                            TRIANGULUM
+                        </td>
+                        <td class="faction_color" onclick="displayFactionAssets('House Triangulum')">
+                            <div id="Triangulum-cell" style="width:100%;height:100%;background-color: #222"></div>
+                        </td>
+                    </tr>
+                    <tr id="Crux-row">
+                        <td
+                            class="faction_name"
+                            onclick='window.open("https://far-verona.fandom.com/wiki/House_Crux")'
+                            onmouseout="hideFactionInfo()"
+                            onmouseover="displayFactionInfo('House Crux')"
+                        >
+                            CRUX
+                        </td>
+                        <td class="faction_color" onclick="displayFactionAssets('House Crux')">
+                            <div id="Crux-cell" style="width:100%;height:100%;background-color: #222"></div>
+                        </td>
+                    </tr>
+                    <tr id="Fornax-row">
+                        <td
+                            class="faction_name"
+                            onclick='window.open("https://far-verona.fandom.com/wiki/House_Fornax")'
+                            onmouseout="hideFactionInfo()"
+                            onmouseover="displayFactionInfo('House Fornax')"
+                        >
+                            FORNAX
+                        </td>
+                        <td class="faction_color" onclick="displayFactionAssets('House Fornax')">
+                            <div id="Fornax-cell" style="width:100%;height:100%;background-color: #222"></div>
+                        </td>
+                    </tr>
+                    <tr id="Lyra-row">
+                        <td
+                            class="faction_name"
+                            onclick='window.open("https://far-verona.fandom.com/wiki/House_Lyra")'
+                            onmouseout="hideFactionInfo()"
+                            onmouseover="displayFactionInfo('House Lyra')"
+                        >
+                            LYRA
+                        </td>
+                        <td class="faction_color" onclick="displayFactionAssets('House Lyra')">
+                            <div id="Lyra-cell" style="width:100%;height:100%;background-color: #222"></div>
+                        </td>
+                    </tr>
+                    <tr id="Serpens-row">
+                        <td
+                            class="faction_name"
+                            onclick='window.open("https://far-verona.fandom.com/wiki/House_Serpens")'
+                            onmouseout="hideFactionInfo()"
+                            onmouseover="displayFactionInfo('House Serpens')"
+                        >
+                            SERPENS
+                        </td>
+                        <td class="faction_color" onclick="displayFactionAssets('House Serpens')">
+                            <div id="Serpens-cell" style="width:100%;height:100%;background-color: #222"></div>
+                        </td>
+                    </tr>
+                    <tr id="Reticulum-row">
+                        <td
+                            class="faction_name"
+                            onclick='window.open("https://far-verona.fandom.com/wiki/House_Reticulum")'
+                            onmouseout="hideFactionInfo()"
+                            onmouseover="displayFactionInfo('House Reticulum')"
+                        >
+                            RETICULUM
+                        </td>
+                        <td class="faction_color" onclick="displayFactionAssets('House Reticulum')">
+                            <div id="Reticulum-cell" style="width:100%;height:100%;background-color: #222"></div>
+                        </td>
+                    </tr>
+                    <tr id="Aquila-row">
+                        <td
+                            class="faction_name"
+                            onclick='window.open("https://far-verona.fandom.com/wiki/House_Aquila")'
+                            onmouseout="hideFactionInfo()"
+                            onmouseover="displayFactionInfo('House Aquila')"
+                        >
+                            AQUILA
+                        </td>
+                        <td class="faction_color" onclick="displayFactionAssets('House Aquila')">
+                            <div id="Aquila-cell" style="width:100%;height:100%;background-color: #222"></div>
+                        </td>
+                    </tr>
+                    <tr id="Trilliant-row">
+                        <td
+                            class="faction_name"
+                            onclick='window.open("https://far-verona.fandom.com/wiki/The_Trilliant_Ring")'
+                            onmouseout="hideFactionInfo()"
+                            onmouseover="displayFactionInfo('The Trilliant Ring')"
+                        >
+                            TRILLIANT
+                        </td>
+                        <td class="faction_color" onclick="displayFactionAssets('The Trilliant Ring')">
+                            <div id="Trilliant-cell" style="width:100%;height:100%;background-color: #222"></div>
+                        </td>
+                    </tr>
+                    <tr id="Prism-row">
+                        <td
+                            class="faction_name"
+                            onclick='window.open("https://far-verona.fandom.com/wiki/The_PRISM_Network")'
+                            onmouseout="hideFactionInfo()"
+                            onmouseover="displayFactionInfo('The PRISM Network')"
+                        >
+                            PRISM
+                        </td>
+                        <td class="faction_color" onclick="displayFactionAssets('The PRISM Network')">
+                            <div id="Prism-cell" style="width:100%;height:100%;background-color: #222"></div>
+                        </td>
+                    </tr>
+                    <tr id="SERAPH-row">
+                        <td
+                            class="faction_name"
+                            onclick='window.open("https://far-verona.fandom.com/wiki/Society_for_Ethical_Reform_through_Aid,_Protection,_and_Humanitarianism")'
+                            onmouseout="hideFactionInfo()"
+                            onmouseover="displayFactionInfo('SERAPH')"
+                        >
+                            SERAPH
+                        </td>
+                        <td class="faction_color" onclick="displayFactionAssets('SERAPH')">
+                            <div id="SERAPH-cell" style="width:100%;height:100%;background-color: #222"></div>
+                        </td>
+                    </tr>
+                    <tr id="DCS-row">
+                        <td
+                            class="faction_name"
+                            onclick='window.open("https://far-verona.fandom.com/wiki/The_Deathless")'
+                            onmouseout="hideFactionInfo()"
+                            onmouseover="displayFactionInfo('The Deathless')"
+                        >
+                            DCS
+                        </td>
+                        <td class="faction_color" onclick="displayFactionAssets('The Deathless')">
+                            <div id="DCS-cell" style="width:100%;height:100%;background-color: #222"></div>
+                        </td>
+                    </tr>
+                    <tr id="Vagrant-row">
+                        <td
+                            class="faction_name"
+                            onclick='window.open("https://far-verona.fandom.com/wiki/Confederation_of_the_Upright_Vagrant")'
+                            onmouseout="hideFactionInfo()"
+                            onmouseover="displayFactionInfo('Confederation of the Upright Vagrant')"
+                        >
+                            VAGRANT
+                        </td>
+                        <td
+                            class="faction_color"
+                            onclick="displayFactionAssets('Confederation of the Upright Vagrant')"
+                        >
+                            <div id="Vagrant-cell" style="width:100%;height:100%;background-color: #222"></div>
+                        </td>
+                    </tr>
+                    <tr id="DM-row">
+                        <td
+                            class="faction_name"
+                            onclick='window.open("https://far-verona.fandom.com/wiki/The_Democratic_Mandate")'
+                            onmouseout="hideFactionInfo()"
+                            onmouseover="displayFactionInfo('The Democratic Mandate')"
+                        >
+                            DM
+                        </td>
+                        <td class="faction_color" onclick="displayFactionAssets('The Democratic Mandate')">
+                            <div id="DM-cell" style="width:100%;height:100%;background-color: #222"></div>
+                        </td>
+                    </tr>
+                    <tr id="Vela-row">
+                        <td
+                            class="faction_name"
+                            onclick='window.open("https://far-verona.fandom.com/wiki/The_Velan_Ascendancy")'
+                            onmouseout="hideFactionInfo()"
+                            onmouseover="displayFactionInfo('The Velan Ascendency')"
+                        >
+                            VELA
+                        </td>
+                        <td class="faction_color" onclick="displayFactionAssets('The Velan Ascendency')">
+                            <div id="Vela-cell" style="width:100%;height:100%;background-color: #222"></div>
+                        </td>
+                    </tr>
+                    <tr id="UPC-row">
+                        <td
+                            class="faction_name"
+                            onclick='window.open("https://far-verona.fandom.com/wiki/Unified_People&#39;s_Collective")'
+                            onmouseout="hideFactionInfo()"
+                            onmouseover="displayFactionInfo('The Unified People\'s Collective')"
+                        >
+                            UPC
+                        </td>
+                        <td class="faction_color" onclick="displayFactionAssets('The Unified People\'s Collective')">
+                            <div id="UPC-cell" style="width:100%;height:100%;background-color: #222"></div>
+                        </td>
+                    </tr>
+                    <tr id="HM-row">
+                        <td
+                            class="faction_name"
+                            onclick='window.open("https://far-verona.fandom.com/wiki/The_Houses_Minor")'
+                            onmouseout="hideFactionInfo()"
+                            onmouseover="displayFactionInfo('The Houses Minor')"
+                        >
+                            HM
+                        </td>
+                        <td class="faction_color" onclick="displayFactionAssets('The Houses Minor')">
+                            <div id="HM-cell" style="width:100%;height:100%;background-color: #222"></div>
+                        </td>
+                    </tr>
+                    <tr id="HC-row">
+                        <td
+                            class="faction_name"
+                            onclick='window.open("https://far-verona.fandom.com/wiki/The_High_Church_of_Messiah-as-Emperox")'
+                            onmouseout="hideFactionInfo()"
+                            onmouseover="displayFactionInfo('The High Church of Messiah-as-Emperox')"
+                        >
+                            HC
+                        </td>
+                        <td
+                            class="faction_color"
+                            onclick="displayFactionAssets('The High Church of Messiah-as-Emperox')"
+                        >
+                            <div id="HC-cell" style="width:100%;height:100%;background-color: #222"></div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="tooltip" id="tip">
+            <table
+                border="0"
+                cellpadding="4"
+                cellspacing="0"
+                style="margin: 0; border-bottom: 1px dotted #777"
+                width="100%"
+            >
+                <tr>
+                    <td id="tip_fac" style="height: 10px; font-size:12px; line-height: 0; color: #fff;"></td>
+                    <td
+                        align="right"
+                        id="tip_stats"
+                        style="height: 10px; font-size:12px; line-height: 0; color: #fff;"
+                    ></td>
+                </tr>
+            </table>
 
-        .infobox {
-            position: fixed;
-            margin: auto;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            width: 600px;
-            max-height: 420px;
-            font-family: 'D-DIN', Helvetica, Arial, sans-serif;
-            color: #fff;
-            border: 1px solid #777;
-            background-color: rgba(20, 20, 20, 1);
-            z-index: -2;
-            opacity: 0;
-        }
-
-        .icon {
-            height: 15px;
-            width: auto;
-        }
-
-        #credits {
-            position: fixed;
-            bottom: 5px;
-            left: 10px;
-            font-family: 'D-DIN', Arial, Helvetica, sans-serif;
-            font-size: 16px;
-        }
-
-        #paypal {
-            width: 30px;
-            height: auto;
-            opacity: 0.5;
-            transition: opacity 0.2s ease-in-out;
-        }
-
-        #paypal:hover {
-            opacity: 1;
-        }
-
-        .influence {
-            position: fixed;
-            top: 50%;
-            left: 10px;
-            transform: translateY(-50%);
-            height: 65px;
-            min-height: 0 !important;
-            width: 65px;
-            border: 0px solid #fff;
-        }
-
-    </style>
-    <script src="openseadragon/openseadragon.min.js"></script>
-    <script src="scripts/openseadragon-svg-overlay.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    <script src="//d3js.org/d3.v5.min.js"></script>
-    <script src="scripts/jquery-3.4.1.min.js"></script>
-    <script src="scripts/modernizr.js"></script>
-    <script src="scripts/constants.js"></script>
-    <script type="text/javascript">
-
-        // Global variables
-        let highlighted_fac = "";
-        let show_inactive = false;
-        let show_factionTable = true;
-        let tip_on = false;
-        let planet_tip_on = false;
-        let faction_tracker = {};
-        let planet_tracker;
-        let asset_tracker;
-        let asset_objects = {};
-        let influence_tracker = {};
-        let viewport_w = window.innerWidth;
-        let viewport_h = window.innerHeight;
-        let isFirefox = typeof InstallTrigger !== 'undefined';
-        // let isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
-
-    </script>
-    <script src="scripts/utils.js"></script>
-</head>
-<body>
-<div class="se-pre-con"></div>
-<div class="viewer">
-    <div id="osd" style="width: 100%; height: 100%"></div>
-</div>
-<script type="text/javascript">
-    const viewer = OpenSeadragon({
-        id: "osd",
-        prefixUrl: "openseadragon/images/",
-        tileSources: "scripts/map_blank.dzi",
-        navigationControlAnchor: OpenSeadragon.ControlAnchor.TOP_LEFT
-    });
-
-    let svg_overlay = viewer.svgOverlay();
-    $(window).resize(() => {
-        svg_overlay.resize();
-        viewport_w = window.innerWidth;
-        viewport_h = window.innerHeight;
-    });
-    viewer.controls.topleft.style.position = 'relative';
-    viewer.controls.topleft.style.width = '105px';
-    viewer.controls.topleft.style.top = '10px';
-    viewer.controls.topleft.style.margin = '0px auto';
-    viewer.addHandler("open", onViewerOpen());
-
-</script>
-<div id="factionsCol">
-    <div id="factionsCenter">
-        <table id="factionTable">
-            <tr id="Pyxis-row">
-                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/House_Pyxis")'
-                    onmouseout="hideFactionInfo()"
-                    onmouseover="displayFactionInfo('House Pyxis')">
-                    PYXIS
-                </td>
-                <td class="faction_color"
-                    onclick="displayFactionAssets('House Pyxis')">
-                    <div id="Pyxis-cell" style="width:100%;height:100%;background-color: #222"></div>
-                </td>
-            </tr>
-            <tr id="Eridanus-row">
-                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/House_Eridanus")'
-                    onmouseout="hideFactionInfo()"
-                    onmouseover="displayFactionInfo('House Eridanus')">
-                    ERIDANUS
-                </td>
-                <td class="faction_color"
-                    onclick="displayFactionAssets('House Eridanus')">
-                    <div id="Eridanus-cell" style="width:100%;height:100%;background-color: #222"></div>
-                </td>
-            </tr>
-            <tr id="Triangulum-row">
-                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/House_Triangulum")'
-                    onmouseout="hideFactionInfo()"
-                    onmouseover="displayFactionInfo('House Triangulum')">
-                    TRIANGULUM
-                </td>
-                <td class="faction_color"
-                    onclick="displayFactionAssets('House Triangulum')">
-                    <div id="Triangulum-cell" style="width:100%;height:100%;background-color: #222"></div>
-                </td>
-            </tr>
-            <tr id="Crux-row">
-                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/House_Crux")'
-                    onmouseout="hideFactionInfo()"
-                    onmouseover="displayFactionInfo('House Crux')">
-                    CRUX
-                </td>
-                <td class="faction_color"
-                    onclick="displayFactionAssets('House Crux')">
-                    <div id="Crux-cell" style="width:100%;height:100%;background-color: #222"></div>
-                </td>
-            </tr>
-            <tr id="Fornax-row">
-                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/House_Fornax")'
-                    onmouseout="hideFactionInfo()"
-                    onmouseover="displayFactionInfo('House Fornax')">
-                    FORNAX
-                </td>
-                <td class="faction_color"
-                    onclick="displayFactionAssets('House Fornax')">
-                    <div id="Fornax-cell" style="width:100%;height:100%;background-color: #222"></div>
-                </td>
-            </tr>
-            <tr id="Lyra-row">
-                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/House_Lyra")'
-                    onmouseout="hideFactionInfo()"
-                    onmouseover="displayFactionInfo('House Lyra')">
-                    LYRA
-                </td>
-                <td class="faction_color"
-                    onclick="displayFactionAssets('House Lyra')">
-                    <div id="Lyra-cell" style="width:100%;height:100%;background-color: #222"></div>
-                </td>
-            </tr>
-            <tr id="Serpens-row">
-                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/House_Serpens")'
-                    onmouseout="hideFactionInfo()"
-                    onmouseover="displayFactionInfo('House Serpens')">
-                    SERPENS
-                </td>
-                <td class="faction_color"
-                    onclick="displayFactionAssets('House Serpens')">
-                    <div id="Serpens-cell" style="width:100%;height:100%;background-color: #222"></div>
-                </td>
-            </tr>
-            <tr id="Reticulum-row">
-                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/House_Reticulum")'
-                    onmouseout="hideFactionInfo()"
-                    onmouseover="displayFactionInfo('House Reticulum')">
-                    RETICULUM
-                </td>
-                <td class="faction_color"
-                    onclick="displayFactionAssets('House Reticulum')">
-                    <div id="Reticulum-cell" style="width:100%;height:100%;background-color: #222"></div>
-                </td>
-            </tr>
-            <tr id="Aquila-row">
-                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/House_Aquila")'
-                    onmouseout="hideFactionInfo()"
-                    onmouseover="displayFactionInfo('House Aquila')">
-                    AQUILA
-                </td>
-                <td class="faction_color"
-                    onclick="displayFactionAssets('House Aquila')">
-                    <div id="Aquila-cell" style="width:100%;height:100%;background-color: #222"></div>
-                </td>
-            </tr>
-            <tr id="Trilliant-row">
-                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/The_Trilliant_Ring")'
-                    onmouseout="hideFactionInfo()"
-                    onmouseover="displayFactionInfo('The Trilliant Ring')">
-                    TRILLIANT
-                </td>
-                <td class="faction_color"
-                    onclick="displayFactionAssets('The Trilliant Ring')">
-                    <div id="Trilliant-cell" style="width:100%;height:100%;background-color: #222"></div>
-                </td>
-            </tr>
-            <tr id="Prism-row">
-                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/The_PRISM_Network")'
-                    onmouseout="hideFactionInfo()"
-                    onmouseover="displayFactionInfo('The PRISM Network')">
-                    PRISM
-                </td>
-                <td class="faction_color"
-                    onclick="displayFactionAssets('The PRISM Network')">
-                    <div id="Prism-cell" style="width:100%;height:100%;background-color: #222"></div>
-                </td>
-            </tr>
-            <tr id="SERAPH-row">
-                <td class="faction_name"
-                    onclick='window.open("https://far-verona.fandom.com/wiki/Society_for_Ethical_Reform_through_Aid,_Protection,_and_Humanitarianism")'
-                    onmouseout="hideFactionInfo()"
-                    onmouseover="displayFactionInfo('SERAPH')">
-                    SERAPH
-                </td>
-                <td class="faction_color" onclick="displayFactionAssets('SERAPH')">
-                    <div id="SERAPH-cell" style="width:100%;height:100%;background-color: #222"></div>
-                </td>
-            </tr>
-            <tr id="DCS-row">
-                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/The_Deathless")'
-                    onmouseout="hideFactionInfo()"
-                    onmouseover="displayFactionInfo('The Deathless')">
-                    DCS
-                </td>
-                <td class="faction_color"
-                    onclick="displayFactionAssets('The Deathless')">
-                    <div id="DCS-cell" style="width:100%;height:100%;background-color: #222"></div>
-                </td>
-            </tr>
-            <tr id="Vagrant-row">
-                <td class="faction_name"
-                    onclick='window.open("https://far-verona.fandom.com/wiki/Confederation_of_the_Upright_Vagrant")'
-                    onmouseout="hideFactionInfo()"
-                    onmouseover="displayFactionInfo('Confederation of the Upright Vagrant')">
-                    VAGRANT
-                </td>
-                <td class="faction_color"
-                    onclick="displayFactionAssets('Confederation of the Upright Vagrant')">
-                    <div id="Vagrant-cell" style="width:100%;height:100%;background-color: #222"></div>
-                </td>
-            </tr>
-            <tr id="DM-row">
-                <td class="faction_name"
-                    onclick='window.open("https://far-verona.fandom.com/wiki/The_Democratic_Mandate")'
-                    onmouseout="hideFactionInfo()"
-                    onmouseover="displayFactionInfo('The Democratic Mandate')">
-                    DM
-                </td>
-                <td class="faction_color"
-                    onclick="displayFactionAssets('The Democratic Mandate')">
-                    <div id="DM-cell" style="width:100%;height:100%;background-color: #222"></div>
-                </td>
-            </tr>
-            <tr id="Vela-row">
-                <td class="faction_name"
-                    onclick='window.open("https://far-verona.fandom.com/wiki/The_Velan_Ascendancy")'
-                    onmouseout="hideFactionInfo()"
-                    onmouseover="displayFactionInfo('The Velan Ascendency')">
-                    VELA
-                </td>
-                <td class="faction_color"
-                    onclick="displayFactionAssets('The Velan Ascendency')">
-                    <div id="Vela-cell" style="width:100%;height:100%;background-color: #222"></div>
-                </td>
-            </tr>
-            <tr id="UPC-row">
-                <td class="faction_name"
-                    onclick='window.open("https://far-verona.fandom.com/wiki/Unified_People&#39;s_Collective")'
-                    onmouseout="hideFactionInfo()"
-                    onmouseover="displayFactionInfo('The Unified People\'s Collective')">
-                    UPC
-                </td>
-                <td class="faction_color"
-                    onclick="displayFactionAssets('The Unified People\'s Collective')">
-                    <div id="UPC-cell" style="width:100%;height:100%;background-color: #222"></div>
-                </td>
-            </tr>
-            <tr id="HM-row">
-                <td class="faction_name" onclick='window.open("https://far-verona.fandom.com/wiki/The_Houses_Minor")'
-                    onmouseout="hideFactionInfo()"
-                    onmouseover="displayFactionInfo('The Houses Minor')">
-                    HM
-                </td>
-                <td class="faction_color"
-                    onclick="displayFactionAssets('The Houses Minor')">
-                    <div id="HM-cell" style="width:100%;height:100%;background-color: #222"></div>
-                </td>
-            </tr>
-            <tr id="HC-row">
-                <td class="faction_name"
-                    onclick='window.open("https://far-verona.fandom.com/wiki/The_High_Church_of_Messiah-as-Emperox")'
-                    onmouseout="hideFactionInfo()"
-                    onmouseover="displayFactionInfo('The High Church of Messiah-as-Emperox')">
-                    HC
-                </td>
-                <td class="faction_color"
-                    onclick="displayFactionAssets('The High Church of Messiah-as-Emperox')">
-                    <div id="HC-cell" style="width:100%;height:100%;background-color: #222"></div>
-                </td>
-            </tr>
-        </table>
-    </div>
-</div>
-<div class="tooltip" id="tip">
-    <table border="0" cellpadding="4" cellspacing="0" style="margin: 0; border-bottom: 1px dotted #777" width="100%">
-        <tr>
-            <td id="tip_fac" style="height: 10px; font-size:12px; line-height: 0; color: #fff;">
-            </td>
-            <td align="right" id="tip_stats" style="height: 10px; font-size:12px; line-height: 0; color: #fff;">
-            </td>
-        </tr>
-    </table>
-    <p id="tip_name" style="font-size:24px; margin-top: 10px; margin-bottom: 10px; color: #fff;">
-    </p>
-    <table border="0" cellpadding="0" cellspacing="0" style="margin: 0" width="100%">
-        <tr>
-            <td align="center" id="tip_hp" style="font-size:18px; line-height: 18px; color: #fff;" valign="bottom"
-                width="18%">
-
-            </td>
-            <td align="center" id="tip_cost" style="font-size:18px; line-height: 18px; color: #fff;" valign="bottom"
-                width="18%">
-
-            </td>
-            <td align="center" id="tip_tl" style="font-size:18px; line-height: 18px; color: #fff;" valign="bottom"
-                width="18%">
-
-            </td>
-            <td align="center" id="tip_atk" style="font-size:18px; line-height: 18px; color: #fff;" valign="bottom"
-                width="23%">
-
-            </td>
-            <td align="center" id="tip_cnt" style="font-size:18px; line-height: 18px; color: #fff;" valign="bottom"
-                width="23%">
-
-            </td>
-        </tr>
-        <tr>
-            <td align="center" style="font-size:12px; line-height: 12px; color: #fff; padding-top: 4px" valign="bottom">
-                <img alt="" class="icon" src="img/hp_icon.png"/>
-            </td>
-            <td align="center" style="font-size:12px; line-height: 12px; color: #fff; padding-top: 4px" valign="bottom">
-                <img alt="" class="icon" src="img/cost_icon.png"/>
-            </td>
-            <td align="center" style="font-size:12px; line-height: 12px; color: #fff; padding-top: 4px" valign="bottom">
-                <img alt="" class="icon" src="img/tl_icon.png"/>
-            </td>
-            <td align="center" style="font-size:12px; line-height: 12px; color: #fff; padding-top: 4px" valign="bottom">
-                <img alt="" class="icon" src="img/atk_icon.png"/>
-            </td>
-            <td align="center" style="font-size:12px; line-height: 12px; color: #fff; padding-top: 4px" valign="bottom">
-                <img alt="" class="icon" src="img/def_icon.png"/>
-            </td>
-        </tr>
-        <tr>
-            <table style="margin-top: 10px" width="100%">
-                <tr id="tip_row_special">
-                    <td style="font-size:12px; line-height: 12px; color: #fff;" valign="top" width="42px">
-                        <b>Special:</b>
+            <p id="tip_name" style="font-size:24px; margin-top: 10px; margin-bottom: 10px; color: #fff;"></p>
+            <table border="0" cellpadding="0" cellspacing="0" style="margin: 0" width="100%">
+                <tr>
+                    <td
+                        align="center"
+                        id="tip_hp"
+                        style="font-size:18px; line-height: 18px; color: #fff;"
+                        valign="bottom"
+                        width="18%"
+                    ></td>
+                    <td
+                        align="center"
+                        id="tip_cost"
+                        style="font-size:18px; line-height: 18px; color: #fff;"
+                        valign="bottom"
+                        width="18%"
+                    ></td>
+                    <td
+                        align="center"
+                        id="tip_tl"
+                        style="font-size:18px; line-height: 18px; color: #fff;"
+                        valign="bottom"
+                        width="18%"
+                    ></td>
+                    <td
+                        align="center"
+                        id="tip_atk"
+                        style="font-size:18px; line-height: 18px; color: #fff;"
+                        valign="bottom"
+                        width="23%"
+                    ></td>
+                    <td
+                        align="center"
+                        id="tip_cnt"
+                        style="font-size:18px; line-height: 18px; color: #fff;"
+                        valign="bottom"
+                        width="23%"
+                    ></td>
+                </tr>
+                <tr>
+                    <td
+                        align="center"
+                        style="font-size:12px; line-height: 12px; color: #fff; padding-top: 4px"
+                        valign="bottom"
+                    >
+                        <img alt="" class="icon" src="img/hp_icon.png" />
                     </td>
-                    <td id="tip_special" style="font-size:12px; line-height: 12px; color: #fff;">
-
+                    <td
+                        align="center"
+                        style="font-size:12px; line-height: 12px; color: #fff; padding-top: 4px"
+                        valign="bottom"
+                    >
+                        <img alt="" class="icon" src="img/cost_icon.png" />
+                    </td>
+                    <td
+                        align="center"
+                        style="font-size:12px; line-height: 12px; color: #fff; padding-top: 4px"
+                        valign="bottom"
+                    >
+                        <img alt="" class="icon" src="img/tl_icon.png" />
+                    </td>
+                    <td
+                        align="center"
+                        style="font-size:12px; line-height: 12px; color: #fff; padding-top: 4px"
+                        valign="bottom"
+                    >
+                        <img alt="" class="icon" src="img/atk_icon.png" />
+                    </td>
+                    <td
+                        align="center"
+                        style="font-size:12px; line-height: 12px; color: #fff; padding-top: 4px"
+                        valign="bottom"
+                    >
+                        <img alt="" class="icon" src="img/def_icon.png" />
                     </td>
                 </tr>
-                <tr id="tip_row_perm">
-                    <td colspan="2" id="tip_perm" style="font-size:12px; line-height: 12px; color: #fff;">
+                <tr>
+                    <table style="margin-top: 10px" width="100%">
+                        <tr id="tip_row_special">
+                            <td style="font-size:12px; line-height: 12px; color: #fff;" valign="top" width="42px">
+                                <b>Special:</b>
+                            </td>
+                            <td id="tip_special" style="font-size:12px; line-height: 12px; color: #fff;"></td>
+                        </tr>
+                        <tr id="tip_row_perm">
+                            <td colspan="2" id="tip_perm" style="font-size:12px; line-height: 12px; color: #fff;"></td>
+                        </tr>
+                    </table>
+                </tr>
+            </table>
+        </div>
+        <div class="tooltip" id="planet_tip">
+            <table
+                border="0"
+                cellpadding="4"
+                cellspacing="0"
+                style="margin: 0; border-bottom: 1px dotted #777"
+                width="100%"
+            >
+                <tr>
+                    <td id="planet_tip_fac" style="color:#fff; height: 10px; font-size: 12px; line-height: 0"></td>
+                    <td
+                        align="right"
+                        id="planet_tip_sys"
+                        style="color:#fff; height: 10px; font-size:12px; line-height: 0"
+                    ></td>
+                </tr>
+            </table>
 
+            <p id="planet_tip_name" style="color:#fff; font-size:24px; margin-top: 10px; margin-bottom: 10px"></p>
+            <table border="0" cellpadding="2" cellspacing="0" style="margin: 0" width="100%">
+                <tr>
+                    <td style="color:#fff; font-size:12px; line-height: 12px" width="80">
+                        <b>Population:</b>
+                    </td>
+                    <td id="planet_tip_pop" style="color:#fff; font-size:12px; line-height: 12px"></td>
+                </tr>
+                <tr>
+                    <td style="color:#fff; font-size:12px; line-height: 12px">
+                        <b>Tech Level:</b>
+                    </td>
+                    <td id="planet_tip_tl" style="color:#fff; font-size:12px; line-height: 12px"></td>
+                </tr>
+                <tr>
+                    <td style="color:#fff; font-size:12px; line-height: 12px">
+                        <b>Total Influence:</b>
+                    </td>
+                    <td id="planet_tip_infl" style="color:#fff; font-size:12px; line-height: 12px"></td>
+                </tr>
+            </table>
+
+            <div id="planet_tip_chart" style="position: relative; top: 5px;"></div>
+        </div>
+        <script type="text/javascript">
+            for (let fac in factions) {
+                if (factions.hasOwnProperty(fac) && fac !== 'The Guild') {
+                    let cell = document.getElementById(factions[fac]['short'] + '-cell');
+                    cell.style.backgroundColor = factions[fac]['color'];
+                    if (inactive_factions.includes(fac)) {
+                        cell.innerHTML = "<img src='assets_alpha/Inactive.png' alt='' />";
+                    }
+                }
+            }
+        </script>
+        <script type="text/javascript">
+            const planet_tip_chart = new ApexCharts(document.querySelector('#planet_tip_chart'), {
+                chart: {
+                    type: 'donut',
+                    animations: {
+                        enabled: true,
+                        easing: 'easeinout',
+                        speed: 100,
+                        animateGradually: {
+                            enabled: true,
+                            delay: 500
+                        },
+                        dynamicAnimation: {
+                            enabled: true,
+                            speed: 100
+                        }
+                    },
+                    fontFamily: 'D-DIN, Helvetica, Arial, sans-serif',
+                    parentHeightOffset: 15,
+                    dropShadow: {
+                        enabled: false
+                    }
+                },
+                title: {
+                    text: 'Influence',
+                    align: 'center',
+                    offsetY: 176,
+                    floating: true,
+                    style: {
+                        color: '#ffffff'
+                    }
+                },
+                series: [],
+                legend: {
+                    show: true,
+                    floating: true,
+                    position: 'bottom',
+                    labels: {
+                        colors: '#ffffff'
+                    },
+                    itemMargin: {
+                        horizontal: 5
+                    }
+                },
+                stroke: {
+                    show: true,
+                    width: 4,
+                    colors: ['#141414']
+                },
+                dataLabels: {
+                    enabled: true,
+                    style: {
+                        fontSize: '16px'
+                    },
+                    dropShadow: {
+                        enabled: false
+                    }
+                },
+                plotOptions: {
+                    pie: {
+                        offsetY: 10,
+                        donut: {
+                            size: '50%'
+                        }
+                    }
+                }
+            });
+            planet_tip_chart.render();
+        </script>
+        <script type="text/javascript">
+            const ttip = document.getElementById('tip');
+            const planet_ttip = document.getElementById('planet_tip');
+            let x_offset = false;
+            let y_offset = false;
+
+            window.onmousemove = function(e) {
+                let mouse_x = e.clientX;
+                let mouse_y = e.clientY;
+
+                if (tip_on === true || planet_tip_on === true) {
+                    if (x_offset) {
+                        ttip.style.left = mouse_x - ttip.offsetWidth - 20 + 'px';
+                        planet_ttip.style.left = mouse_x - planet_ttip.offsetWidth - 20 + 'px';
+                    } else {
+                        ttip.style.left = mouse_x + 20 + 'px';
+                        planet_ttip.style.left = mouse_x + 20 + 'px';
+                    }
+
+                    if (y_offset) {
+                        ttip.style.top = Math.max(mouse_y - ttip.offsetHeight - 20, 5) + 'px';
+                        planet_ttip.style.top = Math.max(mouse_y - planet_ttip.offsetHeight - 20, 5) + 'px';
+                    } else {
+                        ttip.style.top = Math.min(mouse_y + 20, viewport_h - ttip.offsetHeight - 5) + 'px';
+                        planet_ttip.style.top =
+                            Math.min(mouse_y + 20, viewport_h - planet_ttip.offsetHeight - 5) + 'px';
+                    }
+                } else {
+                    x_offset = mouse_x > viewport_w * 0.5;
+                    y_offset = mouse_y > viewport_h * 0.5;
+                }
+            };
+        </script>
+        <div class="infobox" id="info">
+            <table border="0" cellpadding="10" cellspacing="0" width="100%">
+                <tr>
+                    <td colspan="8">
+                        <table
+                            border="0"
+                            cellpadding="10"
+                            cellspacing="0"
+                            style="border-bottom: 1px dotted #777"
+                            width="100%"
+                        >
+                            <tr>
+                                <td id="info_faction" style="font-size: 20px"></td>
+                                <td align="right" id="info_homeworld" style="font-size: 12px" valign="bottom"></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td
+                        align="center"
+                        id="info_force"
+                        style="font-size:42px; line-height: 38px; padding-top: 10px"
+                        valign="bottom"
+                        width="40"
+                    ></td>
+                    <td
+                        align="center"
+                        id="info_cunning"
+                        style="font-size:42px; line-height: 38px"
+                        valign="bottom"
+                        width="40"
+                    ></td>
+                    <td
+                        align="center"
+                        id="info_wealth"
+                        style="font-size:42px; line-height: 38px"
+                        valign="bottom"
+                        width="40"
+                    ></td>
+                    <td align="center" id="info_hp" style="font-size:20px" valign="bottom" width="50"></td>
+                    <td align="center" id="info_income" style="font-size:20px" valign="bottom" width="40"></td>
+                    <td align="center" id="info_balance" style="font-size:20px" valign="bottom" width="40"></td>
+                    <td align="center" id="info_exp" style="font-size:20px" valign="bottom" width="40"></td>
+                    <td valign="bottom" width="40">
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                            <tr>
+                                <td align="center" id="info_infl_abs" style="font-size:16px" valign="bottom">
+                                    400
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center" id="info_infl_rel" style="font-size:16px" valign="bottom">
+                                    23.2%
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr style="border-bottom: 1px dotted #fff">
+                    <td align="center" style="font-size:14px; padding-top: 0">
+                        Force
+                    </td>
+                    <td align="center" style="font-size:14px; padding-top: 0">
+                        Cunning
+                    </td>
+                    <td align="center" style="font-size:14px; padding-top: 0">
+                        Wealth
+                    </td>
+                    <td align="center" style="font-size:14px; padding-top: 0">
+                        HP
+                    </td>
+                    <td align="center" style="font-size:14px; padding-top: 0">
+                        Income
+                    </td>
+                    <td align="center" style="font-size:14px; padding-top: 0">
+                        Balance
+                    </td>
+                    <td align="center" style="font-size:14px; padding-top: 0">
+                        EXP
+                    </td>
+                    <td align="center" style="font-size:14px; padding-top: 0">
+                        Influence
                     </td>
                 </tr>
             </table>
-        </tr>
-    </table>
-</div>
-<div class="tooltip" id="planet_tip">
-    <table border="0" cellpadding="4" cellspacing="0" style="margin: 0; border-bottom: 1px dotted #777" width="100%">
-        <tr>
-            <td id="planet_tip_fac" style="color:#fff; height: 10px; font-size: 12px; line-height: 0">
-            </td>
-            <td align="right" id="planet_tip_sys" style="color:#fff; height: 10px; font-size:12px; line-height: 0">
-            </td>
-        </tr>
-    </table>
-    <p id="planet_tip_name" style="color:#fff; font-size:24px; margin-top: 10px; margin-bottom: 10px">
-    </p>
-    <table border="0" cellpadding="2" cellspacing="0" style="margin: 0" width="100%">
-        <tr>
-            <td style="color:#fff; font-size:12px; line-height: 12px" width="80">
-                <b>Population:</b>
-            </td>
-            <td id="planet_tip_pop" style="color:#fff; font-size:12px; line-height: 12px">
-            </td>
-        </tr>
-        <tr>
-            <td style="color:#fff; font-size:12px; line-height: 12px">
-                <b>Tech Level:</b>
-            </td>
-            <td id="planet_tip_tl" style="color:#fff; font-size:12px; line-height: 12px">
-            </td>
-        </tr>
-        <tr>
-            <td style="color:#fff; font-size:12px; line-height: 12px">
-                <b>Total Influence:</b>
-            </td>
-            <td id="planet_tip_infl" style="color:#fff; font-size:12px; line-height: 12px">
-            </td>
-        </tr>
-    </table>
-    <div id="planet_tip_chart" style="position: relative; top: 5px;"></div>
-</div>
-<script type="text/javascript">
 
-    for (let fac in factions) {
-        if (factions.hasOwnProperty(fac) && fac !== "The Guild") {
-            let cell = document.getElementById(factions[fac]["short"] + "-cell");
-            cell.style.backgroundColor = factions[fac]["color"];
-            if (inactive_factions.includes(fac)) {
-                cell.innerHTML = "<img src='assets_alpha/Inactive.png' alt='' />";
-            }
-        }
-    }
+            <table border="0" cellpadding="4" cellspacing="0" style="margin: 20px 10px 0 10px">
+                <tr>
+                    <td id="info_tag" style="font-size:20px"></td>
+                </tr>
+                <tr>
+                    <td align="justify" id="info_tagdesc"></td>
+                </tr>
+            </table>
 
-</script>
-<script type="text/javascript">
-    const planet_tip_chart = new ApexCharts(document.querySelector("#planet_tip_chart"),
-        {
-            chart: {
-                type: 'donut',
-                animations: {
-                    enabled: true,
-                    easing: 'easeinout',
-                    speed: 100,
-                    animateGradually: {
-                        enabled: true,
-                        delay: 500
-                    },
-                    dynamicAnimation: {
-                        enabled: true,
-                        speed: 100
-                    }
-                },
-                fontFamily: 'D-DIN, Helvetica, Arial, sans-serif',
-                parentHeightOffset: 15,
-                dropShadow: {
-                    enabled: false,
-                }
-            },
-            title: {
-                text: "Influence",
-                align: "center",
-                offsetY: 176,
-                floating: true,
-                style: {
-                    color: "#ffffff"
-                }
-            },
-            series: [],
-            legend: {
-                show: true,
-                floating: true,
-                position: "bottom",
-                labels: {
-                    colors: "#ffffff"
-                },
-                itemMargin: {
-                    horizontal: 5
-                }
-            },
-            stroke: {
-                show: true,
-                width: 4,
-                colors: ["#141414"]
-            },
-            dataLabels: {
-                enabled: true,
-                style: {
-                    fontSize: "16px"
-                },
-                dropShadow: {
-                    enabled: false
-                },
-            },
-            plotOptions: {
-                pie: {
-                    offsetY: 10,
-                    donut: {
-                        size: '50%'
-                    }
-                }
-            }
-        });
-    planet_tip_chart.render();
-</script>
-<script type="text/javascript">
-    const ttip = document.getElementById("tip");
-    const planet_ttip = document.getElementById("planet_tip");
-    let x_offset = false;
-    let y_offset = false;
-    let elementMouseIsOver;
+            <table border="0" cellpadding="4" cellspacing="0" style="margin: 20px 10px 0 10px">
+                <tr>
+                    <td id="info_goal" style="font-size:20px"></td>
+                </tr>
+                <tr>
+                    <td align="justify" id="info_goaldesc"></td>
+                </tr>
+            </table>
 
-    window.onmousemove = function (e) {
-        let mouse_x = e.clientX;
-        let mouse_y = e.clientY;
+            <table border="0" cellpadding="4" cellspacing="0" style="margin: 20px 10px 0 10px">
+                <tr>
+                    <td align="justify" id="info_notes"></td>
+                </tr>
+            </table>
+        </div>
+        <div id="credits">
+            <a href="https://sea-watch.org/en/" rel="noopener noreferrer" target="_blank"
+                ><img alt="" src="img/SeaWatch.png" style="width: 50px; height: auto;"
+            /></a>
+        </div>
 
-        if (tip_on === true || planet_tip_on === true) {
-            if (x_offset) {
-                ttip.style.left = (mouse_x - ttip.offsetWidth - 20) + 'px';
-                planet_ttip.style.left = (mouse_x - planet_ttip.offsetWidth - 20) + 'px';
-            } else {
-                ttip.style.left = (mouse_x + 20) + 'px';
-                planet_ttip.style.left = (mouse_x + 20) + 'px';
-            }
+        <!--<div id="credits">-->
+        <!--<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">-->
+        <!--    <input type="hidden" name="cmd" value="_s-xclick" />-->
+        <!--    <input type="hidden" name="hosted_button_id" value="WX3JZ8L29ZJDE" />-->
+        <!--    <input id="paypal" type="image" src="https://742617000027.de/img/paypal.png" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />-->
+        <!--    <img alt="" border="0" src="https://www.paypal.com/en_DE/i/scr/pixel.gif" width="1" height="1" />-->
+        <!--</form>-->
+        <!--</div>-->
 
-            if (y_offset) {
-                ttip.style.top = Math.max((mouse_y - ttip.offsetHeight - 20), 5) + 'px';
-                planet_ttip.style.top = Math.max((mouse_y - planet_ttip.offsetHeight - 20), 5) + 'px';
-            } else {
-                ttip.style.top = Math.min((mouse_y + 20), viewport_h - ttip.offsetHeight - 5) + 'px';
-                planet_ttip.style.top = Math.min((mouse_y + 20), viewport_h - planet_ttip.offsetHeight - 5) + 'px';
-            }
-        } else {
-            x_offset = (mouse_x > viewport_w * 0.5);
-            y_offset = (mouse_y > viewport_h * 0.5);
-        }
-    };
-</script>
-<div class="infobox" id="info">
-    <table border="0" cellpadding="10" cellspacing="0" width="100%">
-        <tr>
-            <td colspan="8">
-                <table border="0" cellpadding="10" cellspacing="0" style="border-bottom: 1px dotted #777" width="100%">
-                    <tr>
-                        <td id="info_faction" style="font-size: 20px">
-
-                        </td>
-                        <td align="right" id="info_homeworld" style="font-size: 12px" valign="bottom">
-
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td align="center" id="info_force" style="font-size:42px; line-height: 38px; padding-top: 10px"
-                valign="bottom"
-                width="40">
-
-            </td>
-            <td align="center" id="info_cunning" style="font-size:42px; line-height: 38px" valign="bottom" width="40">
-
-            </td>
-            <td align="center" id="info_wealth" style="font-size:42px; line-height: 38px" valign="bottom" width="40">
-
-            </td>
-            <td align="center" id="info_hp" style="font-size:20px" valign="bottom" width="50">
-
-            </td>
-            <td align="center" id="info_income" style="font-size:20px" valign="bottom" width="40">
-
-            </td>
-            <td align="center" id="info_balance" style="font-size:20px" valign="bottom" width="40">
-
-            </td>
-            <td align="center" id="info_exp" style="font-size:20px" valign="bottom" width="40">
-
-            </td>
-            <td valign="bottom" width="40">
-                <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                    <tr>
-                        <td align="center" id="info_infl_abs" style="font-size:16px" valign="bottom">
-                            400
-                        </td>
-                    </tr>
-                    <tr>
-                        <td align="center" id="info_infl_rel" style="font-size:16px" valign="bottom">
-                            23.2%
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr style="border-bottom: 1px dotted #fff">
-            <td align="center" style="font-size:14px; padding-top: 0">
-                Force
-            </td>
-            <td align="center" style="font-size:14px; padding-top: 0">
-                Cunning
-            </td>
-            <td align="center" style="font-size:14px; padding-top: 0">
-                Wealth
-            </td>
-            <td align="center" style="font-size:14px; padding-top: 0">
-                HP
-            </td>
-            <td align="center" style="font-size:14px; padding-top: 0">
-                Income
-            </td>
-            <td align="center" style="font-size:14px; padding-top: 0">
-                Balance
-            </td>
-            <td align="center" style="font-size:14px; padding-top: 0">
-                EXP
-            </td>
-            <td align="center" style="font-size:14px; padding-top: 0">
-                Influence
-            </td>
-        </tr>
-    </table>
-    <table border="0" cellpadding="4" cellspacing="0" style="margin: 20px 10px 0 10px">
-        <tr>
-            <td id="info_tag" style="font-size:20px">
-            </td>
-        </tr>
-        <tr>
-            <td align="justify" id="info_tagdesc">
-            </td>
-        </tr>
-    </table>
-    <table border="0" cellpadding="4" cellspacing="0" style="margin: 20px 10px 0 10px">
-        <tr>
-            <td id="info_goal" style="font-size:20px">
-            </td>
-        </tr>
-        <tr>
-            <td align="justify" id="info_goaldesc">
-            </td>
-        </tr>
-    </table>
-    <table border="0" cellpadding="4" cellspacing="0" style="margin: 20px 10px 0 10px">
-        <tr>
-            <td align="justify" id="info_notes">
-            </td>
-        </tr>
-    </table>
-</div>
-<div id="credits">
-    <a href="https://sea-watch.org/en/" rel="noopener noreferrer" target="_blank"><img alt="" src="img/SeaWatch.png"
-                                                                                       style="width: 50px; height: auto;"/></a>
-</div>
-
-<!--<div id="credits">-->
-<!--<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">-->
-<!--    <input type="hidden" name="cmd" value="_s-xclick" />-->
-<!--    <input type="hidden" name="hosted_button_id" value="WX3JZ8L29ZJDE" />-->
-<!--    <input id="paypal" type="image" src="https://742617000027.de/img/paypal.png" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />-->
-<!--    <img alt="" border="0" src="https://www.paypal.com/en_DE/i/scr/pixel.gif" width="1" height="1" />-->
-<!--</form>-->
-<!--</div>-->
-
-<!--<div id="toggle-container">-->
-<!--    <label class="switch">-->
-<!--        <input onclick="toggleInactiveFactions()" type="checkbox">-->
-<!--        <span class="slider round"></span>-->
-<!--    </label>-->
-<!--</div>-->
-
-<div id="visibilityToggle" onclick="toggleInactiveFactions()" onmouseenter="visibilityToggleStyling('in')"
-     onmouseleave="visibilityToggleStyling('out')"></div>
-<div id="factionToggle" onclick="toggleFactionTable()"></div>
-</body>
+        <div
+            id="visibilityToggle"
+            onclick="toggleInactiveFactions()"
+            onmouseenter="visibilityToggleStyling('in')"
+            onmouseleave="visibilityToggleStyling('out')"
+        ></div>
+        <div id="factionToggle" onclick="toggleFactionTable()"></div>
+    </body>
 </html>
