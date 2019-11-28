@@ -7,7 +7,18 @@ class Asset {
         this.hp = asset['HP'];
         this.max_hp = asset['Max HP'];
         this.stealth = asset['ʘ'] !== 'FALSE';
-        let stealth_str = this.stealth ? '<mark>' + this.name + ' (Stealthed)</mark>' : this.name;
+        this.status = asset["Status"];
+        this.status_str = statuses[this.status];
+        this.inactive = this.status === "Inactive";
+        this.summoning = this.status === "Summoning";
+        this.imperial = this.status === "Imperial Asset";
+        let name_str = this.name;
+        if (this.imperial) {
+            name_str = 'Imperial ' + name_str;
+        }
+        if (this.stealth) {
+            name_str = '<mark>' + name_str + ' (Stealthed)</mark>';
+        }
         this.type = this.isboi ? '' : asset['Type'];
         this.cost = this.isboi ? 'Special' : asset['Cost'];
         this.tl = this.isboi ? '-' : assets[this.name]['TL'];
@@ -16,7 +27,7 @@ class Asset {
         this.stat = this.isboi ? '' : asset['W/C/F'];
         this.stat_tier = this.isboi ? '-' : assets[this.name]['STAT_TIER'];
         this.perm = this.isboi ? '' : assets[this.name]['PERM'] !== '' ? 'Needs governmental permission.' : '';
-        this.special = this.isboi ? '' : assets[this.name]['SPECIAL'];
+        this.special = this.isboi ? '' : assets[this.name]['SPECIAL']
         this.range = this.isboi ? 0 : assets[this.name]['RANGE'];
         if (this.range === 0 && this.faction === 'The Deathless') {
             this.range = 1;
@@ -26,13 +37,10 @@ class Asset {
         this.y = pos['asset']['Y'];
         this.size = box_size / 1.1;
 
+
         this.highlightHexes = function(hex_id, range) {
             let hex_list = hexes[hex_id][range];
-
-            for (let j = 0; j < hex_list.length; j++) {
-                let h = getElem(hex_list[j]);
-                h.style.opacity = '0.05';
-            }
+            hex_list.forEach(h => {getElem(h).style.opacity = '0.05'});
         };
 
         // Render asset
@@ -57,6 +65,9 @@ class Asset {
             .attr('width', this.size)
             .attr('height', this.size);
         this.alpha_box = getElem(this.id + '_alpha');
+        if (this.summoning) {
+            this.alpha_box.style.opacity = '0.75';
+        }
 
         if (this.stealth) {
             d3.select(svg_overlay.node())
@@ -71,7 +82,20 @@ class Asset {
         }
         this.stealth_box = getElem(this.id + '_stealth');
 
-        if (inactive_factions.includes(this.faction)) {
+        if (this.imperial) {
+            d3.select(svg_overlay.node())
+                .append('svg:image')
+                .attr('id', this.id + '_imperial')
+                .attr('class', 'asset ' + factions[this.faction]['short'].toLowerCase())
+                .attr('xlink:href', 'assets_alpha/Imperial.png')
+                .attr('x', this.x)
+                .attr('y', this.y)
+                .attr('width', this.size)
+                .attr('height', this.size);
+        }
+        this.imperial_box = getElem(this.id + '_imperial');
+
+        if (isInactive(this.faction)) {
             d3.select(svg_overlay.node())
                 .append('svg:image')
                 .attr('id', this.id + '_inactive')
@@ -97,7 +121,7 @@ class Asset {
             enterHandler: () => {
                 getElem('tip_fac').innerHTML = this.faction;
                 getElem('tip_stats').innerHTML = this.isboi ? '' : this.type + ', ' + this.stat + ' ' + this.stat_tier;
-                getElem('tip_name').innerHTML = stealth_str;
+                getElem('tip_name').innerHTML = name_str;
                 getElem('tip_hp').innerHTML = this.hp + '/' + this.max_hp;
                 getElem('tip_cost').innerHTML = this.cost;
                 getElem('tip_tl').innerHTML = this.tl;
@@ -109,6 +133,13 @@ class Asset {
                     getElem('tip_row_special').style.display = 'table-row';
                 } else {
                     getElem('tip_row_special').style.display = 'none';
+                }
+                if (this.status !== '') {
+                    getElem('tip_status_label').innerHTML = `<b>${this.status}</b>`;
+                    getElem('tip_status').innerHTML = this.status_str;
+                    getElem('tip_row_status').style.display = 'table-row';
+                } else {
+                    getElem('tip_row_status').style.display = 'none';
                 }
                 if (this.perm !== '') {
                     getElem('tip_perm').innerHTML = '<i>' + this.perm + '</i>';
@@ -137,12 +168,10 @@ class Asset {
                 getElem('tip_special').innerHTML = '';
                 getElem('tip_perm').innerHTML = '';
                 tip_on = false;
-
-                for (let j = 0; j < hex_overlays.length; j++) {
-                    hex_overlays[j].style.opacity = '0';
-                }
+                [...hex_overlays].forEach(h => {h.style.opacity = '0'});
             },
             clickHandler: () => {
+
                 if (tip_on) {
                     tip_on = false;
                     $('#tip').fadeOut(200);
@@ -155,33 +184,73 @@ class Asset {
     }
 
     update(asset_x, asset_y, highlight_x, highlight_y) {
-        if (!show_inactive && inactive_factions.includes(this.faction)) {
+
+        if (!show_inactive && isInactive(this.faction)) {
             this.highlight_box.style.display = 'none';
             this.color_box.style.display = 'none';
             this.alpha_box.style.display = 'none';
             if (this.stealth_box) {
                 this.stealth_box.style.display = 'none';
             }
+            if (this.imperial_box) {
+                this.imperial_box.style.display = 'none';
+            }
             if (this.inactive_box) {
                 this.inactive_box.style.display = 'none';
             }
         } else {
             this.highlight_box.update(new OpenSeadragon.Rect(highlight_x, highlight_y, box_size, box_size), null);
+            this.highlight_box.style.display = 'block';
             this.color_box.setAttribute('x', asset_x);
             this.color_box.setAttribute('y', asset_y);
             this.color_box.style.display = 'block';
             this.alpha_box.setAttribute('x', asset_x);
             this.alpha_box.setAttribute('y', asset_y);
             this.alpha_box.style.display = 'block';
+            if (this.summoning) {
+                this.alpha_box.style.opacity = '0.5';
+            }
             if (this.stealth_box) {
                 this.stealth_box.setAttribute('x', asset_x);
                 this.stealth_box.setAttribute('y', asset_y);
                 this.stealth_box.style.display = 'block';
             }
+            if (this.imperial_box) {
+                this.imperial_box.setAttribute('x', asset_x);
+                this.imperial_box.setAttribute('y', asset_y);
+                this.imperial_box.style.display = 'block';
+            }
             if (this.inactive_box) {
                 this.inactive_box.setAttribute('x', asset_x);
                 this.inactive_box.setAttribute('y', asset_y);
                 this.inactive_box.style.display = 'block';
+            }
+        }
+    }
+
+    opacity(val) {
+        this.color_box.style.opacity = val;
+        if (val < 1) {
+            this.alpha_box.style.opacity = val;
+            if (this.stealth) {
+                this.stealth_box.style.opacity = 0;
+            }
+            if (this.imperial) {
+                this.imperial_box.style.opacity = 0;
+            }
+            if (this.inactive) {
+                this.inactive_box.style.opacity = val;
+            }
+        } else {
+            this.alpha_box.style.opacity = this.summoning ? 0.5 : 1;
+            if (this.stealth) {
+                this.stealth_box.style.opacity = 1;
+            }
+            if (this.imperial) {
+                this.imperial_box.style.opacity = 1;
+            }
+            if (this.inactive) {
+                this.inactive_box.style.opacity = 1;
             }
         }
     }
@@ -209,8 +278,21 @@ function getElem(id) {
     return document.getElementById(id);
 }
 
+function hasProp(obj, key) {
+    return obj.hasOwnProperty(key)
+}
+
+function isInactive(faction) {
+    if (faction === "The Guild") {
+        return true
+    } else {
+        return faction_tracker[faction]["Status"] === "Inactive"
+    }
+}
+
 function visibilityToggleStyling(inout) {
     let toggle = getElem('visibilityToggle');
+
     if (inout === 'in') {
         if (show_inactive) {
             toggle.style.background = "url('img/hide_hover.png')";
@@ -244,9 +326,10 @@ function toggleFactionTable() {
 }
 
 function replaceInactiveFactionNames(planet, fac, hw) {
+
     if (planet === 'The Guild Dyson Sphere') {
         getElem('planet_tip_fac').innerHTML = '🔥🔥🔥';
-    } else if (inactive_factions.includes(fac) && !show_inactive) {
+    } else if (isInactive(fac) && !show_inactive) {
         getElem('planet_tip_fac').innerHTML = 'Unclaimed';
     } else {
         getElem('planet_tip_fac').innerHTML = fac + hw;
@@ -254,23 +337,14 @@ function replaceInactiveFactionNames(planet, fac, hw) {
 }
 
 function recolorPlanetNames() {
-    let num_planets = planet_tracker.length;
-    let planet_dict = {};
 
-    for (let i = 0; i < num_planets; i++) {
+    planet_tracker.forEach((planet, i) => {
+        let owner = planet['Planetary Government'];
+        let hw = planet['Homeworld'];
         let id = 'planet_' + i.toString().padStart(2, '0');
-        let name = getElem(id + '_name').innerHTML.toLowerCase();
-        planet_dict[name] = id;
-    }
-
-    for (let i = 0; i < num_planets; i++) {
-        let name = planet_tracker[i]['Name'].toLowerCase();
-        let owner = planet_tracker[i]['Planetary Government'];
-        let hw = planet_tracker[i]['Homeworld'];
-        let id = planet_dict[name];
         let text = getElem(id + '_name');
         let box = getElem(id + '_color');
-        if (owner === '' || (inactive_factions.includes(owner) && !show_inactive)) {
+        if (owner === '' || (isInactive(owner) && !show_inactive)) {
             text.setAttribute('fill', '#7c7c7c');
             text.setAttribute('font-weight', 'normal');
             box.setAttribute('fill', '#222222');
@@ -281,12 +355,12 @@ function recolorPlanetNames() {
             }
             box.setAttribute('fill', factions[owner]['color']);
         }
-    }
+    });
 }
 
 function reorderAssets() {
-    for (let i = 0; i < planet_tracker.length; i++) {
-        let planet = planet_tracker[i];
+
+    planet_tracker.forEach(planet => {
         let local_assets = planet['Local Assets'];
         let hex_id = 'hex_' + planet['Hex'];
         let current_idx = planet['idx'];
@@ -294,22 +368,16 @@ function reorderAssets() {
 
         if (local_assets) {
             let local_counter = 0;
-
-            for (let j = 0; j < local_assets.length; j++) {
-                let id = local_assets[j];
+            local_assets.forEach(id => {
                 let asset_obj = asset_objects[id];
                 let pos = getPosition(hex_id, current_idx, num_planets, local_counter);
-
                 asset_obj.update(pos['asset']['X'], pos['asset']['Y'], pos['highlight']['X'], pos['highlight']['Y']);
-
-                if (!show_inactive && inactive_factions.includes(asset_obj.faction)) {
-                    continue;
+                if (show_inactive || !isInactive(asset_obj.faction)) {
+                    local_counter++;
                 }
-
-                local_counter++;
-            }
+            });
         }
-    }
+    });
     viewer.forceRedraw();
 }
 
@@ -322,48 +390,44 @@ function toggleInactiveFactions() {
 }
 
 function displayFactionAssets(faction) {
+
     if (faction === highlighted_fac) {
         displayAllAssets();
         highlighted_fac = '';
     } else {
         displayAllAssets();
-        let fac = factions[faction]['short'].toLowerCase();
-        let assets = document.getElementsByClassName('asset');
         let planets = document.getElementsByClassName('planet');
 
-        for (let i = 0; i < assets.length; i++) {
-            if (!assets[i].classList.contains(fac)) {
-                assets[i].style.opacity = '0.05';
-                assets[i].style.filter = 'grayscale(100%)';
-                assets[i].style.WebkitFilter = 'grayscale(100%)';
+        for (let asset in asset_objects) {
+            if (hasProp(asset_objects, asset)) {
+                a = asset_objects[asset];
+                if (a.faction !== faction) {
+                    asset_objects[asset].opacity(0.05);
+                }
             }
         }
 
-        for (let i = 0; i < planets.length; i++) {
-            planets[i].style.opacity = '0.05';
-            planets[i].style.filter = 'grayscale(100%)';
-            planets[i].style.WebkitFilter = 'grayscale(100%)';
-        }
+        [...planets].forEach(p => {
+            p.style.opacity = '0.05';
+        });
+
         highlighted_fac = faction;
     }
 }
 
 function displayAllAssets() {
     highlighted_fac = '';
-    let assets = document.getElementsByClassName('asset');
     let planets = document.getElementsByClassName('planet');
 
-    for (let i = 0; i < assets.length; i++) {
-        assets[i].style.opacity = '1';
-        assets[i].style.filter = 'none';
-        assets[i].style.WebkitFilter = 'none';
+    for (let asset in asset_objects) {
+        if (hasProp(asset_objects, asset)) {
+            asset_objects[asset].opacity(1);
+        }
     }
 
-    for (let i = 0; i < planets.length; i++) {
-        planets[i].style.opacity = '1';
-        planets[i].style.filter = 'none';
-        planets[i].style.WebkitFilter = 'none';
-    }
+    [...planets].forEach(p => {
+        p.style.opacity = '1';
+    });
 }
 
 function sortTable() {
@@ -381,7 +445,7 @@ function sortTable() {
             fac_b = rows[i + 1].getElementsByTagName('TD')[0].innerText.toLowerCase();
 
             for (let key in factions) {
-                if (factions.hasOwnProperty(key)) {
+                if (hasProp(factions, key)) {
                     if (factions[key]['short'].toLowerCase() === fac_a) {
                         val_a = parseFloat(faction_tracker[key]['INFL']);
                     }
@@ -390,11 +454,13 @@ function sortTable() {
                     }
                 }
             }
+
             if (val_a < val_b) {
                 shouldSwitch = true;
                 break;
             }
         }
+
         if (shouldSwitch) {
             rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
             switching = true;
@@ -402,7 +468,7 @@ function sortTable() {
     }
 
     for (let fac in factions) {
-        if (factions.hasOwnProperty(fac) && inactive_factions.includes(fac) && fac !== 'The Guild') {
+        if (hasProp(factions, fac) && isInactive(fac) && fac !== 'The Guild') {
             let row = getElem(factions[fac]['short'] + '-row');
 
             if (show_inactive) {
@@ -425,8 +491,9 @@ function sortTable() {
 
 function displayFactionInfo(faction) {
     let infl_sum = 0;
+
     for (let fac in faction_tracker) {
-        if (faction_tracker.hasOwnProperty(fac) && (!inactive_factions.includes(fac) || show_inactive)) {
+        if (hasProp(faction_tracker, fac) && (!isInactive(fac) || show_inactive)) {
             infl_sum += parseFloat(faction_tracker[fac]['INFL']);
         }
     }
@@ -470,18 +537,16 @@ function hideFactionInfo() {
 
 function tsvJSON(tsv) {
     let lines = tsv.split('\n');
-    let result = [];
-    let headers = lines[0].split('\t');
-
-    for (let i = 1; i < lines.length; i++) {
+    let headers = lines.splice(0, 1)[0].split('\t');
+    let result = lines.map(line => {
         let obj = {};
-        let currentline = lines[i].split('\t');
+        let currentline = line.split('\t');
 
-        for (let j = 0; j < headers.length; j++) {
-            obj[headers[j].replace('\r', '')] = currentline[j].replace('\r', '');
-        }
-        result.push(obj);
-    }
+        headers.forEach((h, i) => {
+            obj[h.replace('\r', '')] = currentline[i].replace('\r', '');
+        });
+        return obj
+    });
     return result;
 }
 
@@ -492,21 +557,21 @@ function processInfluenceTSV(tsv) {
     let n = facs.length;
     facs = facs.slice(5, n);
 
-    for (let i = 2; i < lines.length - 1; i++) {
-        let elems = lines[i].split('\t');
-        let scores = lines[i].split('\t').slice(5, n);
+    lines.forEach(line => {
+        let elems = line.split('\t');
+        let name = elems[2];
+        let scores = line.split('\t').slice(5, n);
+        result[name] = {};
+        result[name]['Hex'] = elems[0];
+        result[name]['System'] = elems[1];
+        result[name]['Score'] = elems[3];
+        result[name]['Total Influence on Planet'] = elems[4];
+        result[name]['Factions'] = {};
 
-        result[elems[2]] = {};
-        result[elems[2]]['Hex'] = elems[0];
-        result[elems[2]]['System'] = elems[1];
-        result[elems[2]]['Score'] = elems[3];
-        result[elems[2]]['Total Influence on Planet'] = elems[4];
-        result[elems[2]]['Factions'] = {};
-
-        for (let j = 0; j < facs.length; j++) {
-            result[elems[2]]['Factions'][facs[j].trim()] = scores[j];
-        }
-    }
+        facs.forEach((f, i) => {
+            result[name]['Factions'][f.trim()] = scores[i];
+        });
+    });
     return result;
 }
 
@@ -586,7 +651,7 @@ function updateChart(planet_name) {
     let txt_colors = [];
 
     for (let fac in planetary_influence) {
-        if (planetary_influence.hasOwnProperty(fac) && (!inactive_factions.includes(fac) || show_inactive)) {
+        if (hasProp(planetary_influence, fac) && (!isInactive(fac) || show_inactive)) {
             let fac_infl = parseFloat(planetary_influence[fac].replace(',', '.'));
             if (fac_infl > 0) {
                 labels.push(fac);
@@ -598,13 +663,15 @@ function updateChart(planet_name) {
     }
 
     let list = [];
-    for (let j = 0; j < labels.length; j++)
+
+    for (let i = 0; i < labels.length; i++) {
         list.push({
-            label: labels[j],
-            value: values[j],
-            color: colors[j],
-            txt_color: txt_colors[j]
+            label: labels[i],
+            value: values[i],
+            color: colors[i],
+            txt_color: txt_colors[i]
         });
+    }
 
     list.sort(function(a, b) {
         return a.value < b.value ? 1 : a.value === b.value ? 0 : -1;
@@ -663,7 +730,7 @@ function makeHexOverlays(key) {
         .append('svg:image')
         .attr('id', key)
         .attr('class', 'hex')
-        .attr('xlink:href', 'img/hex.png')
+        .attr('xlink:href', './img/hex.png')
         .attr('x', hex_x)
         .attr('y', hex_y)
         .attr('width', hex_w)
@@ -824,9 +891,7 @@ function drawPlanetNames() {
 function drawAssets() {
     let counter = 0;
 
-    for (let i = 0; i < planet_tracker.length; i++) {
-        planet_tracker[i]['Local Assets'] = [];
-        let planet = planet_tracker[i];
+    planet_tracker.forEach(planet => {
         let location = planet['Name Constructor'];
         let local_assets = asset_tracker.filter((asset) => asset['Location'] === location);
         let hex_id = 'hex_' + planet['Hex'];
@@ -834,7 +899,7 @@ function drawAssets() {
         let num_planets = planet['total'];
 
         // Assets
-        if (local_assets.length > 0) {
+        if (local_assets) {
             local_assets.sort((a, b) =>
                 a['Owner'] > b['Owner']
                     ? 1
@@ -842,25 +907,22 @@ function drawAssets() {
                     ? a['Asset'] > b['Asset']
                         ? 1
                         : a['Asset'] === b['Asset']
-                        ? a['HP'] > b['HP']
-                            ? 1
+                            ? a['HP'] > b['HP']
+                                ? 1
+                                : -1
                             : -1
-                        : -1
                     : -1
             );
 
-            for (let j = 0; j < local_assets.length; j++) {
-                let asset = local_assets[j];
-                let pos = getPosition(hex_id, idx, num_planets, j);
-
-                // Asset data
+            local_assets.forEach((asset, i) => {
+                let pos = getPosition(hex_id, idx, num_planets, i);
                 let id = 'asset_' + counter.toString().padStart(3, '0');
-                planet_tracker[i]['Local Assets'].push(id);
+                planet['Local Assets'].push(id);
                 counter += 1;
                 asset_objects[id] = new Asset(id, asset, hex_id, pos);
-            }
+            });
         }
-    }
+    });
 
     reorderAssets();
     drawPlanetNames();
@@ -869,9 +931,8 @@ function drawAssets() {
 function drawPlanets() {
     // TODO: make Planet circles into class
 
-    for (let i = 0; i < planet_tracker.length; i++) {
-        planet_tracker[i]['Local Assets'] = [];
-        let planet = planet_tracker[i];
+    planet_tracker.forEach(planet => {
+        planet["Local Assets"] = [];
         let hex_id = 'hex_' + planet['Hex'];
         let current_idx = planet['idx'];
         let hex_x = hexes[hex_id]['X'];
@@ -922,7 +983,7 @@ function drawPlanets() {
                 .attr('y', hex_y - 0.046)
                 .attr('pointer-events', 'none');
         }
-    }
+    });
 }
 
 function getFactions() {
@@ -932,10 +993,9 @@ function getFactions() {
     xhttp.onreadystatechange = function() {
         if (this.readyState === 4 && this.status === 200) {
             let json = tsvJSON(this.responseText);
-
-            for (let i = 0; i < json.length; i++) {
-                faction_tracker[json[i]['Faction']] = json[i];
-            }
+            json.forEach(j => {
+                faction_tracker[j['Faction']] = j;
+            });
             sortTable();
         }
     };
@@ -965,6 +1025,7 @@ function getPlanets() {
     xhttp_dyn_planets.onreadystatechange = function() {
         if (this.readyState === 4 && this.status === 200) {
             planet_tracker = tsvJSON(this.responseText);
+
             for (let hex in hexes) {
                 let current_hex = hex;
                 let num_planets = planet_tracker.filter((planet) => planet['Hex'] === current_hex.replace('hex_', ''))
@@ -973,13 +1034,13 @@ function getPlanets() {
                 if (num_planets) {
                     let local_counter = 0;
 
-                    for (let i = 0; i < planet_tracker.length; i++) {
-                        if (planet_tracker[i]['Hex'] === current_hex.replace('hex_', '')) {
-                            planet_tracker[i]['total'] = num_planets;
-                            planet_tracker[i]['idx'] = local_counter;
+                    planet_tracker.forEach(p => {
+                        if (p['Hex'] === current_hex.replace('hex_', '')) {
+                            p['total'] = num_planets;
+                            p['idx'] = local_counter;
                             local_counter++;
                         }
-                    }
+                    })
                 }
             }
             drawPlanets();
@@ -1011,11 +1072,12 @@ function onViewerOpen() {
     home.parentNode.insertBefore(home, zoomout);
 
     for (let key in hexes) {
-        if (hexes.hasOwnProperty(key)) {
+        if (hasProp(hexes, key)) {
             makeHexOverlays(key);
         }
     }
+
+    getFactions();
     getInfluence();
     getPlanets();
-    getFactions();
 }
