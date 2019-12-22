@@ -29,7 +29,7 @@ class Asset {
         this.perm = this.isboi ? '' : assets[this.name]['PERM'] !== '' ? 'Needs governmental permission.' : '';
         this.special = this.isboi ? '' : assets[this.name]['SPECIAL']
         this.range = this.isboi ? 0 : assets[this.name]['RANGE'];
-        if (this.range === 0 && this.faction === 'The Deathless') {
+        if (!this.isboi && this.range === 0 && faction_tracker[this.faction]['Tag'] === 'Mercenary Group') {
             this.range = 1;
         }
         this.hex_id = hex_id;
@@ -283,7 +283,7 @@ function hasProp(obj, key) {
 }
 
 function isInactive(faction) {
-    if (faction === "The Guild") {
+    if (faction === "The Guild" || faction === 'Unclaimed') {
         return true
     } else {
         return faction_tracker[faction]["Status"] === "Inactive"
@@ -329,7 +329,7 @@ function replaceInactiveFactionNames(planet, fac, hw) {
 
     if (planet === 'The Guild Dyson Sphere') {
         getElem('planet_tip_fac').innerHTML = '🔥🔥🔥';
-    } else if (isInactive(fac) && !show_inactive) {
+    } else if ((isInactive(fac) && !show_inactive) || fac === 'Unclaimed') {
         getElem('planet_tip_fac').innerHTML = 'Unclaimed';
     } else {
         getElem('planet_tip_fac').innerHTML = fac + hw;
@@ -829,6 +829,8 @@ function drawPlanetNames() {
         new OpenSeadragon.MouseTracker({
             element: id + '_highlight',
             enterHandler: () => {
+                console.log(owner_str);
+                console.log(hw_str);
                 getElem('planet_tip_name').innerHTML = planet_name;
                 getElem('planet_tip_sys').innerHTML = hex_id.replace('hex_', '') + ' / ' + system_name;
                 getElem('planet_tip').style.display = 'block';
