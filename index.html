@@ -227,17 +227,6 @@
                 font-size: 16px;
             }
 
-            #paypal {
-                width: 30px;
-                height: auto;
-                opacity: 0.5;
-                transition: opacity 0.2s ease-in-out;
-            }
-
-            #paypal:hover {
-                opacity: 1;
-            }
-
             .influence {
                 position: fixed;
                 top: 50%;
@@ -693,6 +682,12 @@
             <table border="0" cellpadding="2" cellspacing="0" style="margin: 0" width="100%">
                 <tr>
                     <td style="color:#fff; font-size:12px; line-height: 12px" width="80">
+                        <b>Planet Tags:</b>
+                    </td>
+                    <td id="planet_tip_tags" style="color:#fff; font-size:12px; line-height: 12px"></td>
+                </tr>
+                <tr>
+                    <td style="color:#fff; font-size:12px; line-height: 12px" width="80">
                         <b>Population:</b>
                     </td>
                     <td id="planet_tip_pop" style="color:#fff; font-size:12px; line-height: 12px"></td>
@@ -708,6 +703,12 @@
                         <b>Total Influence:</b>
                     </td>
                     <td id="planet_tip_infl" style="color:#fff; font-size:12px; line-height: 12px"></td>
+                </tr>
+                <tr>
+                    <td style="color:#fff; font-size:12px; line-height: 12px">
+                        <b>PCVI:</b>
+                    </td>
+                    <td id="planet_tip_pcvi" style="color:#fff; font-size:12px; line-height: 12px"></td>
                 </tr>
             </table>
 
@@ -942,15 +943,6 @@
                 ><img alt="" src="img/SeaWatch.png" style="width: 50px; height: auto;"
             /></a>
         </div>
-
-        <!--<div id="credits">-->
-        <!--<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">-->
-        <!--    <input type="hidden" name="cmd" value="_s-xclick" />-->
-        <!--    <input type="hidden" name="hosted_button_id" value="WX3JZ8L29ZJDE" />-->
-        <!--    <input id="paypal" type="image" src="https://742617000027.de/img/paypal.png" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />-->
-        <!--    <img alt="" border="0" src="https://www.paypal.com/en_DE/i/scr/pixel.gif" width="1" height="1" />-->
-        <!--</form>-->
-        <!--</div>-->
 
         <div
             id="visibilityToggle"

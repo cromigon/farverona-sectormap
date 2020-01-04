@@ -114,7 +114,7 @@ class Asset {
 
         // Get tooltip
         const hex_overlays = document.getElementsByClassName('hex');
-
+        
         // noinspection JSCheckFunctionSignatures
         new OpenSeadragon.MouseTracker({
             element: id + '_highlight',
@@ -430,6 +430,12 @@ function displayAllAssets() {
     });
 }
 
+
+function calculateInfluence() {
+    planet_tracker.forEach()
+}
+
+
 function sortTable() {
     let table, rows, switching, i, fac_a, fac_b, val_a, val_b, shouldSwitch;
     table = getElem('factionTable');
@@ -507,6 +513,8 @@ function displayFactionInfo(faction) {
         goal_desc = goals[goal];
     }
 
+
+
     getElem('info_faction').innerHTML = faction_tracker[faction]['Faction'];
     getElem('info_homeworld').innerHTML = faction_tracker[faction]['Homeworld'];
     getElem('info_force').innerHTML = '<b>' + faction_tracker[faction]['F'] + '</b>';
@@ -520,11 +528,11 @@ function displayFactionInfo(faction) {
     getElem('info_goal').innerHTML = '<b>' + goal + '</b>';
     getElem('info_goaldesc').innerHTML = goal_desc;
     getElem('info_tag').innerHTML = '<b>' + faction_tracker[faction]['Tag'] + '</b>';
-    getElem('info_tagdesc').innerHTML = tags[faction_tracker[faction]['Tag']];
+    getElem('info_tagdesc').innerHTML = tags[faction_tracker[faction]['Tag']]["desc"];
     getElem('info_notes').innerHTML = faction_tracker[faction]['Notes'];
-    getElem('info_infl_abs').innerHTML = faction_tracker[faction]['INFL'].replace(',', '.');
+    getElem('info_infl_abs').innerHTML = (faction_tracker[faction]['INFL']).toFixed(1);
     getElem('info_infl_rel').innerHTML =
-        Math.round(1000 * (parseFloat(faction_tracker[faction]['INFL']) / infl_sum)) / 10 + '%';
+        Math.round(1000 * (faction_tracker[faction]['INFL'] / infl_sum)) / 10 + '%';
 
     getElem('info').style.opacity = '1';
     getElem('info').style.zIndex = '1';
@@ -546,31 +554,6 @@ function tsvJSON(tsv) {
             obj[h.replace('\r', '')] = currentline[i].replace('\r', '');
         });
         return obj
-    });
-    return result;
-}
-
-function processInfluenceTSV(tsv) {
-    let lines = tsv.split('\n');
-    let result = {};
-    let facs = lines[1].split('\t');
-    let n = facs.length;
-    facs = facs.slice(5, n);
-
-    lines.forEach(line => {
-        let elems = line.split('\t');
-        let name = elems[2];
-        let scores = line.split('\t').slice(5, n);
-        result[name] = {};
-        result[name]['Hex'] = elems[0];
-        result[name]['System'] = elems[1];
-        result[name]['Score'] = elems[3];
-        result[name]['Total Influence on Planet'] = elems[4];
-        result[name]['Factions'] = {};
-
-        facs.forEach((f, i) => {
-            result[name]['Factions'][f.trim()] = scores[i];
-        });
     });
     return result;
 }
@@ -652,7 +635,7 @@ function updateChart(planet_name) {
 
     for (let fac in planetary_influence) {
         if (hasProp(planetary_influence, fac) && (!isInactive(fac) || show_inactive)) {
-            let fac_infl = parseFloat(planetary_influence[fac].replace(',', '.'));
+            let fac_infl = planetary_influence[fac];
             if (fac_infl > 0) {
                 labels.push(fac);
                 values.push(fac_infl);
@@ -709,10 +692,15 @@ function updateChart(planet_name) {
 
     planet_tip_chart.updateSeries(values);
     planet_tip_chart.updateOptions(options);
-    getElem('planet_tip_infl').innerHTML = influence_tracker[planet_name]['Total Influence on Planet'].replace(
-        ',',
-        '.'
-    );
+
+    let total_infl = 0;
+    for (let fac in influence_tracker[planet_name]['Factions']) {
+        if (hasProp(influence_tracker[planet_name]['Factions'], fac) && (!isInactive(fac) || show_inactive)) {
+            total_infl += influence_tracker[planet_name]['Factions'][fac];
+        }
+    }
+
+    getElem('planet_tip_infl').innerHTML = total_infl;
 }
 
 function updateChartOptions(opts) {
@@ -750,6 +738,8 @@ function drawPlanetNames() {
         let hw = planet['Homeworld'];
         let tl = planet['TL'];
         let pop = planet['Population'];
+        let pcvi = planet['PCVI'];
+        let tags = planet['Tags'].join(', ');
 
         let hex_x = hexes[hex_id]['X'];
         let hex_y = hexes[hex_id]['Y'];
@@ -829,16 +819,16 @@ function drawPlanetNames() {
         new OpenSeadragon.MouseTracker({
             element: id + '_highlight',
             enterHandler: () => {
-                console.log(owner_str);
-                console.log(hw_str);
                 getElem('planet_tip_name').innerHTML = planet_name;
                 getElem('planet_tip_sys').innerHTML = hex_id.replace('hex_', '') + ' / ' + system_name;
                 getElem('planet_tip').style.display = 'block';
                 getElem('planet_tip').style.zIndex = '3';
                 planet_tip_on = true;
                 if (planet_name === 'The Guild Dyson Sphere') {
+                    tags = 'tags more like HAX amirite';
                     tl = '9001';
                     pop = 'ok boomer';
+                    pcvi = ['u wot m8', 'u wot m8'];
                     let options = {
                         labels: ['The Guild'],
                         colors: ['#f70094'],
@@ -870,7 +860,9 @@ function drawPlanetNames() {
                     updateChartOptions(opts);
                 }
                 getElem('planet_tip_tl').innerHTML = tl;
+                getElem('planet_tip_pcvi').innerHTML = pcvi[0] !== pcvi[1] ? `${pcvi[1]} (${pcvi[0]})` : pcvi[0];
                 getElem('planet_tip_pop').innerHTML = pop;
+                getElem('planet_tip_tags').innerHTML = tags;
                 replaceInactiveFactionNames(planet_name, owner_str, hw_str);
             },
             exitHandler: () => {
@@ -889,6 +881,88 @@ function drawPlanetNames() {
 
     recolorPlanetNames();
 }
+
+
+function getInfluence() {
+
+    planet_tracker.forEach(p => {
+        let name = p['Name'];
+        let hex = p['Hex'];
+        let sys = p['System'];
+        let hw = p['Homeworld'];
+        let pgov = p['Planetary Government'];
+        let pcvi = p['PCVI'];
+        let factions = {};
+        let local_assets = p['Local Assets'];
+
+        // Influence from local assets
+        local_assets.forEach(a => {
+            let asset = asset_objects[a];
+            let isboi = asset['name'] === 'Base Of Influence';
+            let stealth = asset['stealth'];
+            let fac = asset['faction'];
+            let tag = faction_tracker[fac]['Tag'];
+            let fac_tag_mod = tags[tag]['infl_mod'];
+            let infl = isboi ? parseFloat(asset['hp']) * fac_tag_mod : fac_tag_mod;
+
+            if (stealth) {
+                if (tag === 'Secretive') {
+                    infl *= 0.75;
+                } else {
+                    infl *= 0.5;
+                }
+            }
+
+            if (hasProp(factions, fac)) {
+                factions[fac] += infl;
+            } else {
+                factions[fac] = infl;
+            }
+        });
+
+        // Influence from Planetary Government
+        if (pgov !== '') {
+            let tag = faction_tracker[pgov]['Tag'];
+            let fac_tag_mod = tags[tag]['infl_mod'];
+            if (hasProp(factions, pgov)) {
+                factions[pgov] += 2 * fac_tag_mod;
+            } else {
+                factions[pgov] = 2 * fac_tag_mod;
+            }
+        }
+
+        // Influence from Homeworld
+        if (hw !== '') {
+            if (hasProp(factions, hw)) {
+                factions[hw] += 10;
+            } else {
+                factions[hw] = 10;
+            }
+        }
+
+        // PCVI * Faction Presence
+        for (let fac in factions) {
+            if (hasProp(factions, fac)) {
+                if (pgov === fac) {
+                    factions[fac] *= pcvi[0];
+                } else {
+                    factions[fac] *= pcvi[1];
+                }
+            }
+            factions[fac] = parseFloat((factions[fac]).toFixed(1));
+            faction_tracker[fac]['INFL'] += factions[fac];
+            console.log(fac);
+        }
+
+        influence_tracker[name] = {
+            "Hex": hex,
+            "System": sys,
+            "PCVI": pcvi,
+            "Factions": factions
+        }
+    });
+}
+
 
 function drawAssets() {
     let counter = 0;
@@ -928,6 +1002,8 @@ function drawAssets() {
 
     reorderAssets();
     drawPlanetNames();
+    getInfluence();
+    sortTable();
 }
 
 function drawPlanets() {
@@ -997,8 +1073,8 @@ function getFactions() {
             let json = tsvJSON(this.responseText);
             json.forEach(j => {
                 faction_tracker[j['Faction']] = j;
+                faction_tracker[j['Faction']]['INFL'] = 0;
             });
-            sortTable();
         }
     };
 
@@ -1028,6 +1104,34 @@ function getPlanets() {
         if (this.readyState === 4 && this.status === 200) {
             planet_tracker = tsvJSON(this.responseText);
 
+            planet_tracker.forEach(p => {
+                p['Tags'] = p['Tags'].split(',');
+
+                let tl_mod = infl_tl_mod[p['TL']];
+                let pop_mod = infl_pop_mod[p['Population']];
+                let pcvi_mod = [1, 1];
+                p['Tags'].forEach(t => {
+                    if (t !== '') {
+                        let mod = p_tags[t]['infl_mod'];
+                        if (mod < -1) {
+                            if (t === 'Secret Masters') {
+                                pcvi_mod[0] -= 0.1;
+                                pcvi_mod[1] += 0.1;
+                            } else {
+                                pcvi_mod[0] += 0.1;
+                                pcvi_mod[1] -= 0.1;
+                            }
+                        } else {
+                            pcvi_mod = pcvi_mod.map(m => {
+                                return m + mod
+                            });
+                        }
+                    }
+                });
+                pcvi_mod = pcvi_mod.map(m => {return Math.max(m, 0)});
+                p['PCVI'] = pcvi_mod.map(m => {return parseFloat((m * tl_mod * pop_mod).toFixed(1))});
+            });
+
             for (let hex in hexes) {
                 let current_hex = hex;
                 let num_planets = planet_tracker.filter((planet) => planet['Hex'] === current_hex.replace('hex_', ''))
@@ -1053,20 +1157,6 @@ function getPlanets() {
     xhttp_dyn_planets.send();
 }
 
-function getInfluence() {
-    let url_influence_tracker =
-        'https://docs.google.com/spreadsheets/d/e/2PACX-1vRCK-QRRccgk3_twQSIyfGU3qzuqyPB6WSb4_KktKyV6AzAmm7ioUBf-wddvLuaToxr5CVWy4tRiAS7/pub?gid=1919363050&single=true&output=tsv';
-    const xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState === 4 && this.status === 200) {
-            influence_tracker = processInfluenceTSV(this.responseText);
-        }
-    };
-
-    xhttp.open('GET', url_influence_tracker, true);
-    xhttp.send();
-}
-
 function onViewerOpen() {
     document.querySelector('#osd > div > div:nth-child(2) > div > div > div:nth-child(5)').style.display = 'none';
     let home = document.querySelector('#osd > div > div:nth-child(2) > div > div > div:nth-child(4)');
@@ -1080,6 +1170,5 @@ function onViewerOpen() {
     }
 
     getFactions();
-    getInfluence();
     getPlanets();
 }
