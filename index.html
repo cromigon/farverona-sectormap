@@ -197,7 +197,37 @@
                 border: 1px solid #777;
             }
 
-            .infobox {
+            #sectorinfluence {
+                position: fixed;
+                margin: auto;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                width: 600px;
+                max-height: 740px;
+                font-family: 'D-DIN', Helvetica, Arial, sans-serif;
+                color: #fff;
+                border: 1px solid #777;
+                background-color: rgba(20, 20, 20, 1);
+                z-index: -2;
+                opacity: 0;
+            }
+
+            #sectorinfluence_toggle {
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                left: 10px;
+                opacity: 0.1;
+                z-index: 2;
+            }
+
+            #sectorinfluence_toggle:hover {
+                opacity: 1;
+            }
+
+            #info {
                 position: fixed;
                 margin: auto;
                 top: 0;
@@ -827,7 +857,100 @@
                 }
             };
         </script>
-        <div class="infobox" id="info">
+
+        <div id="sectorinfluence">
+            <table border="0" cellpadding="10" cellspacing="0" width="100%">
+                <tr>
+                    <td>
+                        <table
+                            border="0"
+                            cellpadding="10"
+                            cellspacing="0"
+                            style="border-bottom: 1px dotted #777"
+                            width="100%"
+                        >
+                            <tr>
+                                <td style="font-size: 20px">
+                                    Sector Influence
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+
+            <div id="sectorinfluence_chart" style="position: relative; top: 5px;"></div>
+        </div>
+
+        <script type="text/javascript">
+            const sectorinfluence_chart = new ApexCharts(document.querySelector('#sectorinfluence_chart'), {
+                chart: {
+                    type: 'donut',
+                    animations: {
+                        enabled: true,
+                        easing: 'easeinout',
+                        speed: 100,
+                        animateGradually: {
+                            enabled: true,
+                            delay: 500
+                        },
+                        dynamicAnimation: {
+                            enabled: true,
+                            speed: 100
+                        }
+                    },
+                    fontFamily: 'D-DIN, Helvetica, Arial, sans-serif',
+                    parentHeightOffset: 15,
+                    dropShadow: {
+                        enabled: false
+                    }
+                },
+                series: [],
+                legend: {
+                    show: true,
+                    floating: true,
+                    position: 'bottom',
+                    labels: {
+                        colors: '#ffffff'
+                    },
+                    itemMargin: {
+                        horizontal: 5
+                    }
+                },
+                stroke: {
+                    show: true,
+                    width: 4,
+                    colors: ['#141414']
+                },
+                dataLabels: {
+                    enabled: true,
+                    style: {
+                        fontSize: '16px'
+                    },
+                    dropShadow: {
+                        enabled: false
+                    },
+                    formatter: (val) => {
+                        if (val > 5) {
+                            return Math.round(val * 10) / 10 + '%';
+                        } else {
+                            return '';
+                        }
+                    }
+                },
+                plotOptions: {
+                    pie: {
+                        offsetY: 10,
+                        donut: {
+                            size: '50%'
+                        }
+                    }
+                }
+            });
+            sectorinfluence_chart.render();
+        </script>
+
+        <div id="info">
             <table border="0" cellpadding="10" cellspacing="0" width="100%">
                 <tr>
                     <td colspan="8">
@@ -938,6 +1061,15 @@
                 </tr>
             </table>
         </div>
+
+        <div
+            id="sectorinfluence_toggle"
+            onmouseenter="displaySectorInfluence()"
+            onmouseleave="hideSectorInfluence()"
+        >
+            <img alt="" src="img/donut_chart.png" style="width: 50px; height: auto;" />
+        </div>
+
         <div id="credits">
             <a href="https://sea-watch.org/en/" rel="noopener noreferrer" target="_blank"
                 ><img alt="" src="img/SeaWatch.png" style="width: 50px; height: auto;"
@@ -950,6 +1082,7 @@
             onmouseenter="visibilityToggleStyling('in')"
             onmouseleave="visibilityToggleStyling('out')"
         ></div>
+
         <div id="factionToggle" onclick="toggleFactionTable()"></div>
     </body>
 </html>
