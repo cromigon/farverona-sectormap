@@ -7167,6 +7167,7 @@ const hexes = {
 const factions = {
     'House Pyxis': {
         'short': 'Pyxis',
+        'search': 'pyxis',
         'color': '#ff9a25',
         'text': '#000000',
         'influence': 0,
@@ -7174,6 +7175,7 @@ const factions = {
     },
     'House Eridanus': {
         'short': 'Eridanus',
+        'search': 'eridanus',
         'color': '#0a0908',
         'text': '#ffffff',
         'influence': 0,
@@ -7181,6 +7183,7 @@ const factions = {
     },
     'House Triangulum': {
         'short': 'Triangulum',
+        'search': 'triangulum',
         'color': '#7fb4ff',
         'text': '#000000',
         'influence': 0,
@@ -7188,6 +7191,7 @@ const factions = {
     },
     'House Crux': {
         'short': 'Crux',
+        'search': 'crux',
         'color': '#70489d',
         'text': '#ffffff',
         'influence': 0,
@@ -7195,6 +7199,7 @@ const factions = {
     },
     'House Fornax': {
         'short': 'Fornax',
+        'search': 'fornax',
         'color': '#b57714',
         'text': '#000000',
         'influence': 0,
@@ -7202,6 +7207,7 @@ const factions = {
     },
     'House Lyra': {
         'short': 'Lyra',
+        'search': 'lyra',
         'color': '#843767',
         'text': '#ffffff',
         'influence': 0,
@@ -7209,6 +7215,7 @@ const factions = {
     },
     'House Serpens': {
         'short': 'Serpens',
+        'search': 'serpens',
         'color': '#009282',
         'text': '#ffffff',
         'influence': 0,
@@ -7216,6 +7223,7 @@ const factions = {
     },
     'House Reticulum': {
         'short': 'Reticulum',
+        'search': 'reticulum',
         'color': '#792230',
         'text': '#ffffff',
         'influence': 0,
@@ -7223,6 +7231,7 @@ const factions = {
     },
     'House Aquila': {
         'short': 'Aquila',
+        'search': 'aquila',
         'color': '#c09372',
         'text': '#000000',
         'influence': 0,
@@ -7230,6 +7239,7 @@ const factions = {
     },
     'The Trilliant Ring': {
         'short': 'Trilliant',
+        'search': 'trilliant',
         'color': '#DAA520',
         'text': '#000000',
         'influence': 0,
@@ -7237,6 +7247,7 @@ const factions = {
     },
     'The PRISM Network': {
         'short': 'Prism',
+        'search': 'prism',
         'color': '#b98cc0',
         'text': '#000000',
         'influence': 0,
@@ -7244,6 +7255,7 @@ const factions = {
     },
     'SERAPH': {
         'short': 'SERAPH',
+        'search': 'seraph',
         'color': '#277f97',
         'text': '#ffffff',
         'influence': 0,
@@ -7251,6 +7263,7 @@ const factions = {
     },
     'The Deathless': {
         'short': 'DCS',
+        'search': 'deathless',
         'color': '#835658',
         'text': '#ffffff',
         'influence': 0,
@@ -7258,6 +7271,7 @@ const factions = {
     },
     'Confederation of the Upright Vagrant': {
         'short': 'Vagrant',
+        'search': 'vagrant',
         'color': '#3042ca',
         'text': '#ffffff',
         'influence': 0,
@@ -7265,6 +7279,7 @@ const factions = {
     },
     'The Democratic Mandate': {
         'short': 'DM',
+        'search': 'democratic mandate',
         'color': '#257966',
         'text': '#ffffff',
         'influence': 0,
@@ -7272,6 +7287,7 @@ const factions = {
     },
     'The High Church of Messiah-as-Emperox': {
         'short': 'HC',
+        'search': 'high church',
         'color': '#f0c616',
         'text': '#000000',
         'influence': 0,
@@ -7279,6 +7295,7 @@ const factions = {
     },
     'The Houses Minor': {
         'short': 'HM',
+        'search': 'houses minor',
         'color': '#aaaaaa',
         'text': '#000000',
         'influence': 0,
@@ -7286,6 +7303,7 @@ const factions = {
     },
     'The Guild': {
         'short': 'Guild',
+        'search': 'guild',
         'color': '#f70094',
         'text': '#ffffff',
         'influence': 0,
@@ -7293,6 +7311,7 @@ const factions = {
     },
     'The Unified People\'s Collective': {
         'short': 'UPC',
+        'search': 'unified',
         'color': '#8abc51',
         'text': '#000000',
         'influence': 0,
@@ -7301,6 +7320,7 @@ const factions = {
     ,
     'The Velan Ascendency': {
         'short': 'Vela',
+        'search': 'vela',
         'color': '#4e4aef',
         'text': '#ffffff',
         'influence': 0,
@@ -8808,11 +8828,11 @@ const assets = {
     },
     'Enhanced Psychic Assassins': {
         'STAT': 'Force',
-        'STAT_TIER': -1,
+        'STAT_TIER': '',
         'ASSET': 'Enhanced Psychic Assassins',
         'HP': 6,
-        'COST': -1,
-        'TL': -1,
+        'COST': 'n/a',
+        'TL': 'n/a',
         'TYPE': 'Special Forces',
         'ATTACK': 'Cunning',
         'DEFENSE': 'Cunning',
@@ -9346,13 +9366,13 @@ const p_tags = {
     }
 };
 const infl_tl_mod = {
-    'TL0': 0,
-    'TL1': 0.25,
-    'TL2': 0.5,
-    'TL3': 0.75,
-    'TL4': 1,
-    'TL4+': 1.5,
-    'TL5': 2
+    '0': 0,
+    '1': 0.25,
+    '2': 0.5,
+    '3': 0.75,
+    '4': 1,
+    '4+': 1.5,
+    '5': 2
 };
 const infl_pop_mod = {
     'Failed colony': 0,
@@ -9404,5 +9424,1922 @@ const statuses = {
     'Inactive': 'A Faction or Asset with this status is inactive because the faction is no longer taking turns on the Faction Turn. These assets count for Influence, but otherwise can not affect or be affected by the game.',
     'Protected': 'A Protected Asset can not be targeted by rival Factions, defend, attack, or be activated. Before a Protected Asset can be sold, refit, or traded it must regain at least 1 HP. If traded an Asset looses this state.',
     'Seizing': 'A Faction with the Seizing status is actively seizing the planetary government of a planet. An Asset with the Seizing status can not be moved.',
-    'Summoning': 'After being traded or bought Assets are given the \'Summoning Sickness\' status for one full turn. An Asset in \'Trade Stasis\' can not Expand Influence, Attack, Defend, or activate. Assets which provide a passive bonus can still apply that bonus.'
+    'Summoning': 'After being traded or bought Assets are given the \'Summoning Sickness\' status for one full turn. An Asset in \'Trade Stasis\' can not Expand Influence, Attack, Defend, or activate. Assets which provide a passive bonus can still apply that bonus.',
 };
+const abbreviations = {
+    'Facility': 'Fac',
+    'Logistics Facility': 'LF',
+    'Military Unit': 'MU',
+    'Special Forces': 'SF',
+    'Starship': 'S',
+    'Spaceship': 'S',
+    'Tactic': 'T',
+    'Cunning': 'C',
+    'Force': 'F',
+    'Wealth': 'W',
+    '': '-',
+};
+const system_objects = {
+    "Tavroular": {
+        "text": {
+            "name": "Tavroular",
+            "desc": "System"
+        },
+        "children": [
+            {
+                "text": {
+                    "name": "Banff 9",
+                    "desc": "Deep Space Station"
+                }
+            },
+            {
+                "text": {
+                    "name": "Ataecina",
+                    "desc": "Planet"
+                },
+                "children": [
+                    {
+                        "text": {
+                            "name": "Manzi Mine Project",
+                            "desc": "Gas Giant Mine"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Iara",
+                            "desc": "Moon"
+                        },
+                        "children": [
+                            {
+                                "text": {
+                                    "name": "Libertad 2",
+                                    "desc": "Moon Base"
+                                }
+                            },
+                            {
+                                "text": {
+                                    "name": "Kepler 7",
+                                    "desc": "Research Base"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "text": {
+                            "name": "Leo",
+                            "desc": "Moon"
+                        },
+                        "children": [
+                            {
+                                "text": {
+                                    "name": "Galdakao 2",
+                                    "desc": "Research Base"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "text": {
+                            "name": "Harvaraio",
+                            "desc": "Moon"
+                        },
+                        "children": [
+                            {
+                                "text": {
+                                    "name": "Tem 1",
+                                    "desc": "Moon Base"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "text": {
+                            "name": "Camargo 3",
+                            "desc": "Orbital Ruin"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    "Amedere Orbere": {
+        "text": {
+            "name": "Amedere Orbere",
+            "desc": "System"
+        },
+        "children": [
+            {
+                "text": {
+                    "name": "(81282)  Oodnadatta",
+                    "desc": "Asteroid Belt"
+                },
+                "children": [
+                    {
+                        "text": {
+                            "name": "Tarma 1",
+                            "desc": "Asteroid Base"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Bremerhaven",
+                            "desc": "Asteroid Base"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Cayon 2",
+                            "desc": "Space Station"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Crater 1",
+                            "desc": "Space Station"
+                        }
+                    }
+                ]
+            },
+            {
+                "text": {
+                    "name": "Teuthem",
+                    "desc": "Planet"
+                },
+                "children": [
+                    {
+                        "text": {
+                            "name": "Waspam 9",
+                            "desc": "Research Base"
+                        }
+                    }
+                ]
+            },
+            {
+                "text": {
+                    "name": "Nier 6",
+                    "desc": "Refueling Station"
+                }
+            },
+            {
+                "text": {
+                    "name": "Fenagh 9",
+                    "desc": "Research Base"
+                }
+            }
+        ]
+    },
+    "Benilli": {
+        "text": {
+            "name": "Benilli",
+            "desc": "System"
+        },
+        "children": [
+            {
+                "text": {
+                    "name": "(192)  Canillo",
+                    "desc": "Asteroid Belt"
+                }
+            },
+            {
+                "text": {
+                    "name": "Cabina",
+                    "desc": "Planet"
+                },
+                "children": [
+                    {
+                        "text": {
+                            "name": "Johnstown Mine Project",
+                            "desc": "Gas Giant Mine"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Littleton 9",
+                            "desc": "Orbital Ruin"
+                        }
+                    }
+                ]
+            },
+            {
+                "text": {
+                    "name": "Loon 9",
+                    "desc": "Research Base"
+                }
+            }
+        ]
+    },
+    "Phalest": {
+        "text": {
+            "name": "Phalest",
+            "desc": "System"
+        },
+        "children": [
+            {
+                "text": {
+                    "name": "(6752)  Loto",
+                    "desc": "Asteroid Belt"
+                },
+                "children": [
+                    {
+                        "text": {
+                            "name": "Crewe 6",
+                            "desc": "Asteroid Base"
+                        }
+                    }
+                ]
+            },
+            {
+                "text": {
+                    "name": "Bombala 5",
+                    "desc": "Deep Space Station"
+                }
+            },
+            {
+                "text": {
+                    "name": "Chippe",
+                    "desc": "Planet"
+                }
+            }
+        ]
+    },
+    "Pavvis": {
+        "text": {
+            "name": "Pavvis",
+            "desc": "System"
+        },
+        "children": [
+            {
+                "text": {
+                    "name": "Gokwe 1",
+                    "desc": "Deep Space Station"
+                }
+            },
+            {
+                "text": {
+                    "name": "Intaglio",
+                    "desc": "Planet"
+                }
+            },
+            {
+                "text": {
+                    "name": "Marquise",
+                    "desc": "Planet"
+                },
+                "children": [
+                    {
+                        "text": {
+                            "name": "Farim Project",
+                            "desc": "Gas Giant Mine"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Lasswitz 4",
+                            "desc": "Space Station"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Gastre 3",
+                            "desc": "Space Station"
+                        }
+                    }
+                ]
+            },
+            {
+                "text": {
+                    "name": "Ascher",
+                    "desc": "Planet"
+                },
+                "children": [
+                    {
+                        "text": {
+                            "name": "Crater Project",
+                            "desc": "Gas Giant Mine"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Wahoo Mine Project",
+                            "desc": "Gas Giant Mine"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Risti Sumalin",
+                            "desc": "Moon"
+                        },
+                        "children": [
+                            {
+                                "text": {
+                                    "name": "Coimbra",
+                                    "desc": "Research Base"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "text": {
+                            "name": "Clytine",
+                            "desc": "Moon"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Bianchini 6",
+                            "desc": "Orbital Ruin"
+                        }
+                    }
+                ]
+            },
+            {
+                "text": {
+                    "name": "Betio 5",
+                    "desc": "Research Base"
+                }
+            }
+        ]
+    },
+    "Ellis": {
+        "text": {
+            "name": "Ellis",
+            "desc": "System"
+        },
+        "children": [
+            {
+                "text": {
+                    "name": "Hiera",
+                    "desc": "Planet"
+                },
+                "children": [
+                    {
+                        "text": {
+                            "name": "Throphe",
+                            "desc": "Moon"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Vailami",
+                            "desc": "Moon"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Khal",
+                            "desc": "Moon"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Semeykin IV",
+                            "desc": "Orbital Ruin"
+                        }
+                    }
+                ]
+            },
+            {
+                "text": {
+                    "name": "Gats",
+                    "desc": "Planet"
+                },
+                "children": [
+                    {
+                        "text": {
+                            "name": "Andapa 1",
+                            "desc": "Research Base"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Kholm 2",
+                            "desc": "Space Station"
+                        }
+                    }
+                ]
+            },
+            {
+                "text": {
+                    "name": "Joly 4",
+                    "desc": "Research Base"
+                }
+            }
+        ]
+    },
+    "Askirut Sal": {
+        "text": {
+            "name": "Askirut Sal",
+            "desc": "System"
+        },
+        "children": [
+            {
+                "text": {
+                    "name": "Phymete VIII",
+                    "desc": "Planet"
+                },
+                "children": [
+                    {
+                        "text": {
+                            "name": "Euryale",
+                            "desc": "Moon"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Thorunn",
+                            "desc": "Moon"
+                        },
+                        "children": [
+                            {
+                                "text": {
+                                    "name": "Zaranj 5",
+                                    "desc": "Moon Base"
+                                }
+                            },
+                            {
+                                "text": {
+                                    "name": "Holden 6",
+                                    "desc": "Refueling Station"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "text": {
+                            "name": "Saliyya",
+                            "desc": "Moon"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Llanesco 9",
+                            "desc": "Space Station"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Kamloops 3",
+                            "desc": "Space Station"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    "Alvero": {
+        "text": {
+            "name": "Alvero",
+            "desc": "System"
+        },
+        "children": [
+            {
+                "text": {
+                    "name": "(63)  Moreux",
+                    "desc": "Asteroid Belt"
+                }
+            },
+            {
+                "text": {
+                    "name": "(304)  Udzha",
+                    "desc": "Asteroid Belt"
+                }
+            },
+            {
+                "text": {
+                    "name": "Platte",
+                    "desc": "Deep Space Station"
+                }
+            },
+            {
+                "text": {
+                    "name": "Aomori",
+                    "desc": "Planet"
+                },
+                "children": [
+                    {
+                        "text": {
+                            "name": "Cobalt Mine",
+                            "desc": "Gas Giant Mine"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Foros",
+                            "desc": "Gas Giant Mine"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Phio",
+                            "desc": "Moon"
+                        },
+                        "children": [
+                            {
+                                "text": {
+                                    "name": "Cluny 2",
+                                    "desc": "Refueling Station"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "text": {
+                    "name": "Tiber",
+                    "desc": "Planet"
+                }
+            },
+            {
+                "text": {
+                    "name": "Bhor 6",
+                    "desc": "Refueling Station"
+                }
+            }
+        ]
+    },
+    "Eriopei": {
+        "text": {
+            "name": "Eriopei",
+            "desc": "System"
+        },
+        "children": [
+            {
+                "text": {
+                    "name": "Echo",
+                    "desc": "Planet"
+                },
+                "children": [
+                    {
+                        "text": {
+                            "name": "Aganame",
+                            "desc": "Moon"
+                        },
+                        "children": [
+                            {
+                                "text": {
+                                    "name": "Milankovic 3",
+                                    "desc": "Moon Base"
+                                }
+                            },
+                            {
+                                "text": {
+                                    "name": "Colon 7",
+                                    "desc": "Research Base"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "text": {
+                            "name": "Mumeri",
+                            "desc": "Moon"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Bizes",
+                            "desc": "Moon"
+                        },
+                        "children": [
+                            {
+                                "text": {
+                                    "name": "Tignish 7",
+                                    "desc": "Moon Base"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "text": {
+                            "name": "Lipany 9",
+                            "desc": "Refueling Station"
+                        }
+                    }
+                ]
+            },
+            {
+                "text": {
+                    "name": "Lambert",
+                    "desc": "Research Base"
+                }
+            }
+        ]
+    },
+    "Hild": {
+        "text": {
+            "name": "Hild",
+            "desc": "System"
+        },
+        "children": [
+            {
+                "text": {
+                    "name": "(019)  Souris",
+                    "desc": "Asteroid Belt"
+                }
+            },
+            {
+                "text": {
+                    "name": "Warra 5",
+                    "desc": "Deep Space Station"
+                }
+            },
+            {
+                "text": {
+                    "name": "Ostrov 3",
+                    "desc": "Deep Space Station"
+                }
+            },
+            {
+                "text": {
+                    "name": "Shān",
+                    "desc": "Planet"
+                },
+                "children": [
+                    {
+                        "text": {
+                            "name": "Velidorda",
+                            "desc": "Moon"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Ecou",
+                            "desc": "Moon"
+                        }
+                    }
+                ]
+            },
+            {
+                "text": {
+                    "name": "Argiast",
+                    "desc": "Planet"
+                },
+                "children": [
+                    {
+                        "text": {
+                            "name": "Aleda",
+                            "desc": "Moon"
+                        },
+                        "children": [
+                            {
+                                "text": {
+                                    "name": "Trouvelot 9",
+                                    "desc": "Moon Base"
+                                }
+                            },
+                            {
+                                "text": {
+                                    "name": "Arrhenius 9",
+                                    "desc": "Refueling Station"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "text": {
+                    "name": "Yalgoo 4",
+                    "desc": "Refueling Station"
+                }
+            },
+            {
+                "text": {
+                    "name": "Burton 6",
+                    "desc": "Research Base"
+                }
+            }
+        ]
+    },
+    "Pujaya Nita": {
+        "text": {
+            "name": "Pujaya Nita",
+            "desc": "System"
+        },
+        "children": [
+            {
+                "text": {
+                    "name": "Hallger",
+                    "desc": "Planet"
+                },
+                "children": [
+                    {
+                        "text": {
+                            "name": "Bam",
+                            "desc": "Orbital Ruin"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Luga",
+                            "desc": "Refueling Station"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Nereus 3",
+                            "desc": "Research Base"
+                        }
+                    }
+                ]
+            },
+            {
+                "text": {
+                    "name": "Manah 6",
+                    "desc": "Refueling Station"
+                }
+            }
+        ]
+    },
+    "Perithr": {
+        "text": {
+            "name": "Perithr",
+            "desc": "System"
+        },
+        "children": [
+            {
+                "text": {
+                    "name": "Haqani",
+                    "desc": "Planet"
+                },
+                "children": [
+                    {
+                        "text": {
+                            "name": "Pharos",
+                            "desc": "Moon"
+                        },
+                        "children": [
+                            {
+                                "text": {
+                                    "name": "Wafra 8",
+                                    "desc": "Refueling Station"
+                                }
+                            },
+                            {
+                                "text": {
+                                    "name": "Bree 9",
+                                    "desc": "Research Base"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "text": {
+                            "name": "Sumgin 2",
+                            "desc": "Orbital Ruin"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Seminole 6",
+                            "desc": "Space Station"
+                        }
+                    }
+                ]
+            },
+            {
+                "text": {
+                    "name": "Nain 8",
+                    "desc": "Research Base"
+                }
+            }
+        ]
+    },
+    "Jel Vaa": {
+        "text": {
+            "name": "Jel Vaa",
+            "desc": "System"
+        },
+        "children": [
+            {
+                "text": {
+                    "name": "Ajon 1",
+                    "desc": "Deep Space Station"
+                }
+            },
+            {
+                "text": {
+                    "name": "Imperial Corrections Facility Gleipnir",
+                    "desc": "Planet"
+                }
+            },
+            {
+                "text": {
+                    "name": "Seminole 4",
+                    "desc": "Refueling Station"
+                }
+            }
+        ]
+    },
+    "Antakis": {
+        "text": {
+            "name": "Antakis",
+            "desc": "System"
+        },
+        "children": [
+            {
+                "text": {
+                    "name": "(567)  Azul",
+                    "desc": "Asteroid Belt"
+                },
+                "children": [
+                    {
+                        "text": {
+                            "name": "Horowitz 5",
+                            "desc": "Refueling Station"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Darwin 7",
+                            "desc": "Space Station"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Langtang",
+                            "desc": "Space Station"
+                        }
+                    }
+                ]
+            },
+            {
+                "text": {
+                    "name": "Orpheus",
+                    "desc": "Planet"
+                },
+                "children": [
+                    {
+                        "text": {
+                            "name": "Li Fan Project",
+                            "desc": "Gas Giant Mine"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Meget",
+                            "desc": "Gas Giant Mine"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Meleia",
+                            "desc": "Moon"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Nassan",
+                            "desc": "Moon"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Stokes 3",
+                            "desc": "Research Base"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Sefadu 1",
+                            "desc": "Space Station"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Manzi 4",
+                            "desc": "Space Station"
+                        }
+                    }
+                ]
+            },
+            {
+                "text": {
+                    "name": "Lonar 4",
+                    "desc": "Research Base"
+                }
+            }
+        ]
+    },
+    "Igliza": {
+        "text": {
+            "name": "Igliza",
+            "desc": "System"
+        },
+        "children": [
+            {
+                "text": {
+                    "name": "Trillia IX",
+                    "desc": "Planet"
+                }
+            },
+            {
+                "text": {
+                    "name": "Jeans 7",
+                    "desc": "Refueling Station"
+                }
+            }
+        ]
+    },
+    "Eunelas": {
+        "text": {
+            "name": "Eunelas",
+            "desc": "System"
+        },
+        "children": [
+            {
+                "text": {
+                    "name": "Hong Lu",
+                    "desc": "Planet"
+                },
+                "children": [
+                    {
+                        "text": {
+                            "name": "Masursky Mine Project",
+                            "desc": "Gas Giant Mine"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Bai",
+                            "desc": "Moon"
+                        }
+                    }
+                ]
+            },
+            {
+                "text": {
+                    "name": "Rahe 3",
+                    "desc": "Research Base"
+                }
+            }
+        ]
+    },
+    "Ragnhil": {
+        "text": {
+            "name": "Ragnhil",
+            "desc": "System"
+        },
+        "children": [
+            {
+                "text": {
+                    "name": "Thorg",
+                    "desc": "Planet"
+                },
+                "children": [
+                    {
+                        "text": {
+                            "name": "Kunes 1",
+                            "desc": "Orbital Ruin"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Saheki 1",
+                            "desc": "Research Base"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Knobel 3",
+                            "desc": "Space Station"
+                        }
+                    }
+                ]
+            },
+            {
+                "text": {
+                    "name": "Koschei",
+                    "desc": "Planet"
+                },
+                "children": [
+                    {
+                        "text": {
+                            "name": "Korph Project",
+                            "desc": "Gas Giant Mine"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Thom Mine Project",
+                            "desc": "Gas Giant Mine"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Nasin",
+                            "desc": "Moon"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Astyocl XXII",
+                            "desc": "Moon"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Mavlakis",
+                            "desc": "Moon"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Blois 9",
+                            "desc": "Research Base"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Edam 5",
+                            "desc": "Space Station"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Zuni 8",
+                            "desc": "Space Station"
+                        }
+                    }
+                ]
+            },
+            {
+                "text": {
+                    "name": "Bogra 7",
+                    "desc": "Refueling Station"
+                }
+            },
+            {
+                "text": {
+                    "name": "Arica 2",
+                    "desc": "Research Base"
+                }
+            }
+        ]
+    },
+    "Helesco": {
+        "text": {
+            "name": "Helesco",
+            "desc": "System"
+        },
+        "children": [
+            {
+                "text": {
+                    "name": "Navette",
+                    "desc": "Planet"
+                }
+            }
+        ]
+    },
+    "Almu Gerbia": {
+        "text": {
+            "name": "Almu Gerbia",
+            "desc": "System"
+        },
+        "children": [
+            {
+                "text": {
+                    "name": "(917)  Arago",
+                    "desc": "Asteroid Belt"
+                },
+                "children": [
+                    {
+                        "text": {
+                            "name": "Emma Dean 1",
+                            "desc": "Asteroid Base"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Llanesco 4",
+                            "desc": "Asteroid Base"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Bled 5",
+                            "desc": "Refueling Station"
+                        }
+                    }
+                ]
+            },
+            {
+                "text": {
+                    "name": "Staklakou",
+                    "desc": "Planet"
+                }
+            },
+            {
+                "text": {
+                    "name": "Valverde 8",
+                    "desc": "Refueling Station"
+                }
+            },
+            {
+                "text": {
+                    "name": "Santaca 5",
+                    "desc": "Research Base"
+                }
+            }
+        ]
+    },
+    "Tsatsos": {
+        "text": {
+            "name": "Tsatsos",
+            "desc": "System"
+        },
+        "children": [
+            {
+                "text": {
+                    "name": "Demnoph",
+                    "desc": "Planet"
+                },
+                "children": [
+                    {
+                        "text": {
+                            "name": "Goba Project",
+                            "desc": "Gas Giant Mine"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Lamas Mine Project",
+                            "desc": "Gas Giant Mine"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Tsyomatsa",
+                            "desc": "Moon"
+                        },
+                        "children": [
+                            {
+                                "text": {
+                                    "name": "Loja 6",
+                                    "desc": "Research Base"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "text": {
+                            "name": "Syeh",
+                            "desc": "Moon"
+                        },
+                        "children": [
+                            {
+                                "text": {
+                                    "name": "Talsi 8",
+                                    "desc": "Moon Base"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "text": {
+                            "name": "Creus XXIII",
+                            "desc": "Moon"
+                        },
+                        "children": [
+                            {
+                                "text": {
+                                    "name": "Esira",
+                                    "desc": "Orbital Ruin"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "text": {
+                            "name": "Turbi",
+                            "desc": "Refueling Station"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Peridier 7",
+                            "desc": "Refueling Station"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Keul 7",
+                            "desc": "Research Base"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Agassiz 7",
+                            "desc": "Space Station"
+                        }
+                    }
+                ]
+            },
+            {
+                "text": {
+                    "name": "Yakiyah",
+                    "desc": "Planet"
+                },
+                "children": [
+                    {
+                        "text": {
+                            "name": "Bland Project",
+                            "desc": "Gas Giant Mine"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Argo 2",
+                            "desc": "Orbital Ruin"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Schroeter",
+                            "desc": "Research Base"
+                        }
+                    }
+                ]
+            },
+            {
+                "text": {
+                    "name": "Hroa",
+                    "desc": "Planet"
+                },
+                "children": [
+                    {
+                        "text": {
+                            "name": "Shri Vashne",
+                            "desc": "Moon"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Mardis",
+                            "desc": "Moon"
+                        },
+                        "children": [
+                            {
+                                "text": {
+                                    "name": "Auki 5",
+                                    "desc": "Refueling Station"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "text": {
+                            "name": "Renaudot 5",
+                            "desc": "Orbital Ruin"
+                        }
+                    }
+                ]
+            },
+            {
+                "text": {
+                    "name": "Irbit 8",
+                    "desc": "Refueling Station"
+                }
+            },
+            {
+                "text": {
+                    "name": "Volgograd 3",
+                    "desc": "Research Base"
+                }
+            }
+        ]
+    },
+    "Osun": {
+        "text": {
+            "name": "Osun",
+            "desc": "System"
+        },
+        "children": [
+            {
+                "text": {
+                    "name": "Kama",
+                    "desc": "Planet"
+                },
+                "children": [
+                    {
+                        "text": {
+                            "name": "Dison 2",
+                            "desc": "Research Base"
+                        }
+                    }
+                ]
+            },
+            {
+                "text": {
+                    "name": "Last Stop",
+                    "desc": "Refueling Station"
+                }
+            }
+        ]
+    },
+    "Iphoos": {
+        "text": {
+            "name": "Iphoos",
+            "desc": "System"
+        },
+        "children": [
+            {
+                "text": {
+                    "name": "Du Toit 1",
+                    "desc": "Deep Space Station"
+                }
+            },
+            {
+                "text": {
+                    "name": "Thorhil",
+                    "desc": "Planet"
+                }
+            },
+            {
+                "text": {
+                    "name": "Leorgioly",
+                    "desc": "Planet"
+                }
+            }
+        ]
+    },
+    "Aliya": {
+        "text": {
+            "name": "Aliya",
+            "desc": "System"
+        },
+        "children": [
+            {
+                "text": {
+                    "name": "Yaren 9",
+                    "desc": "Deep Space Station"
+                }
+            },
+            {
+                "text": {
+                    "name": "Diomikato",
+                    "desc": "Planet"
+                },
+                "children": [
+                    {
+                        "text": {
+                            "name": "Rahe 1",
+                            "desc": "Refueling Station"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Bigbee 5",
+                            "desc": "Space Station"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Lowell",
+                            "desc": "Space Station"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    "Pamita Cha": {
+        "text": {
+            "name": "Pamita Cha",
+            "desc": "System"
+        },
+        "children": [
+            {
+                "text": {
+                    "name": "(2173)  Sian",
+                    "desc": "Asteroid Belt"
+                },
+                "children": [
+                    {
+                        "text": {
+                            "name": "Tomari 3",
+                            "desc": "Asteroid Base"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Henry Moore 1",
+                            "desc": "Space Station"
+                        }
+                    }
+                ]
+            },
+            {
+                "text": {
+                    "name": "Lovelace",
+                    "desc": "Planet"
+                },
+                "children": [
+                    {
+                        "text": {
+                            "name": "Olenek 3",
+                            "desc": "Orbital Ruin"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Avan 1",
+                            "desc": "Orbital Ruin"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Garm",
+                            "desc": "Research Base"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Crater",
+                            "desc": "Research Base"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Tignish 7",
+                            "desc": "Research Base"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Kholm 4",
+                            "desc": "Research Base"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Nhill 6",
+                            "desc": "Research Base"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    "Sig": {
+        "text": {
+            "name": "Sig",
+            "desc": "System"
+        },
+        "children": [
+            {
+                "text": {
+                    "name": "Andophael",
+                    "desc": "Planet"
+                },
+                "children": [
+                    {
+                        "text": {
+                            "name": "Copernicus Mine Project",
+                            "desc": "Gas Giant Mine"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Tisoan",
+                            "desc": "Moon"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Thale",
+                            "desc": "Moon"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Staconago",
+                            "desc": "Moon"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Saritri Pala",
+                            "desc": "Moon"
+                        }
+                    }
+                ]
+            },
+            {
+                "text": {
+                    "name": "Fitzroy 7",
+                    "desc": "Research Base"
+                }
+            }
+        ]
+    },
+    "Imperial Prime": {
+        "text": {
+            "name": "Imperial Prime",
+            "desc": "System"
+        },
+        "children": [
+            {
+                "text": {
+                    "name": "Imperial Prime",
+                    "desc": "Planet"
+                },
+                "children": [
+                    {
+                        "text": {
+                            "name": "Porvoo Mine Project",
+                            "desc": "Gas Giant Mine"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Wynn-Williams 8",
+                            "desc": "Orbital Ruin"
+                        }
+                    }
+                ]
+            },
+            {
+                "text": {
+                    "name": "Maja",
+                    "desc": "Planet"
+                },
+                "children": [
+                    {
+                        "text": {
+                            "name": "Newport Mine",
+                            "desc": "Gas Giant Mine"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Arago Project",
+                            "desc": "Gas Giant Mine"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Herculaneum Mine Project",
+                            "desc": "Gas Giant Mine"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Via",
+                            "desc": "Moon"
+                        },
+                        "children": [
+                            {
+                                "text": {
+                                    "name": "Aki 9",
+                                    "desc": "Orbital Ruin"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "text": {
+                            "name": "Daly 2",
+                            "desc": "Orbital Ruin"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Li Fan 1",
+                            "desc": "Refueling Station"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    "Xandare": {
+        "text": {
+            "name": "Xandare",
+            "desc": "System"
+        },
+        "children": [
+            {
+                "text": {
+                    "name": "Pylopid",
+                    "desc": "Planet"
+                }
+            },
+            {
+                "text": {
+                    "name": "Bora",
+                    "desc": "Planet"
+                }
+            }
+        ]
+    },
+    "Guild HQ": {
+        "text": {
+            "name": "Guild HQ",
+            "desc": "System"
+        },
+        "children": [
+            {
+                "text": {
+                    "name": "The Guild Dyson Sphere",
+                    "desc": "Deep Space Station"
+                }
+            },
+            {
+                "text": {
+                    "name": "Optic 1",
+                    "desc": "Research Base"
+                }
+            }
+        ]
+    },
+    "Oenon": {
+        "text": {
+            "name": "Oenon",
+            "desc": "System"
+        },
+        "children": [
+            {
+                "text": {
+                    "name": "Briolette",
+                    "desc": "Planet"
+                }
+            },
+            {
+                "text": {
+                    "name": "Cabochon",
+                    "desc": "Planet"
+                }
+            },
+            {
+                "text": {
+                    "name": "Tarsus 5",
+                    "desc": "Research Base"
+                }
+            }
+        ]
+    },
+    "Solequon": {
+        "text": {
+            "name": "Solequon",
+            "desc": "System"
+        },
+        "children": [
+            {
+                "text": {
+                    "name": "Ergus",
+                    "desc": "Planet"
+                },
+                "children": [
+                    {
+                        "text": {
+                            "name": "Koy 2",
+                            "desc": "Research Base"
+                        }
+                    }
+                ]
+            },
+            {
+                "text": {
+                    "name": "Timoshenko 8",
+                    "desc": "Research Base"
+                }
+            }
+        ]
+    },
+    "Meneus": {
+        "text": {
+            "name": "Meneus",
+            "desc": "System"
+        },
+        "children": [
+            {
+                "text": {
+                    "name": "29 Copernicus",
+                    "desc": "Asteroid Belt"
+                },
+                "children": [
+                    {
+                        "text": {
+                            "name": "Schiaparelli 5",
+                            "desc": "Asteroid Base"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Gamboa 8",
+                            "desc": "Space Station"
+                        }
+                    }
+                ]
+            },
+            {
+                "text": {
+                    "name": "Tak 3",
+                    "desc": "Deep Space Station"
+                }
+            },
+            {
+                "text": {
+                    "name": "Ias",
+                    "desc": "Planet"
+                },
+                "children": [
+                    {
+                        "text": {
+                            "name": "Hallfdi",
+                            "desc": "Moon"
+                        },
+                        "children": [
+                            {
+                                "text": {
+                                    "name": "Ellsley 7",
+                                    "desc": "Research Base"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "text": {
+                            "name": "Kansk 1",
+                            "desc": "Research Base"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Aspen 8",
+                            "desc": "Space Station"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Ubud 8",
+                            "desc": "Space Station"
+                        }
+                    }
+                ]
+            },
+            {
+                "text": {
+                    "name": "Man",
+                    "desc": "Planet"
+                },
+                "children": [
+                    {
+                        "text": {
+                            "name": "Proctor 8",
+                            "desc": "Research Base"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Sibu 6",
+                            "desc": "Space Station"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Falun 8",
+                            "desc": "Space Station"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    "Bergunn": {
+        "text": {
+            "name": "Bergunn",
+            "desc": "System"
+        },
+        "children": [
+            {
+                "text": {
+                    "name": "3 Dessau",
+                    "desc": "Asteroid Belt"
+                },
+                "children": [
+                    {
+                        "text": {
+                            "name": "Oyama",
+                            "desc": "Space Station"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Holden 1",
+                            "desc": "Space Station"
+                        }
+                    }
+                ]
+            },
+            {
+                "text": {
+                    "name": "Al-Dost",
+                    "desc": "Planet"
+                },
+                "children": [
+                    {
+                        "text": {
+                            "name": "Airy Mine",
+                            "desc": "Gas Giant Mine"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Magadi 1",
+                            "desc": "Space Station"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Kita 7",
+                            "desc": "Space Station"
+                        }
+                    }
+                ]
+            },
+            {
+                "text": {
+                    "name": "Pierus XXIII",
+                    "desc": "Planet"
+                },
+                "children": [
+                    {
+                        "text": {
+                            "name": "Thurid VII",
+                            "desc": "Moon"
+                        },
+                        "children": [
+                            {
+                                "text": {
+                                    "name": "Gali 3",
+                                    "desc": "Research Base"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "text": {
+                            "name": "Shatskiy 1",
+                            "desc": "Research Base"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Flateyri 4",
+                            "desc": "Space Station"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Millochau 5",
+                            "desc": "Space Station"
+                        }
+                    }
+                ]
+            },
+            {
+                "text": {
+                    "name": "Chrates",
+                    "desc": "Planet"
+                },
+                "children": [
+                    {
+                        "text": {
+                            "name": "Eil 7",
+                            "desc": "Space Station"
+                        }
+                    },
+                    {
+                        "text": {
+                            "name": "Spry 1",
+                            "desc": "Space Station"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    "Home": {
+        "text": {
+            "name": "Home",
+            "desc": "System"
+        },
+        "children": [
+            {
+                "text": {
+                    "name": "Lodestone",
+                    "desc": "Deep Space Station"
+                }
+            },
+            {
+                "text": {
+                    "name": "Playfair IV",
+                    "desc": "Refueling Station"
+                }
+            }
+        ]
+    }
+}

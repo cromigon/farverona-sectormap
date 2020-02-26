@@ -4,288 +4,34 @@
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
         <link href="favicon.png" rel="icon" type="image/png" />
         <title>Far Verona Sector Map</title>
-        <style>
-            .se-pre-con {
-                position: fixed;
-                left: 0;
-                top: 0;
-                width: 100%;
-                height: 100%;
-                z-index: 9999;
-                background: url('img/loading.gif') center/10% no-repeat #141414;
-            }
-
-            @font-face {
-                font-family: 'D-DIN';
-                src: url('./fonts/D-DIN.otf');
-            }
-
-            @font-face {
-                font-family: 'D-DIN';
-                src: url('./fonts/D-DIN-Bold.otf');
-                font-weight: bold;
-            }
-
-            @-moz-document url-prefix() {
-                html,
-                body {
-                    overflow: hidden !important;
-                }
-            }
-
-            ::-webkit-scrollbar {
-                display: none;
-            }
-
-            body {
-                background-color: #141414;
-            }
-
-            img {
-                max-width: 100%;
-                max-height: 100%;
-            }
-
-            a {
-                color: #444;
-            }
-
-            mark {
-                color: #000;
-                background-color: #3ee1f4;
-            }
-
-            #visibilityToggle {
-                position: fixed;
-                top: 10px;
-                right: 50px;
-                width: 35px;
-                height: 35px;
-                background: url('img/hide_rest.png');
-                background-size: 35px;
-            }
-
-            #factionToggle {
-                position: fixed;
-                top: 10px;
-                right: 16px;
-                width: 35px;
-                height: 35px;
-                background: url('img/toggle_rest.png');
-                background-size: 35px;
-                transition: transform 0.4s ease-in-out;
-            }
-
-            #factionToggle:hover {
-                background: url('img/toggle_hover.png');
-                background-size: 35px;
-            }
-
-            #factionToggle:active {
-                background: url('img/toggle_pressed.png');
-                background-size: 35px;
-            }
-
-            .asset {
-                transition: opacity 0.1s;
-                transition-timing-function: ease-in-out;
-            }
-
-            .planet {
-                z-index: 3;
-                transition: opacity 0.1s;
-                transition-timing-function: ease-in-out;
-            }
-
-            #factionsCol {
-                position: fixed;
-                width: 200px;
-                height: 100%;
-                top: 0;
-                right: 10px;
-                margin: 0;
-                font-family: 'D-DIN', Helvetica, Arial, sans-serif;
-                font-size: 22px;
-                color: #fff;
-                transition: right 0.2s;
-                transition-timing-function: ease-in-out;
-                /*border: 1px solid #f00*/
-            }
-
-            #factionsCenter {
-                position: absolute;
-                top: 50%;
-                right: 0;
-                transform: translateY(-50%);
-                /*border: 1px solid #0f0*/
-            }
-
-            #factionTable {
-                width: 200px;
-                right: 0;
-                transform-origin: right center;
-                border-collapse: separate;
-                border-spacing: 0;
-                z-index: 1;
-                /*border: 1px solid #00f*/
-            }
-
-            .faction_name {
-                text-align: right;
-                padding-right: 10px;
-                cursor: pointer;
-            }
-
-            .faction_name:hover {
-                background-color: rgba(255, 255, 255, 0.1);
-            }
-
-            .faction_color {
-                width: 40px;
-                height: 40px;
-                background-color: #222;
-                padding: 2px 4px 2px 4px;
-                margin: 0;
-                cursor: pointer;
-            }
-
-            td img {
-                display: block;
-                margin-top: auto;
-                margin-bottom: auto;
-            }
-
-            .viewer {
-                position: fixed;
-                width: 100%;
-                top: 0;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                height: 100%;
-                margin: 0;
-                z-index: -1;
-            }
-
-            .hex {
-                opacity: 0;
-                transition: opacity 0.2s;
-                transition-timing-function: ease-in-out;
-            }
-
-            /*noinspection ALL*/
-            .highlight {
-                opacity: 0;
-                background-color: #fff;
-                z-index: 2;
-            }
-
-            /*noinspection ALL*/
-            .highlight:hover,
-            .highlight:focus {
-                opacity: 0.3;
-                background-color: #fff;
-            }
-
-            .tooltip {
-                position: absolute;
-                width: 420px;
-                padding: 10px;
-                display: none;
-                background-color: rgba(20, 20, 20, 1);
-                font-family: 'D-DIN', Helvetica, Arial, sans-serif;
-                border: 1px solid #777;
-            }
-
-            #sectorinfluence {
-                position: fixed;
-                margin: auto;
-                top: 0;
-                right: 0;
-                bottom: 0;
-                left: 0;
-                width: 600px;
-                max-height: 740px;
-                font-family: 'D-DIN', Helvetica, Arial, sans-serif;
-                color: #fff;
-                border: 1px solid #777;
-                background-color: rgba(20, 20, 20, 1);
-                z-index: -2;
-                opacity: 0;
-            }
-
-            #sectorinfluence_toggle {
-                position: absolute;
-                top: 50%;
-                transform: translateY(-50%);
-                left: 10px;
-                opacity: 0.1;
-                z-index: 2;
-            }
-
-            #sectorinfluence_toggle:hover {
-                opacity: 1;
-            }
-
-            #info {
-                position: fixed;
-                margin: auto;
-                top: 0;
-                right: 0;
-                bottom: 0;
-                left: 0;
-                width: 600px;
-                max-height: 420px;
-                font-family: 'D-DIN', Helvetica, Arial, sans-serif;
-                color: #fff;
-                border: 1px solid #777;
-                background-color: rgba(20, 20, 20, 1);
-                z-index: -2;
-                opacity: 0;
-            }
-
-            .icon {
-                height: 15px;
-                width: auto;
-            }
-
-            #credits {
-                position: fixed;
-                bottom: 5px;
-                left: 10px;
-                font-family: 'D-DIN', Arial, Helvetica, sans-serif;
-                font-size: 16px;
-            }
-
-            .influence {
-                position: fixed;
-                top: 50%;
-                left: 10px;
-                transform: translateY(-50%);
-                height: 65px;
-                min-height: 0 !important;
-                width: 65px;
-                /*border: 0px solid #fff;*/
-            }
-        </style>
+        <link rel="stylesheet" type="text/css" href="scripts/style.css">
+        <link rel="stylesheet" type="text/css" href="scripts/Treant.css">
         <script src="openseadragon/openseadragon.min.js"></script>
         <script src="scripts/openseadragon-svg-overlay.js"></script>
         <script src="scripts/apexcharts.js"></script>
         <script src="scripts/d3.v5.min.js"></script>
+        <script src="scripts/Treant.js"></script>
+        <script src="scripts/raphael.js"></script>
         <script src="scripts/jquery-3.4.1.min.js"></script>
         <script src="scripts/constants.js"></script>
         <script type="text/javascript">
             // Global variables
-            let highlighted_fac = '';
+            let highlighted_asset = '';
             let show_inactive = false;
             let show_factionTable = true;
+            let show_sidebar = false;
             let tip_on = false;
             let planet_tip_on = false;
+            let system_tip_on = false;
             let faction_tracker = {};
+            let system_tracker = {};
+            let system_objects_chart;
             let planet_tracker;
+            let planet_obects = {};
             let asset_tracker;
             let asset_objects = {};
             let influence_tracker = {};
+            let dir = {'influence': -1, 'faction': -1, 'name': -1, 'location': -1};
             let viewport_w = window.innerWidth;
             let viewport_h = window.innerHeight;
             let isFirefox = typeof InstallTrigger !== 'undefined';
@@ -330,8 +76,8 @@
                         >
                             PYXIS
                         </td>
-                        <td class="faction_color" onclick="displayFactionAssets('House Pyxis')">
-                            <div id="Pyxis-cell" style="width:100%;height:100%;background-color: #222"></div>
+                        <td class="faction_color">
+                            <div id="Pyxis-cell" style="width:100%;height:100%;background-color: #222" onclick="autoSearch(this.id)"></div>
                         </td>
                     </tr>
                     <tr id="Eridanus-row">
@@ -343,8 +89,8 @@
                         >
                             ERIDANUS
                         </td>
-                        <td class="faction_color" onclick="displayFactionAssets('House Eridanus')">
-                            <div id="Eridanus-cell" style="width:100%;height:100%;background-color: #222"></div>
+                        <td class="faction_color">
+                            <div id="Eridanus-cell" style="width:100%;height:100%;background-color: #222" onclick="autoSearch(this.id)"></div>
                         </td>
                     </tr>
                     <tr id="Triangulum-row">
@@ -356,8 +102,8 @@
                         >
                             TRIANGULUM
                         </td>
-                        <td class="faction_color" onclick="displayFactionAssets('House Triangulum')">
-                            <div id="Triangulum-cell" style="width:100%;height:100%;background-color: #222"></div>
+                        <td class="faction_color">
+                            <div id="Triangulum-cell" style="width:100%;height:100%;background-color: #222" onclick="autoSearch(this.id)"></div>
                         </td>
                     </tr>
                     <tr id="Crux-row">
@@ -369,8 +115,8 @@
                         >
                             CRUX
                         </td>
-                        <td class="faction_color" onclick="displayFactionAssets('House Crux')">
-                            <div id="Crux-cell" style="width:100%;height:100%;background-color: #222"></div>
+                        <td class="faction_color">
+                            <div id="Crux-cell" style="width:100%;height:100%;background-color: #222" onclick="autoSearch(this.id)"></div>
                         </td>
                     </tr>
                     <tr id="Fornax-row">
@@ -382,8 +128,8 @@
                         >
                             FORNAX
                         </td>
-                        <td class="faction_color" onclick="displayFactionAssets('House Fornax')">
-                            <div id="Fornax-cell" style="width:100%;height:100%;background-color: #222"></div>
+                        <td class="faction_color">
+                            <div id="Fornax-cell" style="width:100%;height:100%;background-color: #222" onclick="autoSearch(this.id)"></div>
                         </td>
                     </tr>
                     <tr id="Lyra-row">
@@ -395,8 +141,8 @@
                         >
                             LYRA
                         </td>
-                        <td class="faction_color" onclick="displayFactionAssets('House Lyra')">
-                            <div id="Lyra-cell" style="width:100%;height:100%;background-color: #222"></div>
+                        <td class="faction_color">
+                            <div id="Lyra-cell" style="width:100%;height:100%;background-color: #222" onclick="autoSearch(this.id)"></div>
                         </td>
                     </tr>
                     <tr id="Serpens-row">
@@ -408,8 +154,8 @@
                         >
                             SERPENS
                         </td>
-                        <td class="faction_color" onclick="displayFactionAssets('House Serpens')">
-                            <div id="Serpens-cell" style="width:100%;height:100%;background-color: #222"></div>
+                        <td class="faction_color">
+                            <div id="Serpens-cell" style="width:100%;height:100%;background-color: #222" onclick="autoSearch(this.id)"></div>
                         </td>
                     </tr>
                     <tr id="Reticulum-row">
@@ -421,8 +167,8 @@
                         >
                             RETICULUM
                         </td>
-                        <td class="faction_color" onclick="displayFactionAssets('House Reticulum')">
-                            <div id="Reticulum-cell" style="width:100%;height:100%;background-color: #222"></div>
+                        <td class="faction_color">
+                            <div id="Reticulum-cell" style="width:100%;height:100%;background-color: #222" onclick="autoSearch(this.id)"></div>
                         </td>
                     </tr>
                     <tr id="Aquila-row">
@@ -434,8 +180,8 @@
                         >
                             AQUILA
                         </td>
-                        <td class="faction_color" onclick="displayFactionAssets('House Aquila')">
-                            <div id="Aquila-cell" style="width:100%;height:100%;background-color: #222"></div>
+                        <td class="faction_color">
+                            <div id="Aquila-cell" style="width:100%;height:100%;background-color: #222" onclick="autoSearch(this.id)"></div>
                         </td>
                     </tr>
                     <tr id="Trilliant-row">
@@ -447,8 +193,8 @@
                         >
                             TRILLIANT
                         </td>
-                        <td class="faction_color" onclick="displayFactionAssets('The Trilliant Ring')">
-                            <div id="Trilliant-cell" style="width:100%;height:100%;background-color: #222"></div>
+                        <td class="faction_color">
+                            <div id="Trilliant-cell" style="width:100%;height:100%;background-color: #222" onclick="autoSearch(this.id)"></div>
                         </td>
                     </tr>
                     <tr id="Prism-row">
@@ -460,8 +206,8 @@
                         >
                             PRISM
                         </td>
-                        <td class="faction_color" onclick="displayFactionAssets('The PRISM Network')">
-                            <div id="Prism-cell" style="width:100%;height:100%;background-color: #222"></div>
+                        <td class="faction_color">
+                            <div id="Prism-cell" style="width:100%;height:100%;background-color: #222" onclick="autoSearch(this.id)"></div>
                         </td>
                     </tr>
                     <tr id="SERAPH-row">
@@ -473,8 +219,8 @@
                         >
                             SERAPH
                         </td>
-                        <td class="faction_color" onclick="displayFactionAssets('SERAPH')">
-                            <div id="SERAPH-cell" style="width:100%;height:100%;background-color: #222"></div>
+                        <td class="faction_color">
+                            <div id="SERAPH-cell" style="width:100%;height:100%;background-color: #222" onclick="autoSearch(this.id)"></div>
                         </td>
                     </tr>
                     <tr id="DCS-row">
@@ -486,8 +232,8 @@
                         >
                             DCS
                         </td>
-                        <td class="faction_color" onclick="displayFactionAssets('The Deathless')">
-                            <div id="DCS-cell" style="width:100%;height:100%;background-color: #222"></div>
+                        <td class="faction_color">
+                            <div id="DCS-cell" style="width:100%;height:100%;background-color: #222" onclick="autoSearch(this.id)"></div>
                         </td>
                     </tr>
                     <tr id="Vagrant-row">
@@ -501,9 +247,8 @@
                         </td>
                         <td
                             class="faction_color"
-                            onclick="displayFactionAssets('Confederation of the Upright Vagrant')"
                         >
-                            <div id="Vagrant-cell" style="width:100%;height:100%;background-color: #222"></div>
+                            <div id="Vagrant-cell" style="width:100%;height:100%;background-color: #222" onclick="autoSearch(this.id)"></div>
                         </td>
                     </tr>
                     <tr id="DM-row">
@@ -515,8 +260,8 @@
                         >
                             DM
                         </td>
-                        <td class="faction_color" onclick="displayFactionAssets('The Democratic Mandate')">
-                            <div id="DM-cell" style="width:100%;height:100%;background-color: #222"></div>
+                        <td class="faction_color">
+                            <div id="DM-cell" style="width:100%;height:100%;background-color: #222" onclick="autoSearch(this.id)"></div>
                         </td>
                     </tr>
                     <tr id="Vela-row">
@@ -528,8 +273,8 @@
                         >
                             VELA
                         </td>
-                        <td class="faction_color" onclick="displayFactionAssets('The Velan Ascendency')">
-                            <div id="Vela-cell" style="width:100%;height:100%;background-color: #222"></div>
+                        <td class="faction_color">
+                            <div id="Vela-cell" style="width:100%;height:100%;background-color: #222" onclick="autoSearch(this.id)"></div>
                         </td>
                     </tr>
                     <tr id="UPC-row">
@@ -541,8 +286,8 @@
                         >
                             UPC
                         </td>
-                        <td class="faction_color" onclick="displayFactionAssets('The Unified People\'s Collective')">
-                            <div id="UPC-cell" style="width:100%;height:100%;background-color: #222"></div>
+                        <td class="faction_color">
+                            <div id="UPC-cell" style="width:100%;height:100%;background-color: #222" onclick="autoSearch(this.id)"></div>
                         </td>
                     </tr>
                     <tr id="HM-row">
@@ -554,8 +299,8 @@
                         >
                             HM
                         </td>
-                        <td class="faction_color" onclick="displayFactionAssets('The Houses Minor')">
-                            <div id="HM-cell" style="width:100%;height:100%;background-color: #222"></div>
+                        <td class="faction_color">
+                            <div id="HM-cell" style="width:100%;height:100%;background-color: #222" onclick="autoSearch(this.id)"></div>
                         </td>
                     </tr>
                     <tr id="HC-row">
@@ -567,22 +312,20 @@
                         >
                             HC
                         </td>
-                        <td
-                            class="faction_color"
-                            onclick="displayFactionAssets('The High Church of Messiah-as-Emperox')"
-                        >
-                            <div id="HC-cell" style="width:100%;height:100%;background-color: #222"></div>
+                        <td class="faction_color">
+                            <div id="HC-cell" style="width:100%;height:100%;background-color: #222" onclick="autoSearch(this.id)"></div>
                         </td>
                     </tr>
                 </table>
             </div>
         </div>
+
         <div class="tooltip" id="tip">
             <table
                 border="0"
                 cellpadding="4"
                 cellspacing="0"
-                style="margin: 0; border-bottom: 1px dotted #777"
+                style="margin: 0; border-bottom: 1px dotted #404040"
                 width="100%"
             >
                 <tr>
@@ -595,7 +338,7 @@
                 </tr>
             </table>
 
-            <p id="tip_name" style="font-size:24px; margin-top: 10px; margin-bottom: 10px; color: #fff;"></p>
+            <p id="tip_name" style="font-size:24px; margin-top: 10px; margin-bottom: 10px; color: #fff; font-weight: bold"></p>
             <table border="0" cellpadding="0" cellspacing="0" style="margin: 0" width="100%">
                 <tr>
                     <td
@@ -673,11 +416,19 @@
                 </tr>
                 <tr>
                     <table style="margin-top: 10px" width="100%">
-                        <tr id="tip_row_special">
+                        <tr id="tip_row_stealth">
                             <td style="font-size:12px; line-height: 12px; color: #fff; padding-right: 10px" align="right" valign="middle">
+                                <b>Stealth</b>
+                            </td>
+                            <td id="tip_stealth" style="font-size:12px; line-height: 12px; color: #fff;">
+                                An asset that has been Stealthed cannot be detected or attacked by other factions. If the unit normally requires the permission of a planetary government to be moved onto a planet, that permission may be foregone. An asset loses its Stealth if it is used to attack or defend.
+                            </td>
+                        </tr>
+                        <tr id="tip_row_special">
+                            <td style="font-size:12px; line-height: 12px; color: #fff; padding: 10px 10px 0 0" align="right" valign="middle">
                                 <b>Special</b>
                             </td>
-                            <td id="tip_special" style="font-size:12px; line-height: 12px; color: #fff;"></td>
+                            <td id="tip_special" style="font-size:12px; line-height: 12px; color: #fff; padding-top: 10px"></td>
                         </tr>
                         <tr id="tip_row_status">
                             <td id="tip_status_label" style="font-size:12px; line-height: 12px; color: #fff; padding: 10px 10px 0 0" align="right" valign="middle"></td>
@@ -695,7 +446,7 @@
                 border="0"
                 cellpadding="4"
                 cellspacing="0"
-                style="margin: 0; border-bottom: 1px dotted #777"
+                style="margin: 0; border-bottom: 1px dotted #404040"
                 width="100%"
             >
                 <tr>
@@ -708,41 +459,76 @@
                 </tr>
             </table>
 
-            <p id="planet_tip_name" style="color:#fff; font-size:24px; margin-top: 10px; margin-bottom: 10px"></p>
+            <p id="planet_tip_name" style="color:#fff; font-size:24px; margin-top: 10px; margin-bottom: 10px; font-weight: bold"></p>
             <table border="0" cellpadding="2" cellspacing="0" style="margin: 0" width="100%">
                 <tr>
-                    <td style="color:#fff; font-size:12px; line-height: 12px" width="80">
-                        <b>Planet Tags:</b>
+                    <td style="width: 30px; padding: 5px 5px 5px 0">
+                        <img alt="" class="icon" src="img/pcvi_icon.png" />
                     </td>
-                    <td id="planet_tip_tags" style="color:#fff; font-size:12px; line-height: 12px"></td>
+                    <td id="planet_tip_pcvi" style="color:#fff; font-size: 14px; line-height: 14px"></td>
                 </tr>
                 <tr>
-                    <td style="color:#fff; font-size:12px; line-height: 12px" width="80">
-                        <b>Population:</b>
+                    <td style="width: 30px; padding: 5px 5px 5px 0">
+                        <img alt="" class="icon" src="img/tl_icon.png" />
                     </td>
-                    <td id="planet_tip_pop" style="color:#fff; font-size:12px; line-height: 12px"></td>
+                    <td id="planet_tip_tl" style="color:#fff; font-size: 14px; line-height: 14px"></td>
                 </tr>
                 <tr>
-                    <td style="color:#fff; font-size:12px; line-height: 12px">
-                        <b>Tech Level:</b>
+                    <td style="width: 30px; padding: 5px 5px 5px 0">
+                        <img alt="" class="icon" src="img/pop_icon.png" />
                     </td>
-                    <td id="planet_tip_tl" style="color:#fff; font-size:12px; line-height: 12px"></td>
+                    <td id="planet_tip_pop" style="color:#fff; font-size: 14px; line-height: 14px"></td>
                 </tr>
                 <tr>
-                    <td style="color:#fff; font-size:12px; line-height: 12px">
-                        <b>Total Influence:</b>
+                    <td style="width: 30px; padding: 5px 5px 5px 0">
+                        <img alt="" class="icon" src="img/atmo_icon.png" />
                     </td>
-                    <td id="planet_tip_infl" style="color:#fff; font-size:12px; line-height: 12px"></td>
+                    <td id="planet_tip_atmo" style="color:#fff; font-size: 14px; line-height: 14px"></td>
                 </tr>
                 <tr>
-                    <td style="color:#fff; font-size:12px; line-height: 12px">
-                        <b>PCVI:</b>
+                    <td style="width: 30px; padding: 5px 5px 5px 0">
+                        <img alt="" class="icon" src="img/temp_icon.png" />
                     </td>
-                    <td id="planet_tip_pcvi" style="color:#fff; font-size:12px; line-height: 12px"></td>
+                    <td id="planet_tip_temp" style="color:#fff; font-size: 14px; line-height: 14px"></td>
+                </tr>
+                <tr>
+                    <td style="width: 30px; padding: 5px 5px 5px 0">
+                        <img alt="" class="icon" src="img/bio_icon.png" />
+                    </td>
+                    <td id="planet_tip_bio" style="color:#fff; font-size: 14px; line-height: 14px"></td>
+                </tr>
+                <tr>
+                    <td style="width: 30px; padding: 5px 5px 5px 0">
+                        <img alt="" class="icon" src="img/tags_icon.png" />
+                    </td>
+                    <td id="planet_tip_tags" style="color:#fff; font-size: 14px; line-height: 14px"></td>
                 </tr>
             </table>
 
             <div id="planet_tip_chart" style="position: relative; top: 5px;"></div>
+        </div>
+        <div class="tooltip" id="system_tip">
+            <table border="0" cellpadding="10" cellspacing="0" width="100%">
+                <tr>
+                    <td>
+                        <table
+                                border="0"
+                                cellpadding="10"
+                                cellspacing="0"
+                                style="border-bottom: 1px dotted #404040"
+                                width="100%"
+                        >
+                            <tr>
+                                <td id="system_tip_name" style="font-size: 20px">
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+
+            <div id="system_objects_chart_container"></div>
+            <div id="system_tip_chart" style="position: relative; top: 5px;"></div>
         </div>
         <script type="text/javascript">
             for (let fac in factions) {
@@ -784,7 +570,8 @@
                     offsetY: 176,
                     floating: true,
                     style: {
-                        color: '#ffffff'
+                        color: '#ffffff',
+                        fontWeight: 'bold'
                     }
                 },
                 series: [],
@@ -825,8 +612,79 @@
             planet_tip_chart.render();
         </script>
         <script type="text/javascript">
-            const ttip = document.getElementById('tip');
-            const planet_ttip = document.getElementById('planet_tip');
+            const system_tip_chart = new ApexCharts(document.querySelector('#system_tip_chart'), {
+                chart: {
+                    type: 'donut',
+                    animations: {
+                        enabled: true,
+                        easing: 'easeinout',
+                        speed: 100,
+                        animateGradually: {
+                            enabled: true,
+                            delay: 500
+                        },
+                        dynamicAnimation: {
+                            enabled: true,
+                            speed: 100
+                        }
+                    },
+                    fontFamily: 'D-DIN, Helvetica, Arial, sans-serif',
+                    parentHeightOffset: 15,
+                    dropShadow: {
+                        enabled: false
+                    }
+                },
+                title: {
+                    text: 'Influence',
+                    align: 'center',
+                    offsetY: 176,
+                    floating: true,
+                    style: {
+                        color: '#ffffff',
+                        fontWeight: 'bold'
+                    }
+                },
+                series: [],
+                legend: {
+                    show: true,
+                    floating: true,
+                    position: 'bottom',
+                    labels: {
+                        colors: '#ffffff'
+                    },
+                    itemMargin: {
+                        horizontal: 5
+                    }
+                },
+                stroke: {
+                    show: true,
+                    width: 4,
+                    colors: ['#141414']
+                },
+                dataLabels: {
+                    enabled: true,
+                    style: {
+                        fontSize: '16px'
+                    },
+                    dropShadow: {
+                        enabled: false
+                    }
+                },
+                plotOptions: {
+                    pie: {
+                        offsetY: 10,
+                        donut: {
+                            size: '50%'
+                        }
+                    }
+                }
+            });
+            system_tip_chart.render();
+        </script>
+        <script type="text/javascript">
+            const tip = document.getElementById('tip');
+            const planet_tip = document.getElementById('planet_tip');
+            const system_tip = document.getElementById('system_tip');
             let x_offset = false;
             let y_offset = false;
 
@@ -834,22 +692,27 @@
                 let mouse_x = e.clientX;
                 let mouse_y = e.clientY;
 
-                if (tip_on === true || planet_tip_on === true) {
+                if (tip_on === true || planet_tip_on === true || system_tip_on === true) {
                     if (x_offset) {
-                        ttip.style.left = mouse_x - ttip.offsetWidth - 20 + 'px';
-                        planet_ttip.style.left = mouse_x - planet_ttip.offsetWidth - 20 + 'px';
+                        tip.style.left = mouse_x - tip.offsetWidth - 20 + 'px';
+                        planet_tip.style.left = mouse_x - planet_tip.offsetWidth - 20 + 'px';
+                        system_tip.style.left = mouse_x - system_tip.offsetWidth - 20 + 'px';
                     } else {
-                        ttip.style.left = mouse_x + 20 + 'px';
-                        planet_ttip.style.left = mouse_x + 20 + 'px';
+                        tip.style.left = mouse_x + 20 + 'px';
+                        planet_tip.style.left = mouse_x + 20 + 'px';
+                        system_tip.style.left = mouse_x + 20 + 'px';
                     }
 
                     if (y_offset) {
-                        ttip.style.top = Math.max(mouse_y - ttip.offsetHeight - 20, 5) + 'px';
-                        planet_ttip.style.top = Math.max(mouse_y - planet_ttip.offsetHeight - 20, 5) + 'px';
+                        tip.style.top = Math.max(mouse_y - tip.offsetHeight - 20, 5) + 'px';
+                        planet_tip.style.top = Math.max(mouse_y - planet_tip.offsetHeight - 20, 5) + 'px';
+                        system_tip.style.top = Math.max(mouse_y - system_tip.offsetHeight - 20, 5) + 'px';
                     } else {
-                        ttip.style.top = Math.min(mouse_y + 20, viewport_h - ttip.offsetHeight - 5) + 'px';
-                        planet_ttip.style.top =
-                            Math.min(mouse_y + 20, viewport_h - planet_ttip.offsetHeight - 5) + 'px';
+                        tip.style.top = Math.min(mouse_y + 20, viewport_h - tip.offsetHeight - 5) + 'px';
+                        planet_tip.style.top =
+                            Math.min(mouse_y + 20, viewport_h - planet_tip.offsetHeight - 5) + 'px';
+                        system_tip.style.top =
+                            Math.min(mouse_y + 20, viewport_h - system_tip.offsetHeight - 5) + 'px';
                     }
                 } else {
                     x_offset = mouse_x > viewport_w * 0.5;
@@ -866,12 +729,12 @@
                             border="0"
                             cellpadding="10"
                             cellspacing="0"
-                            style="border-bottom: 1px dotted #777"
+                            style="border-bottom: 1px dotted #404040"
                             width="100%"
                         >
                             <tr>
                                 <td style="font-size: 20px">
-                                    Sector Influence
+                                    <b>Total Sector Influence</b>
                                 </td>
                             </tr>
                         </table>
@@ -881,7 +744,6 @@
 
             <div id="sectorinfluence_chart" style="position: relative; top: 5px;"></div>
         </div>
-
         <script type="text/javascript">
             const sectorinfluence_chart = new ApexCharts(document.querySelector('#sectorinfluence_chart'), {
                 chart: {
@@ -958,11 +820,11 @@
                             border="0"
                             cellpadding="10"
                             cellspacing="0"
-                            style="border-bottom: 1px dotted #777"
+                            style="border-bottom: 1px dotted #404040"
                             width="100%"
                         >
                             <tr>
-                                <td id="info_faction" style="font-size: 20px"></td>
+                                <td id="info_faction" style="font-size: 20px; font-weight: bold"></td>
                                 <td align="right" id="info_homeworld" style="font-size: 12px" valign="bottom"></td>
                             </tr>
                         </table>
@@ -1062,6 +924,43 @@
             </table>
         </div>
 
+        <div id="sidebar">
+
+            <div id="search-container">
+                <input type="text" id="search-bar" onkeyup="filterList()" placeholder="Search ..." />
+
+                <div id="del_button" onclick="delFilter()">
+                    <img id="delButtonImg" src="img/del_icon.png" alt="" />
+                </div>
+            </div>
+
+            <div id="sort-container">
+                <div id="sort_by">
+                    <table>
+                        <tr>
+                            <td id="sort_influence" onclick="sortBy('influence')">
+                                Influence
+                            </td>
+                            <td id="sort_faction" onclick="sortBy('faction')">
+                                Faction
+                            </td>
+                            <td id="sort_asset" onclick="sortBy('name')">
+                                Asset
+                            </td>
+                            <td id="sort_location" onClick="sortBy('location')">
+                                Location
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div id="assetPool"></div>
+
+        </div>
+
+        <div id="sidebarToggle" onclick="toggleSidebar()"></div>
+
         <div
             id="sectorinfluence_toggle"
             onmouseenter="displaySectorInfluence()"
@@ -1070,11 +969,11 @@
             <img alt="" src="img/donut_chart.png" style="width: 50px; height: auto;" />
         </div>
 
-        <div id="credits">
-            <a href="https://sea-watch.org/en/" rel="noopener noreferrer" target="_blank"
-                ><img alt="" src="img/SeaWatch.png" style="width: 50px; height: auto;"
-            /></a>
-        </div>
+<!--        <div id="credits">-->
+<!--            <a href="https://sea-watch.org/en/" rel="noopener noreferrer" target="_blank"-->
+<!--                ><img alt="" src="img/SeaWatch.png" style="width: 50px; height: auto;"-->
+<!--            /></a>-->
+<!--        </div>-->
 
         <div
             id="visibilityToggle"
@@ -1083,6 +982,6 @@
             onmouseleave="visibilityToggleStyling('out')"
         ></div>
 
-        <div id="factionToggle" onclick="toggleFactionTable()"></div>
+<!--        <div id="factionToggle" onclick="toggleFactionTable()"></div>-->
     </body>
 </html>

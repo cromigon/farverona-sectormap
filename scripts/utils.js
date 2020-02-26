@@ -1,5 +1,302 @@
+// TODO: REWRITE TO ONLY MAINTAIN 1 TRACKER
+
+class SystemName {
+    constructor(id, system) {
+        this.id = 'system' + id.toString().padStart(2, '0');
+        this.system_name = system;
+        this.hex_id = 'hex_' + system_tracker[system]['Hex'];
+
+        this.hex_x = hexes[this.hex_id]['X'];
+        this.hex_y = hexes[this.hex_id]['Y'];
+        this.num_planets = system_tracker[system]['num_planets'];
+        this.x_offset = 0;
+        this.y_offset = -0.046;
+
+        this.text_color = '#7c7c7c';
+        let font_weight = 'normal';
+        let w_factor = 1;
+        let padding;
+            let style_str;
+            if (isFirefox) {
+                style_str = 'font-size: 0.02px; font-size-adjust: 0.2';
+                padding = 0.0015;
+            } else {
+                style_str = 'font-size: 0.0056px';
+                padding = 0.0005;
+            }
+
+            let system_name_SVG = d3.select(svg_overlay.node()).append('svg:text')
+                    .text(this.system_name.toUpperCase())
+                    .attr('style', style_str)
+                    .attr('id', this.id + '_name')
+                    .attr('font-family', 'D-DIN')
+                    .attr('fill', '#7c7c7c')
+                    .attr('text-anchor', 'middle')
+                    .attr('x', this.hex_x + this.x_offset)
+                    .attr('y', this.hex_y + this.y_offset);
+        this.text = getElem(this.id + '_name');
+        let box_width = system_name_SVG.node().getComputedTextLength();
+
+        new SystemNameHighlight(
+            this.id + '_highlight',
+            this.hex_x,
+            this.hex_y,
+            this.x_offset,
+            this.y_offset,
+            w_factor,
+            box_width,
+            padding
+        );
+        this.highlight_box = viewer.getOverlayById(this.id + '_highlight');
+
+        // noinspection JSUnusedLocalSymbols
+        new OpenSeadragon.MouseTracker({
+            element: this.id + '_highlight',
+            enterHandler: () => {
+                getElem('system_tip_name').innerHTML = `<b>${this.system_name}</b>`;
+                getElem('system_tip').style.display = 'block';
+                getElem('system_tip').style.zIndex = '3';
+                system_tip_on = true;
+                updateSystemChart(this.system_name);
+
+                let system_objects_chart_config = {
+                    chart: {
+                        container: "#system_objects_chart_container",
+                        rootOrientation: 'WEST', // NORTH || EAST || WEST || SOUTH
+                        levelSeparation: 40,
+                        siblingSeparation: 2,
+                        subTeeSeparation: 10,
+                        nodeAlign: "BOTTOM",
+                        connectors: {
+                            type: "step",
+                            style: {
+                                "stroke-width": 1,
+                                "stroke-linecap": "round",
+                                "stroke-dasharray": '. ',
+                                "stroke": "#777"
+                            }
+                        },
+                        node: {
+                            HTMLclass: 'system_object'
+                        }
+                    },
+                    nodeStructure: system_objects[this.system_name]
+                };
+                system_objects_chart = new Treant(system_objects_chart_config);
+                console.log(system_objects_chart)
+            },
+            exitHandler: () => {
+                getElem('system_tip').style.display = 'none';
+                system_tip_on = false;
+                system_objects_chart.destroy();
+            },
+            clickHandler: () => {
+                window.open('https://far-verona.fandom.com/wiki/' + this.system_name);
+            }
+        });
+    }
+}
+
+class SystemNameHighlight {
+    constructor(id, hex_x, hex_y, x_offset, y_offset, w_factor, box_width, padding) {
+        this.id = id;
+        let highlight = document.createElement('div');
+        highlight.id = this.id;
+        highlight.className = 'highlight';
+        highlight.style.cursor = 'pointer';
+
+        viewer.addOverlay({
+            element: highlight,
+            location: new OpenSeadragon.Rect(
+                hex_x + x_offset - (w_factor * box_width) / 2 - padding,
+                hex_y + y_offset - 0.005,
+                (box_width + 2 * padding) * w_factor,
+                0.006
+            )
+        })
+    }
+}
+
+class PlanetName {
+    constructor(id, planet) {
+        this.planet = planet;
+        this.id = 'planet_' + id.toString().padStart(2, '0');
+        this.hex_id = 'hex_' + planet['Hex'];
+        this.system_name = planet['System'];
+        this.planet_name = planet['Name'];
+        this.pgov = planet['Planetary Government'];
+        this.hw = planet['Homeworld'];
+        this.tl = planet['TL'];
+        this.pop = planet['Population'];
+        this.atmo = planet['Atmosphere'];
+        this.temp = planet['Temperature'];
+        this.bio = planet['Biosphere'];
+        this.pcvi = planet['PCVI'];
+        this.tags = planet['Tags'].join(', ');
+
+        this.hex_x = hexes[this.hex_id]['X'];
+        this.hex_y = hexes[this.hex_id]['Y'];
+        this.current_idx = planet['idx'];
+        this.num_planets = planet['total'];
+        this.x_offset = planet_to_hex_offsets[this.num_planets][this.current_idx]['X'];
+        this.y_offset = planet_to_hex_offsets[this.num_planets][this.current_idx]['Y'];
+
+        this.text_color = '#7c7c7c';
+        this.box_color = '#222222';
+        let font_weight = 'normal';
+        let w_factor = 1;
+        let hw_str = '';
+        let owner_str = 'Unclaimed';
+        if (this.pgov !== '') {
+            this.text_color = factions[this.pgov]['text'];
+            this.box_color = factions[this.pgov]['color'];
+            owner_str = this.pgov;
+        }
+        if (this.pgov === this.hw && this.pgov !== '') {
+            font_weight = 'bold';
+            w_factor = 0.98;
+            hw_str = ' (Homeworld)';
+        }
+        let padding;
+        let style_str;
+        if (isFirefox) {
+            style_str = 'font-size: 0.01px; font-size-adjust: 0.1';
+            padding = 0.0015;
+        } else {
+            style_str = 'font-size: 0.0035px';
+            padding = 0.0005;
+        }
+
+        let planet_name_SVG = d3
+            .select(svg_overlay.node())
+            .append('svg:text')
+            .text(this.planet_name.toUpperCase())
+            .attr('style', style_str)
+            .attr('id', this.id + '_name')
+            .attr('class', 'planet')
+            .attr('font-family', 'D-DIN')
+            .attr('font-weight', font_weight)
+            .attr('fill', this.text_color)
+            .attr('text-anchor', 'middle')
+            .attr('x', this.hex_x + this.x_offset)
+            .attr('y', this.hex_y + this.y_offset + 0.011)
+            .attr('pointer-events', 'none');
+        this.text = getElem(this.id + '_name');
+        let box_width = planet_name_SVG.node().getComputedTextLength();
+        d3.select(svg_overlay.node())
+            .insert('rect', '#' + this.id + '_name')
+            .attr('id', this.id + '_color')
+            .attr('class', 'planet')
+            .attr('fill', this.box_color)
+            .attr('x', this.hex_x + this.x_offset - (w_factor * box_width) / 2 - padding)
+            .attr('y', this.hex_y + this.y_offset + 0.00812)
+            .attr('width', (box_width + 2 * padding) * w_factor)
+            .attr('height', 0.0034)
+            .attr('pointer-events', 'none');
+        this.color_box = getElem(this.id + '_color');
+
+        new PlanetNameHighlight(
+            this.id + '_highlight',
+            this.hex_x,
+            this.hex_y,
+            this.x_offset,
+            this.y_offset,
+            w_factor,
+            box_width,
+            padding
+        );
+        this.highlight_box = viewer.getOverlayById(this.id + '_highlight');
+
+        // noinspection JSUnusedLocalSymbols
+        new OpenSeadragon.MouseTracker({
+            element: this.id + '_highlight',
+            enterHandler: () => {
+                let display_name = this.planet_name;
+                if (this.planet_name === 'The Guild Dyson Sphere') {
+                    display_name = 'Ṫ̠͇̝̤̏͊͛̈́̐̍h̖̯͉͓͉̝̘̝͇̥̒͐̿̅̊̅ẻ̬͚̞̱͙̮̂͗͆̄̈́́ G̟̪̳̳̗͇̗͍͔͓̥̎̃̑̆͐ù͍̪̜̳̱͈͎͔̏͑́̏̏̏̔͐̃́ͅi̲̠͍͙̗̮̞̳̞͌͒͂́͐͊̉̄̐̀̚l͇̥͍̤̮̫̏́͂̿d̮͇̯͙̝̗̤̩̥̯̩̿̽͛͛̋͐̈́̚ D̤̗̙̠͇̀̾̇̌̐̈́y͉̙͇̝͓͔͋̾̓̏͌͂͌͒̉̚s͉͖̣̜̬̋̂͊͊̆̌̉̽̈ȯ̪̟̪̦͂͋̋̈́̒͑́̐͌̚̚n̰͍̦̩͓͉͕̭͍̆̅̿̉́͗̇̇̏̃͑͑ Ŝ̲̞̘̬̓́̈̉͗́̆͐͑̐̿p͔͍͙̲̓̿͌͆͆̿͋̆̈ͅh̦͕̭̥̤̪̯̱̤͐̆̈́̌̐͑̿e͚̱̭̗̣̍̅̑̽̀̂̓͂̚r̖̙̬̭̤̙̬̰̗͚̩̘̿̋́͛̀e̞̙̭̝̗͓͔͔͙̤͇̬̐̓͂͌̋̄̈́̌̑͆͋̑';
+                }
+                getElem('planet_tip_name').innerHTML = display_name;
+                getElem('planet_tip_sys').innerHTML = this.hex_id.replace('hex_', '') + ' / ' + this.system_name;
+                getElem('planet_tip').style.display = 'block';
+                getElem('planet_tip').style.zIndex = '3';
+                planet_tip_on = true;
+                if (this.planet_name === 'The Guild Dyson Sphere') {
+                    this.tags = 'tags more like HAX amirite';
+                    this.atmo = 'chill';
+                    this.temp = 'fever';
+                    this.bio = 'sexy af';
+                    this.tl = '9001';
+                    this.pop = 'ok boomer';
+                    this.pcvi = ['u wot m8', 'u wot m8'];
+                    let options = {
+                        labels: ['The Guild'],
+                        colors: ['#f70094'],
+                        dataLabels: {
+                            formatter: () => {
+                                return '420.0%';
+                            },
+                            style: {
+                                colors: ['#ffffff']
+                            }
+                        }
+                    };
+                    planet_tip_chart.updateSeries([6969]);
+                    planet_tip_chart.updateOptions(options);
+                    getElem('planet_tip_infl').innerHTML = '6969';
+                } else {
+                    updatePlanetChart(this.planet_name);
+                }
+                getElem('planet_tip_atmo').innerHTML = this.atmo;
+                getElem('planet_tip_temp').innerHTML = this.temp;
+                getElem('planet_tip_bio').innerHTML = this.bio;
+                getElem('planet_tip_tl').innerHTML = this.tl;
+                getElem('planet_tip_pcvi').innerHTML = this.pcvi[0] !== this.pcvi[1] ? `${this.pcvi[1]} (${this.pcvi[0]})` : this.pcvi[0];
+                getElem('planet_tip_pop').innerHTML = this.pop;
+                getElem('planet_tip_tags').innerHTML = this.tags;
+                replaceInactiveFactionNames(this.planet_name, owner_str, hw_str);
+            },
+            exitHandler: () => {
+                getElem('planet_tip').style.display = 'none';
+                planet_tip_on = false;
+            },
+            clickHandler: () => {
+                window.open('https://far-verona.fandom.com/wiki/' + this.planet_name);
+            }
+        });
+    }
+
+    color(text_color, box_color) {
+        this.text.setAttribute('fill', text_color);
+        this.color_box.setAttribute('fill', box_color);
+    }
+
+    fontweight(weight) {
+        this.text.setAttribute('font-weight', weight)
+    }
+}
+
+class PlanetNameHighlight {
+    constructor(id, hex_x, hex_y, x_offset, y_offset, w_factor, box_width, padding) {
+        this.id = id;
+        let highlight = document.createElement('div');
+        highlight.id = this.id;
+        highlight.className = 'highlight';
+        highlight.style.cursor = 'pointer';
+
+        viewer.addOverlay({
+            element: highlight,
+            location: new OpenSeadragon.Rect(
+                hex_x + x_offset - (w_factor * box_width) / 2 - padding,
+                hex_y + y_offset + 0.00812,
+                (box_width + 2 * padding) * w_factor,
+                0.0034
+            )
+        })
+    }
+}
+
 class Asset {
-    constructor(id, asset, hex_id, pos) {
+    constructor(id, asset, hex_id, pos, location) {
         this.id = id;
         this.name = asset['Asset'];
         this.isboi = this.name === 'Base Of Influence';
@@ -14,14 +311,14 @@ class Asset {
         this.imperial = this.status === "Imperial Asset";
         let name_str = this.name;
         if (this.imperial) {
-            name_str = 'Imperial ' + name_str;
+            name_str = `Imperial ${name_str}`;
         }
         if (this.stealth) {
-            name_str = '<mark>' + name_str + ' (Stealthed)</mark>';
+            name_str = `<mark>${name_str}</mark>`;
         }
         this.type = this.isboi ? '' : asset['Type'];
-        this.cost = this.isboi ? 'Special' : asset['Cost'];
-        this.tl = this.isboi ? '-' : assets[this.name]['TL'];
+        this.cost = this.isboi ? 'Special' : asset['Cost'] !== 'n/a' ? asset['Cost'] : '-';
+        this.tl = this.isboi ? '-' : assets[this.name]['TL'] !== 'n/a' ? assets[this.name]['TL'] : '-';
         this.atk = this.isboi ? '-' : asset['Attack'].replace('None', '-');
         this.def = this.isboi ? '-' : asset['Counter'].replace('None', '-');
         this.stat = this.isboi ? '' : asset['W/C/F'];
@@ -36,8 +333,12 @@ class Asset {
         this.x = pos['asset']['X'];
         this.y = pos['asset']['Y'];
         this.size = box_size / 1.1;
+        this.location = location;
 
+        // Create asset pool entry
+        createAssetPoolEntry(this);
 
+        // Highlight range of movement assets
         this.highlightHexes = function(hex_id, range) {
             let hex_list = hexes[hex_id][range];
             hex_list.forEach(h => {getElem(h).style.opacity = '0.05'});
@@ -66,7 +367,7 @@ class Asset {
             .attr('height', this.size);
         this.alpha_box = getElem(this.id + '_alpha');
         if (this.summoning) {
-            this.alpha_box.style.opacity = '0.75';
+            this.alpha_box.style.opacity = '0.5';
         }
 
         if (this.stealth) {
@@ -128,6 +429,11 @@ class Asset {
                 getElem('tip_atk').innerHTML = this.atk;
                 getElem('tip_cnt').innerHTML = this.def;
 
+                if (this.stealth) {
+                    getElem('tip_row_stealth').style.display = 'table-row';
+                } else {
+                    getElem('tip_row_stealth').style.display = 'none';
+                }
                 if (this.special !== '') {
                     getElem('tip_special').innerHTML = this.special;
                     getElem('tip_row_special').style.display = 'table-row';
@@ -254,6 +560,53 @@ class Asset {
             }
         }
     }
+
+    hide(bool) {
+        this.hidden = bool;
+        if (this.hidden) {
+            this.highlight_box.style.display = 'none';
+            this.color_box.style.display = 'none';
+            this.alpha_box.style.display = 'none';
+            if (this.stealth) {
+                this.stealth_box.style.display = 'none';
+            }
+            if (this.imperial) {
+                this.imperial_box.style.display = 'none';
+            }
+            if (this.inactive) {
+                this.inactive_box.style.display = 'none';
+            }
+        } else {
+            this.highlight_box.style.display = 'block';
+            this.color_box.style.display = 'block';
+            this.alpha_box.style.display = 'block';
+            if (this.stealth) {
+                this.stealth_box.style.display = 'block';
+            }
+            if (this.imperial) {
+                this.imperial_box.style.display = 'block';
+            }
+            if (this.inactive) {
+                this.inactive_box.style.display = 'block';
+            }
+        }
+    }
+
+    highlightAsset() {
+        for (let asset in asset_objects) {
+            if (hasProp(asset_objects, asset)) {
+                let a = asset_objects[asset];
+                if (this.id !== a.id) {
+                    // asset_objects[asset].opacity(0.05);
+                    asset_objects[asset].hide(true);
+                }
+            }
+        }
+    }
+
+    stopHighlightAsset() {
+        filterList();
+    }
 }
 
 class AssetHighlight {
@@ -274,6 +627,85 @@ class AssetHighlight {
     }
 }
 
+function createAssetPoolEntry(data) {
+
+    let asset_class_str;
+    let asset_stealth_str;
+    if (!data.stealth) {
+        asset_class_str = "asset-table";
+        asset_stealth_str = "-";
+    } else {
+        asset_class_str = "asset-table stealth";
+        asset_stealth_str = "stealthed";
+    }
+
+    let color = factions[data.faction]['color'];
+    let type_stat_str = data.isboi ? '' : data.type + ', ' + data.stat + ' ' + data.stat_tier;
+
+    let asset_div = `<div class="asset-item" id="${data.id}_pool" data-faction="${data.faction.replace('\'', '&#39;')}" data-stealth="${asset_stealth_str}" onclick="toggleHighlightAsset(this.id)" onmouseover="highlightAssetTable(this.id)" onmouseleave="stopHighlightAssetTable(this.id)">` +
+        `<table id="${data.id}_pool_table" class="${asset_class_str}">` +
+        "<tr>" +
+        `<td class="fac-color-td" rowspan="4" style="background-color: ${color}">` +
+        "</td>" +
+        "<td class='top-row-td' colspan='5'>" +
+        "<div class='location-div'>" +
+        data.location +
+        "</div>" +
+        "<div class='type-stat-div'>" +
+        type_stat_str +
+        "</div>" +
+        "</td>" +
+        "</tr>" +
+        "<tr>" +
+        "<td class='name-td' colspan='5'>" +
+        data.name +
+        "</td>" +
+        "</tr>" +
+        "<tr>" +
+        "<td class='hp-td'>" +
+        data.hp + "/" + data.max_hp +
+        "</td>" +
+        "<td class='cost-td'>" +
+        data.cost +
+        "</td>" +
+        "<td class='tl-td'>" +
+        data.tl +
+        "</td>" +
+        "<td class='atk-td'>" +
+        data.atk +
+        "</td>" +
+        "<td class='def-td'>" +
+        data.def +
+        "</td>" +
+        "</tr>" +
+        "<tr>" +
+        "<td class='hp-td' style='padding-bottom: 4px'>" +
+        "<img class='icon-pool' src='img/hp_icon.png' alt='' />" +
+        "</td>" +
+        "<td class='cost-td' style='padding-bottom: 4px'>" +
+        "<img class='icon-pool' src='img/cost_icon.png' alt='' />" +
+        "</td>" +
+        "<td class='tl-td' style='padding-bottom: 4px'>" +
+        "<img class='icon-pool' src='img/tl_icon.png' alt='' />" +
+        "</td>" +
+        "<td class='atk-td' style='padding-bottom: 4px'>" +
+        "<img class='icon-pool' src='img/atk_icon.png' alt='' />" +
+        "</td>" +
+        "<td class='def-td' style='padding-bottom: 4px'>" +
+        "<img class='icon-pool' src='img/def_icon.png' alt='' />" +
+        "</td>" +
+        "</tr>" +
+        "</table>" +
+        "</div>";
+
+    let asset_pool = getElem('assetPool');
+    asset_pool.insertAdjacentHTML('beforeend', asset_div);
+
+    if (isInactive(data.faction)) {
+        getElem(`${data.id}_pool`).style.display = 'none';
+    }
+}
+
 function getElem(id) {
     return document.getElementById(id);
 }
@@ -288,6 +720,135 @@ function isInactive(faction) {
     } else {
         return faction_tracker[faction]["Status"] === "Inactive"
     }
+}
+
+function autoSearch(id) {
+    let current_search_term = getElem('search-bar').value;
+    if (!show_sidebar) {
+        toggleSidebar();
+    }
+    let fac_short = id.replace('-cell', '');
+    let faction;
+    for (let fac in factions) {
+        if (hasProp(factions, fac)) {
+            if (factions[fac]['short'] === fac_short) {
+                faction = fac;
+                break
+            }
+        }
+    }
+    let search_term = factions[faction]['search'];
+    if (current_search_term === search_term) {
+        delFilter();
+        toggleSidebar();
+    } else {
+        getElem('search-bar').value = search_term;
+        filterList();
+    }
+}
+
+function filterList() {
+    let input = getElem("search-bar");
+    let filter = input.value.toUpperCase().split(" ");
+    let assets = getElem("assetPool").getElementsByClassName("asset-item");
+
+    recolorPlanetNames();
+    Object.values(planet_obects).forEach(planet => {
+        let full_name = planet.pgov;
+        if (full_name !== '') {
+            let short_name = factions[full_name]['short'];
+            let search_name = factions[full_name]['search'];
+
+            let search_hits = new Array(filter.length);
+            for (let k=0; k<search_hits.length; k++) {
+                search_hits[k] = false;
+            }
+
+            for (let j=0; j<filter.length; j++) {
+                let search_term = filter[j].replace(/[^A-Za-z_]/g,"");
+                if (full_name.toUpperCase().indexOf(search_term) > -1 ||
+                    short_name.toUpperCase().indexOf(search_term) > -1 ||
+                    search_name.toLocaleString().indexOf(search_term) > -1) {
+                    search_hits[j] = true;
+                }
+            }
+
+            if (!((!isInactive(full_name) || show_inactive) && !search_hits.includes(false))) {
+                planet.color('#7c7c7c', '#222222');
+            }
+        }
+    });
+
+    if (highlighted_asset !== '') {
+        let asset_div = getElem(highlighted_asset + '_pool');
+        let asset_table = getElem(highlighted_asset + '_pool_table');
+        asset_div.style.backgroundColor = '#222';
+        if (asset_table.classList.contains('stealth')) {
+            asset_table.style.backgroundColor = '#293e42';
+        } else {
+            asset_table.style.backgroundColor = '#262626';
+        }
+        highlighted_asset = '';
+    }
+
+    for (let i=0; i<assets.length; i++) {
+
+        let id = assets[i].getAttribute('id').replace('_pool', '');
+
+        let name = assets[i].getElementsByClassName("name-td")[0];
+        let nameValue = name.textContent || name.innerText;
+
+        let facValue = assets[i].getAttribute('data-faction');
+
+        let stealthValue = assets[i].getAttribute('data-stealth');
+
+        let atk = assets[i].getElementsByClassName("atk-td")[0];
+        let atkValue = atk.textContent || atk.innerText;
+
+        let loc = assets[i].getElementsByClassName("location-div")[0];
+        let locValue = loc.textContent || loc.innerText;
+
+        let typestat = assets[i].getElementsByClassName("type-stat-div")[0];
+        let typestatValue = typestat.textContent || typestat.innerText;
+
+        let search_hits = new Array(filter.length);
+        for (let k=0; k<search_hits.length; k++) {
+            search_hits[k] = false;
+        }
+
+        for (let j=0; j<filter.length; j++) {
+            let search_term = filter[j].replace(/[^A-Za-z_]/g,"");
+            if (nameValue.toUpperCase().indexOf(search_term) > -1 ||
+                facValue.toUpperCase().indexOf(search_term) > -1  ||
+                stealthValue.toUpperCase().indexOf(search_term) > -1  ||
+                typestatValue.toUpperCase().indexOf(search_term) > -1 ||
+                atkValue.toUpperCase().indexOf(search_term) > -1 ||
+                locValue.toUpperCase().indexOf(search_term) > -1) {
+                search_hits[j] = true;
+            }
+        }
+
+        if ((!isInactive(facValue) || show_inactive) && !search_hits.includes(false)) {
+            assets[i].style.display = "block";
+            asset_objects[id].hide(false);
+        } else {
+            assets[i].style.display = "none";
+            asset_objects[id].hide(true);
+        }
+    }
+
+    if (input.value !== "") {
+        document.getElementById("del_button").style.display = "block";
+    } else {
+        document.getElementById("del_button").style.display = "none";
+    }
+}
+
+function delFilter() {
+    let input = document.getElementById("search-bar");
+    input.value = "";
+    filterList();
+    recolorPlanetNames();
 }
 
 function visibilityToggleStyling(inout) {
@@ -325,6 +886,21 @@ function toggleFactionTable() {
     }
 }
 
+function toggleSidebar() {
+    show_sidebar = !show_sidebar;
+    let sidebar = getElem('sidebar');
+    let toggle = getElem('sidebarToggle');
+    if (show_sidebar) {
+        sidebar.style.left = '0';
+        toggle.style.left = '405px';
+        toggle.style.transform = 'rotate(90deg)';
+    } else {
+        sidebar.style.left = '-401px';
+        toggle.style.left = '5px';
+        toggle.style.transform = 'rotate(-90deg)';
+    }
+}
+
 function replaceInactiveFactionNames(planet, fac, hw) {
 
     if (planet === 'The Guild Dyson Sphere') {
@@ -338,22 +914,15 @@ function replaceInactiveFactionNames(planet, fac, hw) {
 
 function recolorPlanetNames() {
 
-    planet_tracker.forEach((planet, i) => {
-        let owner = planet['Planetary Government'];
-        let hw = planet['Homeworld'];
-        let id = 'planet_' + i.toString().padStart(2, '0');
-        let text = getElem(id + '_name');
-        let box = getElem(id + '_color');
-        if (owner === '' || (isInactive(owner) && !show_inactive)) {
-            text.setAttribute('fill', '#7c7c7c');
-            text.setAttribute('font-weight', 'normal');
-            box.setAttribute('fill', '#222222');
+    Object.values(planet_obects).forEach(planet => {
+        if (planet.pgov === '' || (isInactive(planet.pgov) && !show_inactive)) {
+            planet.color('#7c7c7c', '#222222');
+            planet.fontweight('normal')
         } else {
-            text.setAttribute('fill', factions[owner]['text']);
-            if (owner === hw) {
-                text.setAttribute('font-weight', 'bold');
+            planet.color(factions[planet.pgov]['text'], factions[planet.pgov]['color']);
+            if (planet.pgov === planet.hw) {
+                planet.fontweight('bold');
             }
-            box.setAttribute('fill', factions[owner]['color']);
         }
     });
 }
@@ -385,52 +954,124 @@ function toggleInactiveFactions() {
     show_inactive = !show_inactive;
 
     reorderAssets();
-    sortTable();
+    sortFactionTable();
     recolorPlanetNames();
-}
 
-function displayFactionAssets(faction) {
-
-    if (faction === highlighted_fac) {
-        displayAllAssets();
-        highlighted_fac = '';
+    if (highlighted_asset !== '') {
+        let asset = asset_objects[highlighted_asset];
+        if (!show_inactive && isInactive(asset.faction)) {
+            toggleHighlightAsset(highlighted_asset + '_pool');
+        }
     } else {
-        displayAllAssets();
-        let planets = document.getElementsByClassName('planet');
-
-        for (let asset in asset_objects) {
-            if (hasProp(asset_objects, asset)) {
-                a = asset_objects[asset];
-                if (a.faction !== faction) {
-                    asset_objects[asset].opacity(0.05);
-                }
-            }
-        }
-
-        [...planets].forEach(p => {
-            p.style.opacity = '0.05';
-        });
-
-        highlighted_fac = faction;
+        filterList();
     }
 }
 
-function displayAllAssets() {
-    highlighted_fac = '';
-    let planets = document.getElementsByClassName('planet');
+function hidePlanets() {
+    Object.values(planet_obects).forEach(planet => {
+        planet.color('#7c7c7c', '#222222');
+    })
+}
 
-    for (let asset in asset_objects) {
-        if (hasProp(asset_objects, asset)) {
-            asset_objects[asset].opacity(1);
+function toggleHighlightAsset(id) {
+    let asset_id = id.replace('_pool', '');
+    let asset_div = getElem(id);
+    let asset_table = getElem(id + '_table');
+    if (highlighted_asset === asset_id) {
+        asset_objects[asset_id].stopHighlightAsset();
+        if (asset_table.classList.contains('stealth')) {
+            asset_table.style.backgroundColor = '#293e42';
+        } else {
+            asset_table.style.backgroundColor = '#262626';
+        }
+        asset_div.style.backgroundColor = '#222';
+        recolorPlanetNames()
+        highlighted_asset = '';
+    } else {
+        if (highlighted_asset !== '') {
+            let old_asset_div = getElem(highlighted_asset + '_pool');
+            let old_asset_table = getElem(highlighted_asset + '_pool_table');
+            old_asset_div.style.backgroundColor = '#222';
+            if (old_asset_table.classList.contains('stealth')) {
+                old_asset_table.style.backgroundColor = '#293e42';
+            } else {
+                old_asset_table.style.backgroundColor = '#262626';
+            }
+            asset_objects[highlighted_asset].stopHighlightAsset();
+        }
+        asset_objects[asset_id].highlightAsset();
+        if (asset_table.classList.contains('stealth')) {
+            asset_table.style.backgroundColor = '#3c6974';
+            asset_div.style.backgroundColor = '#3c6974';
+        } else {
+            asset_table.style.backgroundColor = '#404040';
+            asset_div.style.backgroundColor = '#404040';
+        }
+        hidePlanets();
+        highlighted_asset = asset_id;
+    }
+}
+
+function highlightAssetTable(id) {
+    let asset_id = id.replace('_pool', '');
+    let asset_table = getElem(asset_id + '_pool_table');
+    if (asset_id !== highlighted_asset) {
+        if (asset_table.classList.contains('stealth')) {
+            asset_table.style.backgroundColor = '#2e5058';
+        } else {
+            asset_table.style.backgroundColor = '#2f2f2f';
+        }
+    }
+}
+
+function stopHighlightAssetTable(id) {
+    let asset_id = id.replace('_pool', '');
+    let asset_table = getElem(asset_id + '_pool_table');
+    if (asset_id !== highlighted_asset) {
+        if (asset_table.classList.contains('stealth')) {
+            asset_table.style.backgroundColor = '#293e42';
+        } else {
+            asset_table.style.backgroundColor = '#262626';
+        }
+    }
+}
+
+function sortBy(col) {
+    let asset_pool = document.getElementById("assetPool");
+    let temp_assets = Object.values(asset_objects);
+    for (let direction in dir) {
+        if (direction === col) {
+            dir[col] *= -1;
+        } else {
+            dir[direction] = -1;
         }
     }
 
-    [...planets].forEach(p => {
-        p.style.opacity = '1';
+    let compare = (a, b) => {
+        if (col === 'influence') {
+            let inflA = parseFloat(faction_tracker[a['faction']]['INFL']);
+            let inflB = parseFloat(faction_tracker[b['faction']]['INFL']);
+            return inflA < inflB ? dir[col] :
+                inflA === inflB ? (a['name'] > b['name'] ? 1 : -1) : -dir[col]
+        } else {
+            let valA = a[col].toUpperCase();
+            let valB = b[col].toUpperCase();
+            return valA > valB ? dir[col] : -dir[col]
+        }
+    };
+
+    if (dir[col] === -1) {
+        temp_assets.sort(compare);
+    } else {
+        temp_assets.reverse().sort(compare);
+    }
+
+    temp_assets.forEach((item) => {
+        asset_pool.appendChild(getElem(item['id'] + '_pool'));
     });
 }
 
-function sortTable() {
+function sortFactionTable() {
     let table, rows, switching, i, fac_a, fac_b, val_a, val_b, shouldSwitch;
     table = getElem('factionTable');
     switching = true;
@@ -528,9 +1169,9 @@ function displayFactionInfo(faction) {
     getElem('info_income').innerHTML = '<b>' + faction_tracker[faction]['Income'] + '</b>';
     getElem('info_balance').innerHTML = '<b>' + faction_tracker[faction]['Balance'] + '</b>';
     getElem('info_exp').innerHTML = '<b>' + faction_tracker[faction]['EXP'] + '</b>';
-    getElem('info_goal').innerHTML = '<b>' + goal + '</b>';
+    getElem('info_goal').innerHTML = goal;
     getElem('info_goaldesc').innerHTML = goal_desc;
-    getElem('info_tag').innerHTML = '<b>' + faction_tracker[faction]['Tag'] + '</b>';
+    getElem('info_tag').innerHTML = faction_tracker[faction]['Tag'];
     getElem('info_tagdesc').innerHTML = tags[faction_tracker[faction]['Tag']]["desc"];
     getElem('info_notes').innerHTML = faction_tracker[faction]['Notes'];
     getElem('info_infl_abs').innerHTML = (faction_tracker[faction]['INFL']).toFixed(1);
@@ -634,7 +1275,6 @@ function processChart(iterable) {
     let values = [];
     let colors = [];
     let txt_colors = [];
-    console.log(iterable);
     for (let fac in iterable) {
         if (hasProp(iterable, fac) && (!isInactive(fac) || show_inactive)) {
             let fac_infl = iterable[fac]['INFL'];
@@ -685,7 +1325,7 @@ function processChart(iterable) {
             }
         };
     } else {
-        values = [1];
+        values = [0.01];
         options = {
             labels: ['No influence'],
             colors: ['#ffffff']
@@ -698,12 +1338,42 @@ function updateSectorChart() {
     let [values, options] = processChart(faction_tracker);
     sectorinfluence_chart.updateSeries(values);
     sectorinfluence_chart.updateOptions(options);
-    console.log(values);
     let total_infl = values.reduce((a, b) => a + b, 0);
 }
 
 function updateSectorChartOptions(opts) {
     sectorinfluence_chart.updateOptions(opts);
+}
+
+function updateSystemChart(system_name) {
+    let system_influence = system_tracker[system_name]['Factions'];
+    let [values, options] = processChart(system_influence);
+    system_tip_chart.updateSeries(values);
+    system_tip_chart.updateOptions(options);
+    let total_infl = values.reduce((a, b) => a + b, 0);
+    updateSystemChartOptions({
+        title: {
+            text: 'placeholder-title'
+        },
+        dataLabels: {
+            formatter: (val) => {
+                if (val > 5) {
+                    return Math.round(val * 10) / 10 + '%';
+                } else {
+                    return '';
+                }
+            }
+        }
+    }, total_infl);
+}
+
+function updateSystemChartOptions(opts, infl=null) {
+    system_tip_chart.updateOptions(opts);
+    if (infl) {
+        let display_infl = Math.round(infl * 10) / 10;
+        document.querySelector('#system_tip_chart > div > svg > text')
+            .innerHTML = `<tspan x="210" dy="-0.5em" text-anchor="middle" style="font-size: 24px">${display_infl}</tspan><tspan x="210" dy="1.8em" text-anchor="middle">Total Influence</tspan>`;
+    }
 }
 
 function updatePlanetChart(planet_name) {
@@ -712,11 +1382,31 @@ function updatePlanetChart(planet_name) {
     planet_tip_chart.updateSeries(values);
     planet_tip_chart.updateOptions(options);
     let total_infl = values.reduce((a, b) => a + b, 0);
-    getElem('planet_tip_infl').innerHTML = Math.round(total_infl * 10) / 10;
+    updatePlanetChartOptions({
+        title: {
+            text: 'placeholder-title'
+        },
+        dataLabels: {
+            formatter: (val) => {
+                if (val > 5) {
+                    return Math.round(val * 10) / 10 + '%';
+                } else {
+                    return '';
+                }
+            }
+        }
+    }, total_infl);
+
+    // getElem('planet_tip_infl').innerHTML = Math.round(total_infl * 10) / 10;
 }
 
-function updatePlanetChartOptions(opts) {
+function updatePlanetChartOptions(opts, infl=null) {
     planet_tip_chart.updateOptions(opts);
+    if (infl) {
+        let display_infl = Math.round(infl * 10) / 10;
+        document.querySelector('#planet_tip_chart > div > svg > text')
+            .innerHTML = `<tspan x="210" dy="-0.5em" text-anchor="middle" style="font-size: 24px">${display_infl}</tspan><tspan x="210" dy="1.8em" text-anchor="middle">Total Influence</tspan>`;
+    }
 }
 
 function makeHexOverlays(key) {
@@ -735,167 +1425,6 @@ function makeHexOverlays(key) {
         .attr('y', hex_y)
         .attr('width', hex_w)
         .attr('height', hex_h);
-}
-
-function drawPlanetNames() {
-    // TODO: make planet names into class
-
-    let makeOverlay = function(i) {
-        let planet = planet_tracker[i];
-        let id = 'planet_' + i.toString().padStart(2, '0');
-        let hex_id = 'hex_' + planet['Hex'];
-        let system_name = planet['System'];
-        let planet_name = planet['Name'];
-        let pgov = planet['Planetary Government'];
-        let hw = planet['Homeworld'];
-        let tl = planet['TL'];
-        let pop = planet['Population'];
-        let pcvi = planet['PCVI'];
-        let tags = planet['Tags'].join(', ');
-
-        let hex_x = hexes[hex_id]['X'];
-        let hex_y = hexes[hex_id]['Y'];
-        let current_idx = planet['idx'];
-        let num_planets = planet['total'];
-        let x_offset = planet_to_hex_offsets[num_planets][current_idx]['X'];
-        let y_offset = planet_to_hex_offsets[num_planets][current_idx]['Y'];
-
-        let planet_color = '#7c7c7c';
-        let box_color = '#222222';
-        let font_weight = 'normal';
-        let w_factor = 1;
-        let hw_str = '';
-        let owner_str = 'Unclaimed';
-        if (pgov !== '') {
-            planet_color = factions[pgov]['text'];
-            box_color = factions[pgov]['color'];
-            owner_str = pgov;
-        }
-        if (pgov === hw && pgov !== '') {
-            font_weight = 'bold';
-            w_factor = 0.98;
-            hw_str = ' (Homeworld)';
-        }
-        let padding;
-        let style_str;
-        if (isFirefox) {
-            style_str = 'font-size: 0.01px; font-size-adjust: 0.1';
-            padding = 0.0015;
-        } else {
-            style_str = 'font-size: 0.0035px';
-            padding = 0.0005;
-        }
-
-        let planet_name_SVG = d3
-            .select(svg_overlay.node())
-            .append('svg:text')
-            .text(planet_name.toUpperCase())
-            .attr('style', style_str)
-            .attr('id', id + '_name')
-            .attr('class', 'planet')
-            .attr('font-family', 'D-DIN')
-            .attr('font-weight', font_weight)
-            .attr('fill', planet_color)
-            .attr('text-anchor', 'middle')
-            .attr('x', hex_x + x_offset)
-            .attr('y', hex_y + y_offset + 0.011)
-            .attr('pointer-events', 'none');
-        let box_width = planet_name_SVG.node().getComputedTextLength();
-        d3.select(svg_overlay.node())
-            .insert('rect', '#' + id + '_name')
-            .attr('id', id + '_color')
-            .attr('class', 'planet')
-            .attr('fill', box_color)
-            .attr('x', hex_x + x_offset - (w_factor * box_width) / 2 - padding)
-            .attr('y', hex_y + y_offset + 0.00812)
-            .attr('width', (box_width + 2 * padding) * w_factor)
-            .attr('height', 0.0034)
-            .attr('pointer-events', 'none');
-
-        let highlight = document.createElement('div');
-        highlight.id = id + '_highlight';
-        highlight.className = 'highlight';
-        highlight.style.cursor = 'pointer';
-
-        viewer.addOverlay({
-            element: highlight,
-            location: new OpenSeadragon.Rect(
-                hex_x + x_offset - (w_factor * box_width) / 2 - padding,
-                hex_y + y_offset + 0.00812,
-                (box_width + 2 * padding) * w_factor,
-                0.0034
-            )
-        });
-
-        // noinspection JSUnusedLocalSymbols
-        new OpenSeadragon.MouseTracker({
-            element: id + '_highlight',
-            enterHandler: () => {
-                let display_name = planet_name;
-                if (planet_name === 'The Guild Dyson Sphere') {
-                    display_name = 'Ṫ̠͇̝̤̏͊͛̈́̐̍h̖̯͉͓͉̝̘̝͇̥̒͐̿̅̊̅ẻ̬͚̞̱͙̮̂͗͆̄̈́́ G̟̪̳̳̗͇̗͍͔͓̥̎̃̑̆͐ù͍̪̜̳̱͈͎͔̏͑́̏̏̏̔͐̃́ͅi̲̠͍͙̗̮̞̳̞͌͒͂́͐͊̉̄̐̀̚l͇̥͍̤̮̫̏́͂̿d̮͇̯͙̝̗̤̩̥̯̩̿̽͛͛̋͐̈́̚ D̤̗̙̠͇̀̾̇̌̐̈́y͉̙͇̝͓͔͋̾̓̏͌͂͌͒̉̚s͉͖̣̜̬̋̂͊͊̆̌̉̽̈ȯ̪̟̪̦͂͋̋̈́̒͑́̐͌̚̚n̰͍̦̩͓͉͕̭͍̆̅̿̉́͗̇̇̏̃͑͑ Ŝ̲̞̘̬̓́̈̉͗́̆͐͑̐̿p͔͍͙̲̓̿͌͆͆̿͋̆̈ͅh̦͕̭̥̤̪̯̱̤͐̆̈́̌̐͑̿e͚̱̭̗̣̍̅̑̽̀̂̓͂̚r̖̙̬̭̤̙̬̰̗͚̩̘̿̋́͛̀e̞̙̭̝̗͓͔͔͙̤͇̬̐̓͂͌̋̄̈́̌̑͆͋̑';
-                }
-                getElem('planet_tip_name').innerHTML = display_name;
-                getElem('planet_tip_sys').innerHTML = hex_id.replace('hex_', '') + ' / ' + system_name;
-                getElem('planet_tip').style.display = 'block';
-                getElem('planet_tip').style.zIndex = '3';
-                planet_tip_on = true;
-                if (planet_name === 'The Guild Dyson Sphere') {
-                    tags = 'tags more like HAX amirite';
-                    tl = '9001';
-                    pop = 'ok boomer';
-                    pcvi = ['u wot m8', 'u wot m8'];
-                    let options = {
-                        labels: ['The Guild'],
-                        colors: ['#f70094'],
-                        dataLabels: {
-                            formatter: () => {
-                                return '420.0%';
-                            },
-                            style: {
-                                colors: ['#ffffff']
-                            }
-                        }
-                    };
-                    planet_tip_chart.updateSeries([6969]);
-                    planet_tip_chart.updateOptions(options);
-                    getElem('planet_tip_infl').innerHTML = '6969';
-                } else {
-                    updatePlanetChart(planet_name);
-                    let opts = {
-                        dataLabels: {
-                            formatter: (val) => {
-                                if (val > 5) {
-                                    return Math.round(val * 10) / 10 + '%';
-                                } else {
-                                    return '';
-                                }
-                            }
-                        }
-                    };
-                    updatePlanetChartOptions(opts);
-                }
-                getElem('planet_tip_tl').innerHTML = tl;
-                getElem('planet_tip_pcvi').innerHTML = pcvi[0] !== pcvi[1] ? `${pcvi[1]} (${pcvi[0]})` : pcvi[0];
-                getElem('planet_tip_pop').innerHTML = pop;
-                getElem('planet_tip_tags').innerHTML = tags;
-                replaceInactiveFactionNames(planet_name, owner_str, hw_str);
-            },
-            exitHandler: () => {
-                getElem('planet_tip').style.display = 'none';
-                planet_tip_on = false;
-            },
-            clickHandler: () => {
-                window.open('https://far-verona.fandom.com/wiki/' + planet_name);
-            }
-        });
-    };
-
-    for (let i = 0; i < planet_tracker.length; i++) {
-        makeOverlay(i);
-    }
-
-    recolorPlanetNames();
 }
 
 function getInfluence() {
@@ -975,8 +1504,43 @@ function getInfluence() {
             "Factions": factions
         }
     });
+
+    Object.values(influence_tracker).forEach(planet => {
+        let sys = planet['System'];
+        let factions = planet['Factions'];
+        for (let fac in factions) {
+            if (hasProp(factions, fac)) {
+                if (hasProp(system_tracker[sys]['Factions'], fac)) {
+                    system_tracker[sys]['Factions'][fac]['INFL'] += factions[fac]['INFL'];
+                } else {
+                    system_tracker[sys]['Factions'][fac] = {'INFL': factions[fac]['INFL']};
+                }
+            }
+        }
+    });
 }
 
+function drawSystemNames() {
+
+    let i = 0;
+
+    for (let sys in system_tracker) {
+        if (hasProp(system_tracker, sys)) {
+            new SystemName(i, sys);
+            i++;
+        }
+    }
+}
+
+function drawPlanetNames() {
+
+    planet_tracker.forEach((planet, i) => {
+        let id = `planet_${i}`;
+        planet_obects[id] = new PlanetName(id, planet);
+    });
+
+    recolorPlanetNames();
+}
 
 function drawAssets() {
     let counter = 0;
@@ -1009,15 +1573,17 @@ function drawAssets() {
                 let id = 'asset_' + counter.toString().padStart(3, '0');
                 planet['Local Assets'].push(id);
                 counter += 1;
-                asset_objects[id] = new Asset(id, asset, hex_id, pos);
+                asset_objects[id] = new Asset(id, asset, hex_id, pos, planet['Name Constructor']);
             });
         }
     });
 
     reorderAssets();
+    drawSystemNames();
     drawPlanetNames();
     getInfluence();
-    sortTable();
+    sortFactionTable();
+    sortBy('influence');
 }
 
 function drawPlanets() {
@@ -1054,27 +1620,27 @@ function drawPlanets() {
         }
 
         // System Name
-        let system_id = planet['System'];
-        let style_str;
-        if (isFirefox) {
-            style_str = 'font-size: 0.02px; font-size-adjust: 0.2';
-        } else {
-            style_str = 'font-size: 0.0056px';
-        }
-        let sys = getElem(system_id);
-        if (!sys) {
-            d3.select(svg_overlay.node())
-                .insert('svg:text', 'circle')
-                .text(system_id.toUpperCase())
-                .attr('style', style_str)
-                .attr('id', system_id)
-                .attr('font-family', 'D-DIN')
-                .attr('fill', '#7c7c7c')
-                .attr('text-anchor', 'middle')
-                .attr('x', hex_x)
-                .attr('y', hex_y - 0.046)
-                .attr('pointer-events', 'none');
-        }
+    //     let system_id = planet['System'];
+    //     let style_str;
+    //     if (isFirefox) {
+    //         style_str = 'font-size: 0.02px; font-size-adjust: 0.2';
+    //     } else {
+    //         style_str = 'font-size: 0.0056px';
+    //     }
+    //     let sys = getElem(system_id);
+    //     if (!sys) {
+    //         d3.select(svg_overlay.node())
+    //             .insert('svg:text', 'circle')
+    //             .text(system_id.toUpperCase())
+    //             .attr('style', style_str)
+    //             .attr('id', system_id)
+    //             .attr('font-family', 'D-DIN')
+    //             .attr('fill', '#7c7c7c')
+    //             .attr('text-anchor', 'middle')
+    //             .attr('x', hex_x)
+    //             .attr('y', hex_y - 0.046)
+    //             .attr('pointer-events', 'none');
+    //     }
     });
 }
 
@@ -1119,14 +1685,21 @@ function getPlanets() {
             planet_tracker = tsvJSON(this.responseText);
 
             planet_tracker.forEach(p => {
-                p['Tags'] = p['Tags'].split(',');
+                p['Tags'] = p['Tags'].split(',').map(tag => {
+                    return tag.trim()
+                });
 
                 let tl_mod = infl_tl_mod[p['TL']];
                 let pop_mod = infl_pop_mod[p['Population']];
                 let pcvi_mod = [1, 1];
                 p['Tags'].forEach(t => {
                     if (t !== '') {
-                        let mod = p_tags[t]['infl_mod'];
+                        let mod;
+                        if (hasProp(p_tags, t)) {
+                            mod = p_tags[t]['infl_mod'];
+                        } else {
+                            mod = 1;
+                        }
                         if (mod < -1) {
                             if (t === 'Secret Masters') {
                                 pcvi_mod[0] -= 0.1;
@@ -1144,6 +1717,17 @@ function getPlanets() {
                 });
                 pcvi_mod = pcvi_mod.map(m => {return Math.max(m, 0)});
                 p['PCVI'] = pcvi_mod.map(m => {return parseFloat((m * tl_mod * pop_mod).toFixed(1))});
+                if (!hasProp(system_tracker, p['System'])) {
+                    system_tracker[p['System']] = {
+                        'Planets': [p['Name']],
+                        'Hex': p['Hex'],
+                        'num_planets': 1,
+                        'Factions': {}
+                    }
+                } else {
+                    system_tracker[p['System']]['Planets'].push(p['Name']);
+                    system_tracker[p['System']]['num_planets'] += 1;
+                }
             });
 
             for (let hex in hexes) {
@@ -1176,6 +1760,15 @@ function onViewerOpen() {
     let home = document.querySelector('#osd > div > div:nth-child(2) > div > div > div:nth-child(4)');
     let zoomout = document.querySelector('#osd > div > div:nth-child(2) > div > div > div:nth-child(3)');
     home.parentNode.insertBefore(home, zoomout);
+
+    document.addEventListener('keydown', event => {
+       if (event.keyCode === 27) {
+           delFilter();
+           if (show_sidebar) {
+               toggleSidebar();
+           }
+       }
+    });
 
     for (let key in hexes) {
         if (hasProp(hexes, key)) {
