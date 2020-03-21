@@ -10,6 +10,8 @@
         <script src="scripts/openseadragon-svg-overlay.js"></script>
         <script src="scripts/apexcharts.js"></script>
         <script src="scripts/d3.v5.min.js"></script>
+<!--        <script src="https://d3js.org/d3-path.v1.min.js"></script>-->
+<!--        <script src="https://d3js.org/d3-shape.v1.min.js"></script>-->
         <script src="scripts/Treant.js"></script>
         <script src="scripts/raphael.js"></script>
         <script src="scripts/jquery-3.4.1.min.js"></script>
@@ -18,16 +20,20 @@
             // Global variables
             let highlighted_asset = '';
             let show_inactive = false;
-            let show_factionTable = true;
+            let show_regions = false;
+            let show_faction_table = true;
             let show_sidebar = false;
+            let menu_on = false;
             let tip_on = false;
             let planet_tip_on = false;
             let system_tip_on = false;
             let faction_tracker = {};
             let system_tracker = {};
-            let system_objects_chart;
+            let system_objects = {};
+            let orbital_objects_chart;
             let planet_tracker;
-            let planet_obects = {};
+            let planet_objects = {};
+            let planet_objects_chart;
             let asset_tracker;
             let asset_objects = {};
             let influence_tracker = {};
@@ -62,183 +68,198 @@
             viewer.controls.topleft.style.width = '105px';
             viewer.controls.topleft.style.top = '10px';
             viewer.controls.topleft.style.margin = '0px auto';
+            viewer.zoomPerClick = 1;
             viewer.addHandler('open', onViewerOpen());
+            viewer.addHandler('canvas-click', (e) => {
+                if (e.originalEvent.target.innerText !== 'ATTACKER' && e.originalEvent.target.innerText !== 'DEFENDER') {
+                    menu_on = false;
+                    for (let asset in asset_objects) {
+                        if (hasProp(asset_objects, asset)) {
+                            let a = asset_objects[asset];
+                            if (a['menu_on']) {
+                                a['menu_on'] = false;
+                                viewer.removeOverlay('menu');
+                            }
+                        }
+                    }
+                }
+            });
         </script>
-        <div id="factionsCol">
-            <div id="factionsCenter">
-                <table id="factionTable">
+        <div id="factions-col">
+            <div id="factions-center">
+                <table id="faction-table">
                     <tr id="Pyxis-row">
                         <td
-                            class="faction_name"
+                            class="faction-name"
                             onclick='window.open("https://far-verona.fandom.com/wiki/House_Pyxis")'
                             onmouseout="hideFactionInfo()"
                             onmouseover="displayFactionInfo('House Pyxis')"
                         >
                             PYXIS
                         </td>
-                        <td class="faction_color">
+                        <td class="faction-color">
                             <div id="Pyxis-cell" style="width:100%;height:100%;background-color: #222" onclick="autoSearch(this.id)"></div>
                         </td>
                     </tr>
                     <tr id="Eridanus-row">
                         <td
-                            class="faction_name"
+                            class="faction-name"
                             onclick='window.open("https://far-verona.fandom.com/wiki/House_Eridanus")'
                             onmouseout="hideFactionInfo()"
                             onmouseover="displayFactionInfo('House Eridanus')"
                         >
                             ERIDANUS
                         </td>
-                        <td class="faction_color">
+                        <td class="faction-color">
                             <div id="Eridanus-cell" style="width:100%;height:100%;background-color: #222" onclick="autoSearch(this.id)"></div>
                         </td>
                     </tr>
                     <tr id="Triangulum-row">
                         <td
-                            class="faction_name"
+                            class="faction-name"
                             onclick='window.open("https://far-verona.fandom.com/wiki/House_Triangulum")'
                             onmouseout="hideFactionInfo()"
                             onmouseover="displayFactionInfo('House Triangulum')"
                         >
                             TRIANGULUM
                         </td>
-                        <td class="faction_color">
+                        <td class="faction-color">
                             <div id="Triangulum-cell" style="width:100%;height:100%;background-color: #222" onclick="autoSearch(this.id)"></div>
                         </td>
                     </tr>
                     <tr id="Crux-row">
                         <td
-                            class="faction_name"
+                            class="faction-name"
                             onclick='window.open("https://far-verona.fandom.com/wiki/House_Crux")'
                             onmouseout="hideFactionInfo()"
                             onmouseover="displayFactionInfo('House Crux')"
                         >
                             CRUX
                         </td>
-                        <td class="faction_color">
+                        <td class="faction-color">
                             <div id="Crux-cell" style="width:100%;height:100%;background-color: #222" onclick="autoSearch(this.id)"></div>
                         </td>
                     </tr>
                     <tr id="Fornax-row">
                         <td
-                            class="faction_name"
+                            class="faction-name"
                             onclick='window.open("https://far-verona.fandom.com/wiki/House_Fornax")'
                             onmouseout="hideFactionInfo()"
                             onmouseover="displayFactionInfo('House Fornax')"
                         >
                             FORNAX
                         </td>
-                        <td class="faction_color">
+                        <td class="faction-color">
                             <div id="Fornax-cell" style="width:100%;height:100%;background-color: #222" onclick="autoSearch(this.id)"></div>
                         </td>
                     </tr>
                     <tr id="Lyra-row">
                         <td
-                            class="faction_name"
+                            class="faction-name"
                             onclick='window.open("https://far-verona.fandom.com/wiki/House_Lyra")'
                             onmouseout="hideFactionInfo()"
                             onmouseover="displayFactionInfo('House Lyra')"
                         >
                             LYRA
                         </td>
-                        <td class="faction_color">
+                        <td class="faction-color">
                             <div id="Lyra-cell" style="width:100%;height:100%;background-color: #222" onclick="autoSearch(this.id)"></div>
                         </td>
                     </tr>
                     <tr id="Serpens-row">
                         <td
-                            class="faction_name"
+                            class="faction-name"
                             onclick='window.open("https://far-verona.fandom.com/wiki/House_Serpens")'
                             onmouseout="hideFactionInfo()"
                             onmouseover="displayFactionInfo('House Serpens')"
                         >
                             SERPENS
                         </td>
-                        <td class="faction_color">
+                        <td class="faction-color">
                             <div id="Serpens-cell" style="width:100%;height:100%;background-color: #222" onclick="autoSearch(this.id)"></div>
                         </td>
                     </tr>
                     <tr id="Reticulum-row">
                         <td
-                            class="faction_name"
+                            class="faction-name"
                             onclick='window.open("https://far-verona.fandom.com/wiki/House_Reticulum")'
                             onmouseout="hideFactionInfo()"
                             onmouseover="displayFactionInfo('House Reticulum')"
                         >
                             RETICULUM
                         </td>
-                        <td class="faction_color">
+                        <td class="faction-color">
                             <div id="Reticulum-cell" style="width:100%;height:100%;background-color: #222" onclick="autoSearch(this.id)"></div>
                         </td>
                     </tr>
                     <tr id="Aquila-row">
                         <td
-                            class="faction_name"
+                            class="faction-name"
                             onclick='window.open("https://far-verona.fandom.com/wiki/House_Aquila")'
                             onmouseout="hideFactionInfo()"
                             onmouseover="displayFactionInfo('House Aquila')"
                         >
                             AQUILA
                         </td>
-                        <td class="faction_color">
+                        <td class="faction-color">
                             <div id="Aquila-cell" style="width:100%;height:100%;background-color: #222" onclick="autoSearch(this.id)"></div>
                         </td>
                     </tr>
                     <tr id="Trilliant-row">
                         <td
-                            class="faction_name"
+                            class="faction-name"
                             onclick='window.open("https://far-verona.fandom.com/wiki/The_Trilliant_Ring")'
                             onmouseout="hideFactionInfo()"
                             onmouseover="displayFactionInfo('The Trilliant Ring')"
                         >
                             TRILLIANT
                         </td>
-                        <td class="faction_color">
+                        <td class="faction-color">
                             <div id="Trilliant-cell" style="width:100%;height:100%;background-color: #222" onclick="autoSearch(this.id)"></div>
                         </td>
                     </tr>
                     <tr id="Prism-row">
                         <td
-                            class="faction_name"
+                            class="faction-name"
                             onclick='window.open("https://far-verona.fandom.com/wiki/The_PRISM_Network")'
                             onmouseout="hideFactionInfo()"
                             onmouseover="displayFactionInfo('The PRISM Network')"
                         >
                             PRISM
                         </td>
-                        <td class="faction_color">
+                        <td class="faction-color">
                             <div id="Prism-cell" style="width:100%;height:100%;background-color: #222" onclick="autoSearch(this.id)"></div>
                         </td>
                     </tr>
                     <tr id="SERAPH-row">
                         <td
-                            class="faction_name"
+                            class="faction-name"
                             onclick='window.open("https://far-verona.fandom.com/wiki/Society_for_Ethical_Reform_through_Aid,_Protection,_and_Humanitarianism")'
                             onmouseout="hideFactionInfo()"
                             onmouseover="displayFactionInfo('SERAPH')"
                         >
                             SERAPH
                         </td>
-                        <td class="faction_color">
+                        <td class="faction-color">
                             <div id="SERAPH-cell" style="width:100%;height:100%;background-color: #222" onclick="autoSearch(this.id)"></div>
                         </td>
                     </tr>
                     <tr id="DCS-row">
                         <td
-                            class="faction_name"
+                            class="faction-name"
                             onclick='window.open("https://far-verona.fandom.com/wiki/The_Deathless")'
                             onmouseout="hideFactionInfo()"
                             onmouseover="displayFactionInfo('The Deathless')"
                         >
                             DCS
                         </td>
-                        <td class="faction_color">
+                        <td class="faction-color">
                             <div id="DCS-cell" style="width:100%;height:100%;background-color: #222" onclick="autoSearch(this.id)"></div>
                         </td>
                     </tr>
                     <tr id="Vagrant-row">
                         <td
-                            class="faction_name"
+                            class="faction-name"
                             onclick='window.open("https://far-verona.fandom.com/wiki/Confederation_of_the_Upright_Vagrant")'
                             onmouseout="hideFactionInfo()"
                             onmouseover="displayFactionInfo('Confederation of the Upright Vagrant')"
@@ -246,79 +267,106 @@
                             VAGRANT
                         </td>
                         <td
-                            class="faction_color"
+                            class="faction-color"
                         >
                             <div id="Vagrant-cell" style="width:100%;height:100%;background-color: #222" onclick="autoSearch(this.id)"></div>
                         </td>
                     </tr>
                     <tr id="DM-row">
                         <td
-                            class="faction_name"
+                            class="faction-name"
                             onclick='window.open("https://far-verona.fandom.com/wiki/The_Democratic_Mandate")'
                             onmouseout="hideFactionInfo()"
                             onmouseover="displayFactionInfo('The Democratic Mandate')"
                         >
                             DM
                         </td>
-                        <td class="faction_color">
+                        <td class="faction-color">
                             <div id="DM-cell" style="width:100%;height:100%;background-color: #222" onclick="autoSearch(this.id)"></div>
                         </td>
                     </tr>
                     <tr id="Vela-row">
                         <td
-                            class="faction_name"
+                            class="faction-name"
                             onclick='window.open("https://far-verona.fandom.com/wiki/The_Velan_Ascendancy")'
                             onmouseout="hideFactionInfo()"
                             onmouseover="displayFactionInfo('The Velan Ascendency')"
                         >
                             VELA
                         </td>
-                        <td class="faction_color">
+                        <td class="faction-color">
                             <div id="Vela-cell" style="width:100%;height:100%;background-color: #222" onclick="autoSearch(this.id)"></div>
                         </td>
                     </tr>
                     <tr id="UPC-row">
                         <td
-                            class="faction_name"
+                            class="faction-name"
                             onclick='window.open("https://far-verona.fandom.com/wiki/Unified_People&#39;s_Collective")'
                             onmouseout="hideFactionInfo()"
                             onmouseover="displayFactionInfo('The Unified People\'s Collective')"
                         >
                             UPC
                         </td>
-                        <td class="faction_color">
+                        <td class="faction-color">
                             <div id="UPC-cell" style="width:100%;height:100%;background-color: #222" onclick="autoSearch(this.id)"></div>
                         </td>
                     </tr>
                     <tr id="HM-row">
                         <td
-                            class="faction_name"
+                            class="faction-name"
                             onclick='window.open("https://far-verona.fandom.com/wiki/The_Houses_Minor")'
                             onmouseout="hideFactionInfo()"
                             onmouseover="displayFactionInfo('The Houses Minor')"
                         >
                             HM
                         </td>
-                        <td class="faction_color">
+                        <td class="faction-color">
                             <div id="HM-cell" style="width:100%;height:100%;background-color: #222" onclick="autoSearch(this.id)"></div>
                         </td>
                     </tr>
                     <tr id="HC-row">
                         <td
-                            class="faction_name"
+                            class="faction-name"
                             onclick='window.open("https://far-verona.fandom.com/wiki/The_High_Church_of_Messiah-as-Emperox")'
                             onmouseout="hideFactionInfo()"
                             onmouseover="displayFactionInfo('The High Church of Messiah-as-Emperox')"
                         >
                             HC
                         </td>
-                        <td class="faction_color">
+                        <td class="faction-color">
                             <div id="HC-cell" style="width:100%;height:100%;background-color: #222" onclick="autoSearch(this.id)"></div>
                         </td>
                     </tr>
                 </table>
             </div>
         </div>
+
+        <script type="text/javascript">
+            for (let fac in factions) {
+                if (factions.hasOwnProperty(fac) && fac !== 'The Guild') {
+                    let cell = document.getElementById(factions[fac]['short'] + '-cell');
+                    cell.style.backgroundColor = factions[fac]['color'];
+                    if (inactive_factions.includes(fac)) {
+                        cell.innerHTML = "<img src='assets_alpha/Inactive.png' alt='' />";
+                    }
+                }
+            }
+        </script>
+
+<!--        <div id="menu">-->
+<!--            <table width="100%">-->
+<!--                <tr>-->
+<!--                    <td>-->
+<!--                        ATTACKER-->
+<!--                    </td>-->
+<!--                </tr>-->
+<!--                <tr>-->
+<!--                    <td>-->
+<!--                        DEFENDER-->
+<!--                    </td>-->
+<!--                </tr>-->
+<!--            </table>-->
+<!--        </div>-->
 
         <div class="tooltip" id="tip">
             <table
@@ -329,49 +377,49 @@
                 width="100%"
             >
                 <tr>
-                    <td id="tip_fac" style="height: 10px; font-size:12px; line-height: 0; color: #fff;"></td>
+                    <td id="tip-fac" style="height: 10px; font-size:12px; line-height: 0; color: #fff;"></td>
                     <td
                         align="right"
-                        id="tip_stats"
+                        id="tip-stats"
                         style="height: 10px; font-size:12px; line-height: 0; color: #fff;"
                     ></td>
                 </tr>
             </table>
 
-            <p id="tip_name" style="font-size:24px; margin-top: 10px; margin-bottom: 10px; color: #fff; font-weight: bold"></p>
+            <p id="tip-name" style="font-size:24px; margin-top: 10px; margin-bottom: 10px; color: #fff; font-weight: bold"></p>
             <table border="0" cellpadding="0" cellspacing="0" style="margin: 0" width="100%">
                 <tr>
                     <td
                         align="center"
-                        id="tip_hp"
+                        id="tip-hp"
                         style="font-size:18px; line-height: 18px; color: #fff;"
                         valign="bottom"
                         width="18%"
                     ></td>
                     <td
                         align="center"
-                        id="tip_cost"
+                        id="tip-cost"
                         style="font-size:18px; line-height: 18px; color: #fff;"
                         valign="bottom"
                         width="18%"
                     ></td>
                     <td
                         align="center"
-                        id="tip_tl"
+                        id="tip-tl"
                         style="font-size:18px; line-height: 18px; color: #fff;"
                         valign="bottom"
                         width="18%"
                     ></td>
                     <td
                         align="center"
-                        id="tip_atk"
+                        id="tip-atk"
                         style="font-size:18px; line-height: 18px; color: #fff;"
                         valign="bottom"
                         width="23%"
                     ></td>
                     <td
                         align="center"
-                        id="tip_cnt"
+                        id="tip-def"
                         style="font-size:18px; line-height: 18px; color: #fff;"
                         valign="bottom"
                         width="23%"
@@ -416,32 +464,33 @@
                 </tr>
                 <tr>
                     <table style="margin-top: 10px" width="100%">
-                        <tr id="tip_row_stealth">
+                        <tr id="tip-row-stealth">
                             <td style="font-size:12px; line-height: 12px; color: #fff; padding-right: 10px" align="right" valign="middle">
                                 <b>Stealth</b>
                             </td>
-                            <td id="tip_stealth" style="font-size:12px; line-height: 12px; color: #fff;">
+                            <td id="tip-stealth" style="font-size:12px; line-height: 12px; color: #fff;">
                                 An asset that has been Stealthed cannot be detected or attacked by other factions. If the unit normally requires the permission of a planetary government to be moved onto a planet, that permission may be foregone. An asset loses its Stealth if it is used to attack or defend.
                             </td>
                         </tr>
-                        <tr id="tip_row_special">
+                        <tr id="tip-row-special">
                             <td style="font-size:12px; line-height: 12px; color: #fff; padding: 10px 10px 0 0" align="right" valign="middle">
                                 <b>Special</b>
                             </td>
-                            <td id="tip_special" style="font-size:12px; line-height: 12px; color: #fff; padding-top: 10px"></td>
+                            <td id="tip-special" style="font-size:12px; line-height: 12px; color: #fff; padding-top: 10px"></td>
                         </tr>
-                        <tr id="tip_row_status">
-                            <td id="tip_status_label" style="font-size:12px; line-height: 12px; color: #fff; padding: 10px 10px 0 0" align="right" valign="middle"></td>
-                            <td id="tip_status" style="font-size:12px; line-height: 12px; color: #fff; padding-top: 10px"></td>
+                        <tr id="tip-row-status">
+                            <td id="tip-status-label" style="font-size:12px; line-height: 12px; color: #fff; padding: 10px 10px 0 0" align="right" valign="middle"></td>
+                            <td id="tip-status" style="font-size:12px; line-height: 12px; color: #fff; padding-top: 10px"></td>
                         </tr>
-                        <tr id="tip_row_perm">
-                            <td colspan="2" id="tip_perm" style="font-size:12px; line-height: 12px; color: #fff;"></td>
+                        <tr id="tip-row-perm">
+                            <td colspan="2" id="tip-perm" style="font-size:12px; line-height: 12px; color: #fff;"></td>
                         </tr>
                     </table>
                 </tr>
             </table>
         </div>
-        <div class="tooltip" id="planet_tip">
+
+        <div class="tooltip" id="planet-tip">
             <table
                 border="0"
                 cellpadding="4"
@@ -450,99 +499,68 @@
                 width="100%"
             >
                 <tr>
-                    <td id="planet_tip_fac" style="color:#fff; height: 10px; font-size: 12px; line-height: 0"></td>
+                    <td id="planet-tip-fac" style="color:#fff; height: 10px; font-size: 12px; line-height: 0"></td>
                     <td
                         align="right"
-                        id="planet_tip_sys"
+                        id="planet-tip-sys"
                         style="color:#fff; height: 10px; font-size:12px; line-height: 0"
                     ></td>
                 </tr>
             </table>
 
-            <p id="planet_tip_name" style="color:#fff; font-size:24px; margin-top: 10px; margin-bottom: 10px; font-weight: bold"></p>
+            <p id="planet-tip-name" style="color:#fff; font-size:24px; margin-top: 10px; margin-bottom: 10px; font-weight: bold"></p>
             <table border="0" cellpadding="2" cellspacing="0" style="margin: 0" width="100%">
                 <tr>
                     <td style="width: 30px; padding: 5px 5px 5px 0">
                         <img alt="" class="icon" src="img/pcvi_icon.png" />
                     </td>
-                    <td id="planet_tip_pcvi" style="color:#fff; font-size: 14px; line-height: 14px"></td>
+                    <td id="planet-tip-pcvi" style="color:#fff; font-size: 14px; line-height: 14px"></td>
                 </tr>
                 <tr>
                     <td style="width: 30px; padding: 5px 5px 5px 0">
                         <img alt="" class="icon" src="img/tl_icon.png" />
                     </td>
-                    <td id="planet_tip_tl" style="color:#fff; font-size: 14px; line-height: 14px"></td>
+                    <td id="planet-tip-tl" style="color:#fff; font-size: 14px; line-height: 14px"></td>
                 </tr>
                 <tr>
                     <td style="width: 30px; padding: 5px 5px 5px 0">
                         <img alt="" class="icon" src="img/pop_icon.png" />
                     </td>
-                    <td id="planet_tip_pop" style="color:#fff; font-size: 14px; line-height: 14px"></td>
+                    <td id="planet-tip-pop" style="color:#fff; font-size: 14px; line-height: 14px"></td>
                 </tr>
                 <tr>
                     <td style="width: 30px; padding: 5px 5px 5px 0">
                         <img alt="" class="icon" src="img/atmo_icon.png" />
                     </td>
-                    <td id="planet_tip_atmo" style="color:#fff; font-size: 14px; line-height: 14px"></td>
+                    <td id="planet-tip-atmo" style="color:#fff; font-size: 14px; line-height: 14px"></td>
                 </tr>
                 <tr>
                     <td style="width: 30px; padding: 5px 5px 5px 0">
                         <img alt="" class="icon" src="img/temp_icon.png" />
                     </td>
-                    <td id="planet_tip_temp" style="color:#fff; font-size: 14px; line-height: 14px"></td>
+                    <td id="planet-tip-temp" style="color:#fff; font-size: 14px; line-height: 14px"></td>
                 </tr>
                 <tr>
                     <td style="width: 30px; padding: 5px 5px 5px 0">
                         <img alt="" class="icon" src="img/bio_icon.png" />
                     </td>
-                    <td id="planet_tip_bio" style="color:#fff; font-size: 14px; line-height: 14px"></td>
+                    <td id="planet-tip-bio" style="color:#fff; font-size: 14px; line-height: 14px"></td>
                 </tr>
                 <tr>
                     <td style="width: 30px; padding: 5px 5px 5px 0">
                         <img alt="" class="icon" src="img/tags_icon.png" />
                     </td>
-                    <td id="planet_tip_tags" style="color:#fff; font-size: 14px; line-height: 14px"></td>
+                    <td id="planet-tip-tags" style="color:#fff; font-size: 14px; line-height: 14px"></td>
                 </tr>
             </table>
 
-            <div id="planet_tip_chart" style="position: relative; top: 5px;"></div>
+            <div id="planet-objects-chart-container" class="objects-chart-container" style="position: relative;"></div>
+            <div id="planet-tip-chart" style="position: relative;"></div>
         </div>
-        <div class="tooltip" id="system_tip">
-            <table border="0" cellpadding="10" cellspacing="0" width="100%">
-                <tr>
-                    <td>
-                        <table
-                                border="0"
-                                cellpadding="10"
-                                cellspacing="0"
-                                style="border-bottom: 1px dotted #404040"
-                                width="100%"
-                        >
-                            <tr>
-                                <td id="system_tip_name" style="font-size: 20px">
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
 
-            <div id="system_objects_chart_container"></div>
-            <div id="system_tip_chart" style="position: relative; top: 5px;"></div>
-        </div>
         <script type="text/javascript">
-            for (let fac in factions) {
-                if (factions.hasOwnProperty(fac) && fac !== 'The Guild') {
-                    let cell = document.getElementById(factions[fac]['short'] + '-cell');
-                    cell.style.backgroundColor = factions[fac]['color'];
-                    if (inactive_factions.includes(fac)) {
-                        cell.innerHTML = "<img src='assets_alpha/Inactive.png' alt='' />";
-                    }
-                }
-            }
-        </script>
-        <script type="text/javascript">
-            const planet_tip_chart = new ApexCharts(document.querySelector('#planet_tip_chart'), {
+
+            const planet_tip_chart = new ApexCharts(document.querySelector('#planet-tip-chart'), {
                 chart: {
                     type: 'donut',
                     animations: {
@@ -611,28 +629,40 @@
             });
             planet_tip_chart.render();
         </script>
+
+        <div class="tooltip" id="system-tip">
+            <table border="0" cellpadding="10" cellspacing="0" width="100%">
+                <tr>
+                    <td>
+                        <table
+                                border="0"
+                                cellpadding="10"
+                                cellspacing="0"
+                                style="border-bottom: 1px dotted #404040"
+                                width="100%"
+                        >
+                            <tr>
+                                <td id="system-tip-name" style="font-size: 20px">
+                                </td>
+                                <td id="system-tip-hex" style="width: 50px; text-align: right; color: #777; font-size: 20px">
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+
+            <div id="orbital-objects-chart-container" class="objects-chart-container" style="position: relative;"></div>
+            <div id="system-tip-chart-container" style="position: relative;">
+                <div id="system-tip-chart-outer" style="position: absolute; width: 100%;"></div>
+                <div id="system-tip-chart-inner" style="position: absolute; width: 100%"></div>
+            </div>
+        </div>
+
         <script type="text/javascript">
-            const system_tip_chart = new ApexCharts(document.querySelector('#system_tip_chart'), {
+            const system_tip_chart_outer = new ApexCharts(document.querySelector('#system-tip-chart-outer'), {
                 chart: {
                     type: 'donut',
-                    animations: {
-                        enabled: true,
-                        easing: 'easeinout',
-                        speed: 100,
-                        animateGradually: {
-                            enabled: true,
-                            delay: 500
-                        },
-                        dynamicAnimation: {
-                            enabled: true,
-                            speed: 100
-                        }
-                    },
-                    fontFamily: 'D-DIN, Helvetica, Arial, sans-serif',
-                    parentHeightOffset: 15,
-                    dropShadow: {
-                        enabled: false
-                    }
                 },
                 title: {
                     text: 'Influence',
@@ -644,7 +674,7 @@
                         fontWeight: 'bold'
                     }
                 },
-                series: [],
+                series: [1],
                 legend: {
                     show: true,
                     floating: true,
@@ -654,7 +684,7 @@
                     },
                     itemMargin: {
                         horizontal: 5
-                    }
+                    },
                 },
                 stroke: {
                     show: true,
@@ -674,17 +704,57 @@
                     pie: {
                         offsetY: 10,
                         donut: {
-                            size: '50%'
+                            size: '60%'
                         }
                     }
                 }
             });
-            system_tip_chart.render();
+            system_tip_chart_outer.render();
+
+            const system_tip_chart_inner = new ApexCharts(document.querySelector('#system-tip-chart-inner'), {
+                chart: {
+                    type: 'donut',
+                },
+                series: [],
+                legend: {
+                    show: false,
+                },
+                theme: {
+                    monochrome: {
+                        enabled: true,
+                        color: '#222222',
+                        shadeIntensity: 0
+                    }
+                },
+                stroke: {
+                    show: true,
+                    width: 6.6,
+                    colors: ['#141414']
+                },
+                dataLabels: {
+                    enabled: true,
+                    style: {
+                        colors: ['#777777'],
+                        fontSize: '12px'
+                    },
+                    dropShadow: {
+                        enabled: false,
+                    }
+                },
+                plotOptions: {
+                    pie: {
+                        customScale: 0.62,
+                        offsetY: 6,
+                        donut: {
+                            size: '60%'
+                        }
+                    }
+                }
+            });
+            system_tip_chart_inner.render();
         </script>
         <script type="text/javascript">
-            const tip = document.getElementById('tip');
-            const planet_tip = document.getElementById('planet_tip');
-            const system_tip = document.getElementById('system_tip');
+            let tip;
             let x_offset = false;
             let y_offset = false;
 
@@ -692,33 +762,51 @@
                 let mouse_x = e.clientX;
                 let mouse_y = e.clientY;
 
-                if (tip_on === true || planet_tip_on === true || system_tip_on === true) {
+                if (tip_on === true || planet_tip_on === true || system_tip_on === true || menu_on === true) {
+
+                    if (tip_on) {
+                        tip = document.getElementById('tip');
+                    } else if (planet_tip_on) {
+                        tip = document.getElementById('planet-tip');
+                    } else if (system_tip_on) {
+                        tip = document.getElementById('system-tip');
+                    }
+
+                    let tip_h = tip.offsetHeight;
+                    let scale_h = Math.min(viewport_h / tip_h, 1);
+                    tip.style.transform = `scale(${scale_h})`;
+
                     if (x_offset) {
                         tip.style.left = mouse_x - tip.offsetWidth - 20 + 'px';
-                        planet_tip.style.left = mouse_x - planet_tip.offsetWidth - 20 + 'px';
-                        system_tip.style.left = mouse_x - system_tip.offsetWidth - 20 + 'px';
                     } else {
                         tip.style.left = mouse_x + 20 + 'px';
-                        planet_tip.style.left = mouse_x + 20 + 'px';
-                        system_tip.style.left = mouse_x + 20 + 'px';
                     }
 
                     if (y_offset) {
-                        tip.style.top = Math.max(mouse_y - tip.offsetHeight - 20, 5) + 'px';
-                        planet_tip.style.top = Math.max(mouse_y - planet_tip.offsetHeight - 20, 5) + 'px';
-                        system_tip.style.top = Math.max(mouse_y - system_tip.offsetHeight - 20, 5) + 'px';
+                        if (scale_h === 1) {
+                            tip.style.top = Math.max(mouse_y - tip.offsetHeight - 20, 5) + 'px';
+                        } else {
+                            tip.style.top = '0';
+                            let rect = tip.getBoundingClientRect();
+                            tip.style.top = `-${rect.top - 1}px`;
+                        }
+
                     } else {
-                        tip.style.top = Math.min(mouse_y + 20, viewport_h - tip.offsetHeight - 5) + 'px';
-                        planet_tip.style.top =
-                            Math.min(mouse_y + 20, viewport_h - planet_tip.offsetHeight - 5) + 'px';
-                        system_tip.style.top =
-                            Math.min(mouse_y + 20, viewport_h - system_tip.offsetHeight - 5) + 'px';
+                        if (scale_h === 1) {
+                            tip.style.top = Math.min(mouse_y + 20, viewport_h - tip.offsetHeight - 5) + 'px';
+                        } else {
+                            tip.style.top = '0';
+                            let rect = tip.getBoundingClientRect();
+                            tip.style.top = `-${rect.top - 1}px`;
+                        }
                     }
+
                 } else {
                     x_offset = mouse_x > viewport_w * 0.5;
                     y_offset = mouse_y > viewport_h * 0.5;
                 }
             };
+
         </script>
 
         <div id="sectorinfluence">
@@ -742,25 +830,15 @@
                 </tr>
             </table>
 
-            <div id="sectorinfluence_chart" style="position: relative; top: 5px;"></div>
+            <div id="sectorinfluence-chart-container" style="position: relative;">
+                <div id="sectorinfluence-chart-outer" style="position: absolute; width: 100%"></div>
+                <div id="sectorinfluence-chart-inner" style="position: absolute; width: 100%"></div>
+            </div>
         </div>
         <script type="text/javascript">
-            const sectorinfluence_chart = new ApexCharts(document.querySelector('#sectorinfluence_chart'), {
+            const sectorinfluence_chart_outer = new ApexCharts(document.querySelector('#sectorinfluence-chart-outer'), {
                 chart: {
                     type: 'donut',
-                    animations: {
-                        enabled: true,
-                        easing: 'easeinout',
-                        speed: 100,
-                        animateGradually: {
-                            enabled: true,
-                            delay: 500
-                        },
-                        dynamicAnimation: {
-                            enabled: true,
-                            speed: 100
-                        }
-                    },
                     fontFamily: 'D-DIN, Helvetica, Arial, sans-serif',
                     parentHeightOffset: 15,
                     dropShadow: {
@@ -768,6 +846,11 @@
                     }
                 },
                 series: [],
+                title: {
+                    style: {
+                        color: '#fff'
+                    }
+                },
                 legend: {
                     show: true,
                     floating: true,
@@ -787,7 +870,7 @@
                 dataLabels: {
                     enabled: true,
                     style: {
-                        fontSize: '16px'
+                        fontSize: '24px'
                     },
                     dropShadow: {
                         enabled: false
@@ -802,14 +885,56 @@
                 },
                 plotOptions: {
                     pie: {
-                        offsetY: 10,
                         donut: {
-                            size: '50%'
+                            size: '60%'
                         }
                     }
                 }
             });
-            sectorinfluence_chart.render();
+            sectorinfluence_chart_outer.render();
+
+            const sectorinfluence_chart_inner = new ApexCharts(document.querySelector('#sectorinfluence-chart-inner'), {
+                chart: {
+                    type: 'donut',
+                },
+                series: [],
+                legend: {
+                    show: false,
+                },
+                theme: {
+                    monochrome: {
+                        enabled: true,
+                        color: '#222222',
+                        shadeIntensity: 0
+                    }
+                },
+                stroke: {
+                    show: true,
+                    width: 6.1,
+                    colors: ['#141414']
+                },
+                dataLabels: {
+                    enabled: true,
+                    style: {
+                        colors: ['#777777'],
+                        fontSize: '12px',
+                        fontWeight: 'bold'
+                    },
+                    dropShadow: {
+                        enabled: false,
+                    }
+                },
+                plotOptions: {
+                    pie: {
+                        customScale: 0.65,
+                        offsetY: 9,
+                        donut: {
+                            size: '60%'
+                        }
+                    }
+                }
+            });
+            sectorinfluence_chart_inner.render();
         </script>
 
         <div id="info">
@@ -824,8 +949,8 @@
                             width="100%"
                         >
                             <tr>
-                                <td id="info_faction" style="font-size: 20px; font-weight: bold"></td>
-                                <td align="right" id="info_homeworld" style="font-size: 12px" valign="bottom"></td>
+                                <td id="info-faction" style="font-size: 20px; font-weight: bold"></td>
+                                <td align="right" id="info-homeworld" style="font-size: 12px" valign="bottom"></td>
                             </tr>
                         </table>
                     </td>
@@ -833,38 +958,38 @@
                 <tr>
                     <td
                         align="center"
-                        id="info_force"
+                        id="info-force"
                         style="font-size:42px; line-height: 38px; padding-top: 10px"
                         valign="bottom"
                         width="40"
                     ></td>
                     <td
                         align="center"
-                        id="info_cunning"
+                        id="info-cunning"
                         style="font-size:42px; line-height: 38px"
                         valign="bottom"
                         width="40"
                     ></td>
                     <td
                         align="center"
-                        id="info_wealth"
+                        id="info-wealth"
                         style="font-size:42px; line-height: 38px"
                         valign="bottom"
                         width="40"
                     ></td>
-                    <td align="center" id="info_hp" style="font-size:20px" valign="bottom" width="50"></td>
-                    <td align="center" id="info_income" style="font-size:20px" valign="bottom" width="40"></td>
-                    <td align="center" id="info_balance" style="font-size:20px" valign="bottom" width="40"></td>
-                    <td align="center" id="info_exp" style="font-size:20px" valign="bottom" width="40"></td>
+                    <td align="center" id="info-hp" style="font-size:20px" valign="bottom" width="50"></td>
+                    <td align="center" id="info-income" style="font-size:20px" valign="bottom" width="40"></td>
+                    <td align="center" id="info-balance" style="font-size:20px" valign="bottom" width="40"></td>
+                    <td align="center" id="info-exp" style="font-size:20px" valign="bottom" width="40"></td>
                     <td valign="bottom" width="40">
                         <table border="0" cellpadding="0" cellspacing="0" width="100%">
                             <tr>
-                                <td align="center" id="info_infl_abs" style="font-size:16px" valign="bottom">
+                                <td align="center" id="info-infl-abs" style="font-size:16px" valign="bottom">
                                     400
                                 </td>
                             </tr>
                             <tr>
-                                <td align="center" id="info_infl_rel" style="font-size:16px" valign="bottom">
+                                <td align="center" id="info-infl-rel" style="font-size:16px" valign="bottom">
                                     23.2%
                                 </td>
                             </tr>
@@ -901,25 +1026,25 @@
 
             <table border="0" cellpadding="4" cellspacing="0" style="margin: 20px 10px 0 10px">
                 <tr>
-                    <td id="info_tag" style="font-size:20px"></td>
+                    <td id="info-tag" style="font-size:20px"></td>
                 </tr>
                 <tr>
-                    <td align="justify" id="info_tagdesc"></td>
-                </tr>
-            </table>
-
-            <table border="0" cellpadding="4" cellspacing="0" style="margin: 20px 10px 0 10px">
-                <tr>
-                    <td id="info_goal" style="font-size:20px"></td>
-                </tr>
-                <tr>
-                    <td align="justify" id="info_goaldesc"></td>
+                    <td align="justify" id="info-tag-desc"></td>
                 </tr>
             </table>
 
             <table border="0" cellpadding="4" cellspacing="0" style="margin: 20px 10px 0 10px">
                 <tr>
-                    <td align="justify" id="info_notes"></td>
+                    <td id="info-goal" style="font-size:20px"></td>
+                </tr>
+                <tr>
+                    <td align="justify" id="info-goal-desc"></td>
+                </tr>
+            </table>
+
+            <table border="0" cellpadding="4" cellspacing="0" style="margin: 20px 10px 0 10px">
+                <tr>
+                    <td align="justify" id="info-notes"></td>
                 </tr>
             </table>
         </div>
@@ -929,25 +1054,25 @@
             <div id="search-container">
                 <input type="text" id="search-bar" onkeyup="filterList()" placeholder="Search ..." />
 
-                <div id="del_button" onclick="delFilter()">
-                    <img id="delButtonImg" src="img/del_icon.png" alt="" />
+                <div id="del-button" onclick="delFilter()">
+                    <img id="del-button-img" src="img/del_icon.png" alt="" />
                 </div>
             </div>
 
             <div id="sort-container">
-                <div id="sort_by">
+                <div id="sort-by">
                     <table>
                         <tr>
-                            <td id="sort_influence" onclick="sortBy('influence')">
+                            <td id="sort-influence" onclick="sortBy('influence')">
                                 Influence
                             </td>
-                            <td id="sort_faction" onclick="sortBy('faction')">
+                            <td id="sort-faction" onclick="sortBy('faction')">
                                 Faction
                             </td>
-                            <td id="sort_asset" onclick="sortBy('name')">
+                            <td id="sort-asset" onclick="sortBy('name')">
                                 Asset
                             </td>
-                            <td id="sort_location" onClick="sortBy('location')">
+                            <td id="sort-location" onClick="sortBy('location')">
                                 Location
                             </td>
                         </tr>
@@ -955,17 +1080,18 @@
                 </div>
             </div>
 
-            <div id="assetPool"></div>
+            <div id="asset-pool"></div>
 
         </div>
 
-        <div id="sidebarToggle" onclick="toggleSidebar()"></div>
+        <div id="sidebar-toggle" onclick="toggleSidebar()"></div>
 
         <div
-            id="sectorinfluence_toggle"
+            id="sectorinfluence-toggle"
             onmouseenter="displaySectorInfluence()"
             onmouseleave="hideSectorInfluence()"
         >
+
             <img alt="" src="img/donut_chart.png" style="width: 50px; height: auto;" />
         </div>
 
@@ -975,13 +1101,173 @@
 <!--            /></a>-->
 <!--        </div>-->
 
-        <div
-            id="visibilityToggle"
-            onclick="toggleInactiveFactions()"
-            onmouseenter="visibilityToggleStyling('in')"
-            onmouseleave="visibilityToggleStyling('out')"
-        ></div>
+        <div id="region-toggle">
+            <label id="region" class="label">SHOW REGIONS
+                <input type="checkbox" onclick="toggleInfluenceOverlay()">
+                <span class="checkmark"></span>
+            </label>
+        </div>
 
-<!--        <div id="factionToggle" onclick="toggleFactionTable()"></div>-->
+        <div id="visibility-toggle">
+            <label id="visibility" class="label">SHOW INACTIVE
+                <input type="checkbox" onclick="toggleInactiveFactions()">
+                <span class="checkmark"></span>
+            </label>
+        </div>
+
+        <div id="battle-container">
+            <table border="0" width="800" height="170">
+                <tr>
+                    <td
+                        id="attacker-fac-name"
+                        colspan="2"
+                        width="370"
+                        height="25"
+                        align="right"
+                        valign="bottom"
+                        class="battle-fac-name"
+                        style="font-size: 24px; font-weight: bold; border-bottom: 1px solid #404040; "
+                    >-</td>
+                    <td rowspan="2" width="60" style="padding: 5px">
+                        <div style="position: relative; height: 40px; width: 60px;">
+                            <div id="fight-button">
+                                <div id="attacker-stat">-</div>
+                                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%)">v</div>
+                                <div id="defender-stat">-</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td
+                        id="defender-fac-name"
+                        colspan="2"
+                        width="370"
+                        valign="bottom"
+                        class="battle-fac-name"
+                        style="font-size: 24px; font-weight: bold; border-bottom: 1px solid #404040"
+                    >-</td>
+                </tr>
+                <tr>
+                    <td id="attacker-hit-chance" class="chances" colspan="2" height="15" align="right" style="font-size: 12px; color: #777777">
+                        TO HIT: -
+                    </td>
+                    <td id="defender-evade-chance" class="chances" colspan="2" style="font-size: 12px; color: #777777">
+                        TO EVADE: -
+                    </td>
+                </tr>
+                <tr>
+                    <td width="270" style="padding: 5px">
+                        <div id="attacker-asset" class="asset-container">
+                            <table id="attacker-asset-active" width="100%" height="100%" border="0">
+                                <tr>
+                                    <td id="attacker-asset-type-stattier" colspan="3" style="font-size: 10px; color: #777; border-bottom: 1px solid #404040">
+                                        -
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td id="attacker-asset-name" colspan="3" height="20" valign="bottom" style="font-size: 18px; font-weight: bold">
+                                    -
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td id="attacker-asset-hp" width="25%" align="center" valign="bottom">
+                                        -
+                                    </td>
+                                    <td id="attacker-asset-atk" width="50%" align="center" valign="bottom">
+                                        -
+                                    </td>
+                                    <td id="attacker-asset-def" width="25%" align="center" valign="bottom">
+                                        -
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class='hp-td' style='padding-bottom: 4px'>
+                                        <img class='icon-pool' src='img/hp_icon.png' alt='' />
+                                    </td>
+                                    <td class='atk-td' style='padding-bottom: 4px'>
+                                        <img class='icon-pool' src='img/atk_icon.png' alt='' />
+                                    </td>
+                                    <td class='def-td' style='padding-bottom: 4px'>
+                                        <img class='icon-pool' src='img/def_icon.png' alt='' />
+                                    </td>
+                                </tr>
+                            </table>
+                            <table id="attacker-asset-inactive" width="100%" height="100%" border="0">
+                                <tr>
+                                    <td align="center" valign="middle" style="font-size: 14px; color: #444444">
+                                        ATTACKER ASSET
+                                    </td>
+                                </tr>
+                            </table>
+                            <div id="attacker-asset-del" class="battle-asset-del" onclick="clearBattleSlot('attacker')"></div>
+                        </div>
+                    </td>
+                    <td width="100">
+                        <div id="attacker-roll" class="roll-container"></div>
+                    </td>
+                    <td>
+                        <img src="img/fight_icon.png" alt
+                             style="
+                             position: absolute;
+                             width: 50px;
+                             height: auto;
+                             left: 50%;
+                             bottom: 45px;
+                             transform: translateX(-50%);
+                             opacity: 0.2;">
+                    </td>
+                    <td width="100">
+                        <div id="defender-roll" class="roll-container"></div>
+                    </td>
+                    <td width="270" style="padding: 5px">
+                        <div id="defender-asset" class="asset-container">
+                            <table id="defender-asset-active" width="100%" height="100%" border="0">
+                                <tr>
+                                    <td id="defender-asset-type-stattier" colspan="3" style="font-size: 10px; color: #777; border-bottom: 1px solid #404040">
+                                        Special Forces, Wealth 6
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td id="defender-asset-name" colspan="3" height="20" valign="bottom" style="font-size: 18px; font-weight: bold">
+                                        Imperial Commodities Broker
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td id="defender-asset-hp" width="25%" align="center" valign="bottom">
+                                        10/10
+                                    </td>
+                                    <td id="defender-asset-atk" width="50%" align="center" valign="bottom">
+                                        FvF, 3d10+4
+                                    </td>
+                                    <td id="defender-asset-def" width="25%" align="center" valign="bottom">
+                                        2d8+2
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class='hp-td' style='padding-bottom: 4px'>
+                                        <img class='icon-pool' src='img/hp_icon.png' alt='' />
+                                    </td>
+                                    <td class='atk-td' style='padding-bottom: 4px'>
+                                        <img class='icon-pool' src='img/atk_icon.png' alt='' />
+                                    </td>
+                                    <td class='def-td' style='padding-bottom: 4px'>
+                                        <img class='icon-pool' src='img/def_icon.png' alt='' />
+                                    </td>
+                                </tr>
+                            </table>
+                            <table id="defender-asset-inactive" width="100%" height="100%" border="0">
+                                <tr>
+                                    <td align="center" valign="middle" style="font-size: 14px; color: #444444">
+                                        DEFENDER ASSET
+                                    </td>
+                                </tr>
+                            </table>
+                            <div id="defender-asset-del" class="battle-asset-del" onclick="clearBattleSlot('defender')"></div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+<!--        <div id="faction-toggle" onclick="toggleFactionTable()"></div>-->
     </body>
 </html>

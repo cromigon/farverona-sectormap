@@ -46,17 +46,88 @@ mark {
     background-color: #3ee1f4;
 }
 
-#visibilityToggle {
+#region-toggle {
     position: fixed;
-    top: 10px;
-    right: 5px;
-    width: 35px;
-    height: 35px;
-    background: url('../img/hide_rest.png');
-    background-size: 35px;
+    top: 15px;
+    right: 10px;
 }
 
-#factionToggle {
+#visibility-toggle {
+    position: fixed;
+    top: 35px;
+    right: 10px;
+}
+
+.label {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-family: 'D-DIN', Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    line-height: 15px;
+    color: #444444;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    transition: color 0.2s ease-in-out;
+}
+
+.label:hover {
+    color: #777777;
+}
+
+.label input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkmark {
+    float: right;
+    top: 0;
+    right: 0;
+    height: 15px;
+    width: 15px;
+    margin-left: 5px;
+    background-color: #444444;
+    border-radius: 10px;
+}
+
+.label + input:checked  {
+    color: #777777;
+}
+
+.label input:checked ~ .checkmark {
+    background-color: #f70094;
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.label input:checked ~ .checkmark:after {
+    display: block;
+}
+
+.label .checkmark:after {
+    right: 4px;
+    width: 4px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+#faction-toggle {
     position: fixed;
     top: 10px;
     right: 16px;
@@ -67,28 +138,33 @@ mark {
     transition: transform 0.4s ease-in-out;
 }
 
-#factionToggle:hover {
+#faction-toggle:hover {
     background: url('../img/toggle_hover.png');
     background-size: 35px;
 }
 
-#factionToggle:active {
+#faction-toggle:active {
     background: url('../img/toggle_pressed.png');
     background-size: 35px;
 }
 
 .asset {
-    transition: opacity 0.1s;
+    transition: opacity 0.2s;
+    transition-timing-function: ease-in-out;
+}
+
+.system-name {
+    transition: opacity 0.2s, color 0.2s, fill 0.2s, stroke 0.2s;
     transition-timing-function: ease-in-out;
 }
 
 .planet {
     z-index: 3;
-    transition: opacity 0.1s;
+    transition: opacity 0.2s, color 0.2s, fill 0.2s, stroke 0.2s;
     transition-timing-function: ease-in-out;
 }
 
-#factionsCol {
+#factions-col {
     position: fixed;
     width: 200px;
     height: 100%;
@@ -103,7 +179,7 @@ mark {
     /*border: 1px solid #f00*/
 }
 
-#factionsCenter {
+#factions-center {
     position: absolute;
     top: 50%;
     right: 0;
@@ -111,7 +187,7 @@ mark {
     /*border: 1px solid #0f0*/
 }
 
-#factionTable {
+#faction-table {
     width: 200px;
     right: 0;
     transform-origin: right center;
@@ -121,17 +197,18 @@ mark {
     /*border: 1px solid #00f*/
 }
 
-.faction_name {
+.faction-name {
     text-align: right;
     padding-right: 10px;
     cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
 }
 
-.faction_name:hover {
+.faction-name:hover {
     background-color: rgba(255, 255, 255, 0.1);
 }
 
-.faction_color {
+.faction-color {
     width: 40px;
     height: 40px;
     background-color: #222;
@@ -176,6 +253,51 @@ td img {
 .highlight:focus {
     opacity: 0.3;
     background-color: #fff;
+    cursor: pointer;
+}
+
+#menu {
+    display: none;
+    position: absolute;
+    width: 112px;
+    font-family: 'D-DIN', Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    color: #fff;
+    z-index: 999;
+}
+
+#menu table {
+    position: absolute;
+    top: 0;
+    left: 6px;
+    background-color: #f70094;
+    box-shadow: 10px 10px 5px 0 rgba(10,10,10,0.3);
+}
+
+#menu td {
+    padding: 5px;
+}
+
+#menu td.hover:hover {
+    cursor: pointer;
+    background-color: #b9005d;
+}
+
+#menu td.inactive {
+    color: rgba(255,255,255,0.7);
+    user-select: none;
+}
+
+#menu-arrow {
+    position: absolute;
+    width: 0;
+    height: 0;
+    top: 0;
+    left: 0;
+    border-top: 6px solid #f70094;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    z-index: 999;
 }
 
 .tooltip {
@@ -186,10 +308,11 @@ td img {
     background-color: rgba(20, 20, 20, 1);
     color: #fff;
     font-family: 'D-DIN', Helvetica, Arial, sans-serif;
-    border: 1px solid #404040;
+    /*border: 1px solid #404040;*/
+    box-shadow: 10px 10px 5px 0 rgba(10,10,10,0.3);
 }
 
-#system_tip {
+#system-tip {
     padding: 0;
 }
 
@@ -204,13 +327,14 @@ td img {
     max-height: 740px;
     font-family: 'D-DIN', Helvetica, Arial, sans-serif;
     color: #fff;
-    border: 1px solid #404040;
+    /*border: 1px solid #404040;*/
     background-color: rgba(20, 20, 20, 1);
+    box-shadow: 10px 10px 5px 0 rgba(10,10,10,0.3);
     z-index: -2;
     opacity: 0;
 }
 
-#sectorinfluence_toggle {
+#sectorinfluence-toggle {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -219,7 +343,7 @@ td img {
     z-index: 1;
 }
 
-#sectorinfluence_toggle:hover {
+#sectorinfluence-toggle:hover {
     opacity: 1;
 }
 
@@ -234,8 +358,9 @@ td img {
     max-height: 420px;
     font-family: 'D-DIN', Helvetica, Arial, sans-serif;
     color: #fff;
-    border: 1px solid #404040;
+    /*border: 1px solid #404040;*/
     background-color: rgba(20, 20, 20, 1);
+    box-shadow: 10px 10px 5px 0 rgba(10,10,10,0.3);
     z-index: -2;
     opacity: 0;
 }
@@ -288,7 +413,7 @@ td img {
     background: #888;
 }
 
-#sidebarToggle {
+#sidebar-toggle {
     position: absolute;
     top: 10px;
     left: 5px;
@@ -300,12 +425,12 @@ td img {
     transition: transform 0.5s ease-in-out, left 0.5s ease-in-out;
 }
 
-#sidebarToggle:hover {
+#sidebar-toggle:hover {
     background: url('../img/toggle_hover.png');
     background-size: 35px;
 }
 
-#sidebarToggle:active {
+#sidebar-toggle:active {
     background: url('../img/toggle_pressed.png');
     background-size: 35px;
 }
@@ -313,12 +438,13 @@ td img {
 #sidebar {
     position: absolute;
     top: 0;
-    left: -401px;
+    left: -410px;
     width: 400px;
     height: 100%;
     margin: 0;
     transition: left 0.5s ease-in-out;
     z-index: 2;
+    box-shadow: 10px 10px 5px rgba(10,10,10,0.3);
 }
 
 #search-container {
@@ -356,7 +482,7 @@ td img {
     outline-width: 0;
 }
 
-#del_button {
+#del-button {
     position: absolute;
     top: 15px;
     right: 20px;
@@ -364,7 +490,7 @@ td img {
     cursor: pointer;
 }
 
-#delButtonImg {
+#del-button-img {
     width: 20px;
     height: 20px;
     max-width: 20px;
@@ -382,7 +508,7 @@ td img {
     border-right: 1px solid #404040;
 }
 
-#sort_by {
+#sort-by {
     font-family: 'D-DIN', Arial, Helvetica, sans-serif;
     font-size: 12px;
     color: #404040;
@@ -396,7 +522,7 @@ td img {
     user-select: none;
 }
 
-#sort_by table {
+#sort-by table {
     position: relative;
     bottom: -50%;
     transform: translateY(-50%);
@@ -407,7 +533,7 @@ td img {
     /*border: 1px solid #fff*/
 }
 
-#sort_by td {
+#sort-by td {
     width: 25%;
     height: 100%;
     text-align: center;
@@ -415,22 +541,22 @@ td img {
     border-right: 1px solid #404040;
 }
 
-#sort_by td:last-child {
+#sort-by td:last-child {
     border: 0;
 }
 
-#sort_by td:hover {
+#sort-by td:hover {
     color: #888888;
     background-color: #404040;
     cursor: pointer;
 }
 
-#sort_by td:active {
+#sort-by td:active {
     color: #fff;
     background-color: #f70094;
 }
 
-#assetPool {
+#asset-pool {
     position: absolute;
     top: 80px;
     left: 0;
@@ -570,7 +696,7 @@ td img {
     line-height: 15px;
 }
 
-#asset_info {
+#asset-info {
     position: absolute;
     width: 400px;
     font-family: 'D-DIN', Arial, Helvetica, sans-serif;
@@ -581,29 +707,27 @@ td img {
     z-index: 2;
 }
 
-#asset_info td {
+#asset-info td {
     padding: 5px;
 }
 
-#asset_info_name {
+#asset-info_name {
     font-size: 18px;
     border-bottom: 1px dotted #fafafa
 }
 
-#asset_info_special {
+#asset-info_special {
     font-size: 14px;
     vertical-align: bottom;
 }
 
-#asset_info_perm {
+#asset-info_perm {
     font-size: 14px;
 }
 
-#system_objects_chart_container {
+.objects-chart-container {
     margin: 0;
     width: 420px;
-    /*transform: scale(0.5);*/
-    /*border: 1px solid #f00;*/
 }
 
 .Treant > .node {
@@ -627,10 +751,232 @@ td img {
     padding: 0;
 }
 
-.system_object {
-    padding: 2px;
+.system-object {
+    padding: 5px;
     color: #fff;
     background-color: #222;
     font-family: 'D-DIN', Arial, Helvetica, sans-serif;
-    font-size: 8px;
+    font-size: 10px;
+    border-radius: 2px;
+}
+
+.nav-routes {
+    transition: opacity 0.2s ease-in-out;
+}
+
+#battle-container {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 800px;
+    height: 170px;
+    padding: 10px;
+    font-family: 'D-DIN', Helvetica, Arial, sans-serif;
+    color: #fff;
+    border: 1px solid #404040;
+    background-color: #222222;
+    box-shadow: 10px 10px 5px rgba(10,10,10,0.3);
+}
+
+.battle-fac-name {
+    color: #444;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.chances {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.asset-container {
+    position: relative;
+    padding: 5px;
+    width: 260px;
+    height: 100%;
+    background-color: rgb(38, 38, 38);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.dropped-a {
+    -webkit-animation: fadeout 0.7s ease-out;
+    animation: fadeout-a 0.7s ease-out;
+}
+
+.dropped-b {
+    -webkit-animation: fadeout 0.7s ease-out;
+    animation: fadeout-b 0.7s ease-out;
+}
+
+@keyframes fadeout-a {
+    from { background-color: #dc00c8; }
+    to   { background-color: rgb(38, 38, 38); }
+}
+
+@keyframes fadeout-b {
+    from { background-color: #dc00c8; }
+    to   { background-color: rgb(38, 38, 38); }
+}
+
+#attacker-asset-active {
+    display: none;
+}
+
+#defender-asset-active {
+    display: none;
+}
+
+.battle-asset-del {
+    display: none;
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 16px;
+    height: 16px;
+    text-align: center;
+    color: #404040;
+    background: url('../img/del_icon.png') center/50% no-repeat #222;
+    border-radius: 8px;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.battle-asset-del:hover {
+    background-color: #333;
+    cursor: pointer;
+}
+
+#fight-button {
+    position: absolute;
+    top: -10.5px;
+    width: 60px;
+    height: 40px;
+    text-align: center;
+    vertical-align: bottom;
+    font-size: 24px;
+    font-weight: bold;
+    color: #444;
+    background-color: #222;
+    border: 1px solid #444;
+    /*box-sizing: border-box;*/
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    transition: background-color 0.2s ease-in-out;
+}
+
+#fight-button.active {
+    color: #fff;
+    animation: colorPulse 2s infinite alternate;
+}
+
+@keyframes colorPulse {
+    0% {
+        background-color: rgb(38, 38, 38);
+        border-color: #444;
+    }
+    60% {
+        background-color: rgb(38, 38, 38);
+        border-color: #444;
+    }
+    100% {
+        background-color: #dc00c8;
+        border-color: #dc00c8;
+    }
+}
+
+#fight-button.active:hover {
+    background-color: #dc00c8;
+    cursor: pointer;
+    animation: none;
+}
+
+#attacker-stat {
+    position: absolute;
+    left: 2px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 36px;
+}
+
+#defender-stat {
+    position: absolute;
+    right: 2px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 36px;
+}
+
+.roll-container {
+    position: relative;
+    /*border: 1px solid #f00;*/
+    overflow: hidden;
+    top: 0;
+    width: 71px;
+    height: 80px;
+    max-width: 71px;
+    max-height: 80px;
+    font-size: 80px;
+    font-weight: bold;
+    line-height: 100px;
+}
+
+.roll-container span {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#attacker-roll {
+    text-align: right;
+}
+
+#attacker-roll span {
+    -webkit-animation: rollAtk 5s ease-in-out;
+    -o-animation: rollAtk 5s ease-in-out;
+    animation: rollAtk 5s ease-in-out;
+    animation-fill-mode: forwards;
+}
+
+#defender-roll {
+    text-align: left;
+}
+
+#defender-roll span {
+    -webkit-animation: rollDef 7s ease-in-out;
+    -o-animation: rollDef 7s ease-in-out;
+    animation: rollDef 7s ease-in-out;
+    animation-fill-mode: forwards;
+}
+
+@keyframes rollAtk {
+    0% {
+        top: 0;
+    }
+    80% {
+        top: -5050px;
+    }
+    100% {
+        top: -5010px;
+    }
+}
+
+@keyframes rollDef {
+    0% {
+        top: 0;
+    }
+    75% {
+        top: -5040px;
+    }
+    100% {
+        top: -5010px;
+    }
 }
