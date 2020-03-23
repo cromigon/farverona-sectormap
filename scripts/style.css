@@ -1122,7 +1122,7 @@ td img {
     position: absolute;
     width: 15px;
     height: 15px;
-    bottom: 12px
+    bottom: 12px;
 }
 
 .roll-advantage input {
@@ -1142,9 +1142,9 @@ td img {
     width: 15px;
     background-color: #222;
     border: 1px solid #444;
-    cursor: auto;
     /*opacity: 0.3;*/
     transition: background-color 0.2s ease-in-out;
+    cursor: auto;
 }
 
 .roll-advantage + input:checked {

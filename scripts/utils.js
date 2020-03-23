@@ -1061,9 +1061,12 @@ function armRollButton(role) {
 
         getElem('attacker-advantage-checkbox').removeAttribute('disabled');
         getElem('attacker-advantage-checkmark').style.backgroundColor = '#262626';
+        getElem('attacker-advantage-checkmark').style.cursor = 'pointer';
+
 
         getElem('defender-advantage-checkbox').removeAttribute('disabled');
         getElem('defender-advantage-checkmark').style.backgroundColor = '#262626';
+        getElem('defender-advantage-checkmark').style.cursor = 'pointer';
     } else if (role === 'attacker') {
         getElem('attacker-reroll').classList.add('active');
         getElem('attacker-reroll').setAttribute('onclick', 'singleRoll(\'attacker\', \'hit\')');
@@ -1073,6 +1076,7 @@ function armRollButton(role) {
         }
         getElem('attacker-advantage-checkbox').removeAttribute('disabled');
         getElem('attacker-advantage-checkmark').style.backgroundColor = '#262626';
+        getElem('attacker-advantage-checkmark').style.cursor = 'pointer';
     } else {
         getElem('defender-reroll').classList.add('active');
         getElem('defender-reroll').setAttribute('onclick', 'singleRoll(\'defender\', \'hit\')');
@@ -1082,6 +1086,7 @@ function armRollButton(role) {
         }
         getElem('defender-advantage-checkbox').removeAttribute('disabled');
         getElem('defender-advantage-checkmark').style.backgroundColor = '#262626';
+        getElem('defender-advantage-checkmark').style.cursor = 'pointer';
     }
 }
 
@@ -1101,8 +1106,10 @@ function disarmRollButton(role) {
         getElem('defender-dmg').classList.remove('active');
         getElem('defender-dmg').removeAttribute('onclick');
         getElem('attacker-advantage-checkmark').style.backgroundColor = '#222';
+        getElem('attacker-advantage-checkmark').style.cursor = 'auto';
         getElem('attacker-advantage-checkbox').setAttribute('disabled', '');
         getElem('defender-advantage-checkmark').style.backgroundColor = '#222';
+        getElem('defender-advantage-checkmark').style.cursor = 'auto';
         getElem('defender-advantage-checkbox').setAttribute('disabled', '');
     }
     if (role === 'attacker') {
@@ -1111,6 +1118,7 @@ function disarmRollButton(role) {
         getElem('attacker-dmg').classList.remove('active');
         getElem('attacker-dmg').removeAttribute('onclick');
         getElem('attacker-advantage-checkmark').style.backgroundColor = '#222';
+        getElem('attacker-advantage-checkmark').style.cursor = 'auto';
         getElem('attacker-advantage-checkbox').setAttribute('disabled', '');
     }
     if (role === 'defender') {
@@ -1119,6 +1127,8 @@ function disarmRollButton(role) {
         getElem('defender-dmg').classList.remove('active');
         getElem('defender-dmg').removeAttribute('onclick');
         getElem('defender-advantage-checkmark').style.backgroundColor = '#222';
+        getElem('defender-advantage-checkmark').style.cursor = 'auto';
+
         getElem('defender-advantage-checkbox').setAttribute('disabled', '');
     }
 }

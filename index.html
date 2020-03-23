@@ -647,7 +647,7 @@
     system_tip_chart_inner.render();
 </script>
 <script type="text/javascript">
-    let tip;
+    let tips;
     let x_offset = false;
     let y_offset = false;
 
@@ -657,15 +657,13 @@
 
         if (tip_on === true || planet_tip_on === true || system_tip_on === true || menu_on === true) {
 
-            if (tip_on) {
-                tip = document.getElementById('tip');
-            } else if (planet_tip_on) {
-                tip = document.getElementById('planet-tip');
-            } else if (system_tip_on) {
-                tip = document.getElementById('system-tip');
-            }
+            tips = [
+                document.getElementById('tip'),
+                document.getElementById('planet-tip'),
+                document.getElementById('system-tip')
+            ];
 
-            let tip_h = tip.offsetHeight;
+            let tip_h = tips.map(t => { return t.offsetHeight });
             let scale_h = Math.min(viewport_h / tip_h, 1);
             tip.style.transform = `scale(${scale_h})`;
 
