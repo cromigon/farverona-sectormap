@@ -94,16 +94,13 @@ mark {
     height: 15px;
     width: 15px;
     margin-left: 5px;
-    background-color: #444444;
-    border-radius: 10px;
+    background-color: #222;
+    border: 1px solid #444;
+    transition: background-color 0.2s ease-in-out;
 }
 
-.label + input:checked  {
+.label + input:checked {
     color: #777777;
-}
-
-.label input:checked ~ .checkmark {
-    background-color: #f70094;
 }
 
 .checkmark:after {
@@ -141,6 +138,7 @@ mark {
 #faction-toggle:hover {
     background: url('../img/toggle_hover.png');
     background-size: 35px;
+    cursor: pointer;
 }
 
 #faction-toggle:active {
@@ -270,8 +268,8 @@ td img {
     position: absolute;
     top: 0;
     left: 6px;
-    background-color: #f70094;
-    box-shadow: 10px 10px 5px 0 rgba(10,10,10,0.3);
+    background-color: #FD3F6D;
+    box-shadow: 10px 10px 5px 0 rgba(10, 10, 10, 0.3);
 }
 
 #menu td {
@@ -280,11 +278,11 @@ td img {
 
 #menu td.hover:hover {
     cursor: pointer;
-    background-color: #b9005d;
+    background-color: #c0395d;
 }
 
 #menu td.inactive {
-    color: rgba(255,255,255,0.7);
+    color: rgba(255, 255, 255, 0.7);
     user-select: none;
 }
 
@@ -294,7 +292,7 @@ td img {
     height: 0;
     top: 0;
     left: 0;
-    border-top: 6px solid #f70094;
+    border-top: 6px solid #FD3F6D;
     border-left: 6px solid transparent;
     border-right: 6px solid transparent;
     z-index: 999;
@@ -309,7 +307,7 @@ td img {
     color: #fff;
     font-family: 'D-DIN', Helvetica, Arial, sans-serif;
     /*border: 1px solid #404040;*/
-    box-shadow: 10px 10px 5px 0 rgba(10,10,10,0.3);
+    box-shadow: 10px 10px 5px 0 rgba(10, 10, 10, 0.3);
 }
 
 #system-tip {
@@ -329,7 +327,7 @@ td img {
     color: #fff;
     /*border: 1px solid #404040;*/
     background-color: rgba(20, 20, 20, 1);
-    box-shadow: 10px 10px 5px 0 rgba(10,10,10,0.3);
+    box-shadow: 10px 10px 5px 0 rgba(10, 10, 10, 0.3);
     z-index: -2;
     opacity: 0;
 }
@@ -360,7 +358,7 @@ td img {
     color: #fff;
     /*border: 1px solid #404040;*/
     background-color: rgba(20, 20, 20, 1);
-    box-shadow: 10px 10px 5px 0 rgba(10,10,10,0.3);
+    box-shadow: 10px 10px 5px 0 rgba(10, 10, 10, 0.3);
     z-index: -2;
     opacity: 0;
 }
@@ -400,17 +398,17 @@ td img {
 
 /* Track */
 ::-webkit-scrollbar-track {
-    background: #404040;
+    background: #262626;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: #777;
+    background: #444;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-    background: #888;
+    background: #555;
 }
 
 #sidebar-toggle {
@@ -428,6 +426,7 @@ td img {
 #sidebar-toggle:hover {
     background: url('../img/toggle_hover.png');
     background-size: 35px;
+    cursor: pointer;
 }
 
 #sidebar-toggle:active {
@@ -444,7 +443,7 @@ td img {
     margin: 0;
     transition: left 0.5s ease-in-out;
     z-index: 2;
-    box-shadow: 10px 10px 5px rgba(10,10,10,0.3);
+    box-shadow: 10px 10px 5px rgba(10, 10, 10, 0.3);
 }
 
 #search-container {
@@ -466,7 +465,7 @@ td img {
     font-family: 'D-DIN', Arial, Helvetica, sans-serif;
     font-size: 28px;
     color: #fff;
-    background-color: #222;
+    background-color: #1e1e1e;
     background-image: url('../img/search_icon.png');
     background-position: 10px 10px;
     background-size: 30px 30px;
@@ -517,7 +516,7 @@ td img {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: #222;
+    background-color: #1e1e1e;
     box-sizing: border-box;
     user-select: none;
 }
@@ -553,7 +552,7 @@ td img {
 
 #sort-by td:active {
     color: #fff;
-    background-color: #f70094;
+    background-color: #FD3F6D;
 }
 
 #asset-pool {
@@ -563,7 +562,7 @@ td img {
     width: 400px;
     height: calc(100% - 80px);
     margin: 0;
-    background-color: #222;
+    background-color: #1e1e1e;
     border-top: 1px #404040 dotted;
     border-right: 1px #404040 solid;
     overflow-y: scroll;
@@ -581,7 +580,7 @@ td img {
     text-decoration: none;
     cursor: pointer;
     user-select: none;
-    background-color: #222;
+    background-color: #1e1e1e;
     transition: background-color 0.1s ease-in-out;
 }
 
@@ -604,7 +603,7 @@ td img {
     padding: 0;
     border-spacing: 0;
     border-collapse: collapse;
-    background-color: #262626;
+    background-color: #222;
     transition: background-color 0.1s ease-in-out;
 }
 
@@ -764,46 +763,116 @@ td img {
     transition: opacity 0.2s ease-in-out;
 }
 
+#battle-container-toggle {
+    position: absolute;
+    bottom: 10px;
+    left: calc(50% - 17px);
+    width: 35px;
+    height: 35px;
+    background: url('../img/toggle_rest.png');
+    background-size: 35px;
+    transform: rotate(180deg);
+    transition: transform 0.5s ease-in-out, bottom 0.5s ease-in-out;
+}
+
+#battle-container-toggle:hover {
+    background: url('../img/toggle_hover.png');
+    background-size: 35px;
+    cursor: pointer;
+}
+
+#battle-container-toggle:active {
+    background: url('../img/toggle_pressed.png');
+    background-size: 35px;
+}
+
 #battle-container {
     position: fixed;
-    bottom: 0;
+    bottom: -180px;
     left: 50%;
     transform: translateX(-50%);
     width: 800px;
     height: 170px;
-    padding: 10px;
     font-family: 'D-DIN', Helvetica, Arial, sans-serif;
     color: #fff;
     border: 1px solid #404040;
-    background-color: #222222;
-    box-shadow: 10px 10px 5px rgba(10,10,10,0.3);
+    box-sizing: border-box;
+    background-color: #1e1e1e;
+    box-shadow: 10px 10px 5px rgba(10, 10, 10, 0.3);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    transition: bottom 0.5s ease-in-out;
 }
 
 .battle-fac-name {
+    position: absolute;
+    width: 350px;
+    height: 30px;
+    top: 0;
     color: #444;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 34px;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    border-bottom: 1px solid #444;
+}
+
+#attacker-fac-name {
+    left: 10px;
+    text-align: right;
+}
+
+#defender-fac-name {
+    right: 10px;
 }
 
 .chances {
+    position: absolute;
+    width: 350px;
+    height: 15px;
+    top: 35px;
+    font-size: 12px;
+    color: #777777;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    /*border: 1px solid #f00;*/
+}
+
+#attacker-hit-chance {
+    left: 10px;
+    text-align: right;
+}
+
+#defender-evade-chance {
+    right: 10px;
+}
+
+.asset-container {
+    position: absolute;
+    width: 250px;
+    height: 105px;
+    bottom: 10px;
+    padding: 5px;
+    background-color: #222;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
 }
 
-.asset-container {
-    position: relative;
-    padding: 5px;
-    width: 260px;
-    height: 100%;
-    background-color: rgb(38, 38, 38);
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+#attacker-asset {
+    left: 10px;
+}
+
+#defender-asset {
+    right: 10px;
 }
 
 .dropped-a {
@@ -817,21 +886,46 @@ td img {
 }
 
 @keyframes fadeout-a {
-    from { background-color: #dc00c8; }
-    to   { background-color: rgb(38, 38, 38); }
+    from {
+        background-color: #FD3F6D;
+    }
+    to {
+        background-color: #222;
+    }
 }
 
 @keyframes fadeout-b {
-    from { background-color: #dc00c8; }
-    to   { background-color: rgb(38, 38, 38); }
+    from {
+        background-color: #FD3F6D;
+    }
+    to {
+        background-color: #222;
+    }
 }
 
 #attacker-asset-active {
     display: none;
+    width: 100%;
+    height: 100%;
 }
+
+#attacker-asset-inactive {
+    display: table;
+    width: 100%;
+    height: 100%;
+}
+
 
 #defender-asset-active {
     display: none;
+    width: 100%;
+    height: 100%;
+}
+
+#defender-asset-inactive {
+    display: table;
+    width: 100%;
+    height: 100%;
 }
 
 .battle-asset-del {
@@ -842,8 +936,7 @@ td img {
     width: 16px;
     height: 16px;
     text-align: center;
-    color: #404040;
-    background: url('../img/del_icon.png') center/50% no-repeat #222;
+    background: url('../img/del_icon.png') center/50% no-repeat #1e1e1e;
     border-radius: 8px;
     transition: background-color 0.2s ease-in-out;
 }
@@ -855,9 +948,11 @@ td img {
 
 #fight-button {
     position: absolute;
-    top: -10.5px;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
     width: 60px;
-    height: 40px;
+    height: 50px;
     text-align: center;
     vertical-align: bottom;
     font-size: 24px;
@@ -865,36 +960,40 @@ td img {
     color: #444;
     background-color: #222;
     border: 1px solid #444;
-    /*box-sizing: border-box;*/
+    border-radius: 2px;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    transition: background-color 0.2s ease-in-out;
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
 }
 
 #fight-button.active {
     color: #fff;
     animation: colorPulse 2s infinite alternate;
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
 }
 
 @keyframes colorPulse {
     0% {
         background-color: rgb(38, 38, 38);
         border-color: #444;
+        box-shadow: 0 0 0 #FD3F6D;
     }
     60% {
         background-color: rgb(38, 38, 38);
         border-color: #444;
+        box-shadow: 0 0 0 #FD3F6D;
     }
     100% {
-        background-color: #dc00c8;
-        border-color: #dc00c8;
+        background-color: #FD3F6D;
+        border-color: #FD3F6D;
+        box-shadow: 0 0 5px #FD3F6D;
     }
 }
 
 #fight-button.active:hover {
-    background-color: #dc00c8;
+    background-color: #FD3F6D;
     cursor: pointer;
     animation: none;
 }
@@ -905,6 +1004,7 @@ td img {
     top: 50%;
     transform: translateY(-50%);
     font-size: 36px;
+    transition: color 0.2s ease-in-out;
 }
 
 #defender-stat {
@@ -913,70 +1013,223 @@ td img {
     top: 50%;
     transform: translateY(-50%);
     font-size: 36px;
+    transition: color 0.2s ease-in-out;
 }
 
 .roll-container {
-    position: relative;
-    /*border: 1px solid #f00;*/
+    position: absolute;
     overflow: hidden;
-    top: 0;
-    width: 71px;
+    top: 55px;
+    width: 85px;
     height: 80px;
-    max-width: 71px;
+    max-width: 85px;
     max-height: 80px;
-    font-size: 80px;
-    font-weight: bold;
-    line-height: 100px;
+    /*border: 1px solid #0f0;*/
+}
+
+#attacker-roll {
+    left: 280px;
+}
+
+#defender-roll {
+    right: 280px;
 }
 
 .roll-container span {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
+    font-size: 80px;
+    font-weight: bold;
+    line-height: 80px;
+    text-align: center;
+    /*border-left: 2px dashed #444;*/
+    /*border-right: 2px dashed #444;*/
+    /*box-sizing: border-box;*/
+    /*border: 1px solid #00f;*/
 }
 
-#attacker-roll {
-    text-align: right;
+.roll-button {
+    position: absolute;
+    width: 40px;
+    height: 15px;
+    bottom: 10px;
+    font-size: 9px;
+    line-height: 17px;
+    color: #444;
+    text-align: center;
+    background-color: #222;
+    border: 1px solid #444;
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
-#attacker-roll span {
-    -webkit-animation: rollAtk 5s ease-in-out;
-    -o-animation: rollAtk 5s ease-in-out;
-    animation: rollAtk 5s ease-in-out;
-    animation-fill-mode: forwards;
+.roll-button.active {
+    color: #777;
+    background-color: rgb(38, 38, 38);
 }
 
-#defender-roll {
-    text-align: left;
+.roll-button.active:hover {
+    cursor: pointer;
+    color: #fff;
+    background-color: #FD3F6D;
 }
 
-#defender-roll span {
-    -webkit-animation: rollDef 7s ease-in-out;
-    -o-animation: rollDef 7s ease-in-out;
-    animation: rollDef 7s ease-in-out;
-    animation-fill-mode: forwards;
+#attacker-reroll {
+    left: 325px;
+}
+
+#attacker-dmg {
+    left: 280px;
+}
+
+#defender-reroll {
+    right: 325px;
+}
+
+#defender-dmg {
+    right: 280px;
 }
 
 @keyframes rollAtk {
     0% {
-        top: 0;
+        top: 10px;
     }
     80% {
-        top: -5050px;
+        top: -5070px;
     }
     100% {
-        top: -5010px;
+        top: -5030px;
     }
 }
 
 @keyframes rollDef {
     0% {
-        top: 0;
+        top: 10px;
     }
     75% {
-        top: -5040px;
+        top: -5080px;
     }
     100% {
-        top: -5010px;
+        top: -5030px;
     }
+}
+
+.roll-advantage {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    bottom: 12px
+}
+
+.roll-advantage input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.adv-checkmark {
+    position: relative;
+    float: left;
+    top: 0;
+    right: 0;
+    height: 15px;
+    width: 15px;
+    background-color: #222;
+    border: 1px solid #444;
+    cursor: auto;
+    /*opacity: 0.3;*/
+    transition: background-color 0.2s ease-in-out;
+}
+
+.roll-advantage + input:checked {
+    color: #777777;
+}
+
+.adv-checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.roll-advantage input:checked ~ .adv-checkmark:after {
+    display: block;
+}
+
+.roll-advantage .adv-checkmark:after {
+    right: 4px;
+    width: 4px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+#attacker-advantage {
+    left: 370px;
+}
+
+#defender-advantage {
+    right: 372px;
+}
+
+#advantage-label {
+    position: absolute;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #444;
+    font-size: 9px;
+}
+
+.advantage-arrows {
+    position: absolute;
+    bottom: 22px;
+    color: #444;
+    font-size: 18px;
+}
+
+#advantage-arrow-left {
+    left: 375px;
+}
+
+#advantage-arrow-right {
+    right: 375px;
+}
+
+.roll-arrows {
+    position: absolute;
+    bottom: 28px;
+    color: #777;
+    font-size: 12px;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+    /*border: 1px solid #f00;*/
+}
+
+#attacker-atk-arrow {
+    left: 330px;
+    transform: scale(-1, 1) translateX(-50%);
+}
+
+#attacker-dmg-arrow {
+    left: 305px;
+    transform: translateX(-50%);
+}
+
+#defender-def-arrow {
+    right: 330px;
+    transform: translateX(-50%);
+}
+
+#defender-dmg-arrow {
+    right: 305px;
+    transform: scale(-1, 1) translateX(-50%);
 }

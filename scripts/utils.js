@@ -42,15 +42,15 @@ class SystemName {
             this.num_planets = system_tracker[system]['num_planets'];
 
             let system_name_SVG = d3.select(svg_overlay.node()).append('svg:text')
-                    .text(this.system_name.toUpperCase())
-                    .attr('style', style_str_name)
-                    .attr('id', this.id + '-name')
-                    .attr('class', 'system-name')
-                    .attr('font-family', 'D-DIN')
-                    .attr('fill', '#7c7c7c')
-                    .attr('text-anchor', 'middle')
-                    .attr('x', this.hex_x + this.x_offset)
-                    .attr('y', this.hex_y + this.y_offset);
+                .text(this.system_name.toUpperCase())
+                .attr('style', style_str_name)
+                .attr('id', this.id + '-name')
+                .attr('class', 'system-name')
+                .attr('font-family', 'D-DIN')
+                .attr('fill', '#7c7c7c')
+                .attr('text-anchor', 'middle')
+                .attr('x', this.hex_x + this.x_offset)
+                .attr('y', this.hex_y + this.y_offset);
             this.text = getElem(this.id + '-name');
             let box_width = system_name_SVG.node().getComputedTextLength();
 
@@ -81,21 +81,21 @@ class SystemName {
 
                         let orbital_objects_chart_config = {
                             chart: {
-                                container: "#orbital-objects-chart-container",
+                                container: '#orbital-objects-chart-container',
                                 rootOrientation: 'WEST', // NORTH || EAST || WEST || SOUTH
                                 levelSeparation: 20,
                                 siblingSeparation: 5,
                                 subTeeSeparation: 10,
-                                nodeAlign: "BOTTOM",
+                                nodeAlign: 'BOTTOM',
                                 scrollbar: 'None',
                                 connectors: {
-                                    type: "step",
+                                    type: 'step',
                                     style: {
-                                        "arrow-end": 'block-wide-long',
-                                        "stroke-width": 1,
-                                        "stroke-linecap": "round",
-                                        "stroke-dasharray": '. ',
-                                        "stroke": "#777"
+                                        'arrow-end': 'block-wide-long',
+                                        'stroke-width': 1,
+                                        'stroke-linecap': 'round',
+                                        'stroke-dasharray': '. ',
+                                        'stroke': '#777'
                                     }
                                 },
                                 node: {
@@ -158,7 +158,7 @@ class SystemNameHighlight {
                 (box_width + 2 * padding) * w_factor,
                 0.006
             )
-        })
+        });
     }
 }
 
@@ -299,7 +299,7 @@ class PlanetName {
                         this.pcvi = ['u wot m8', 'u wot m8'];
                         let options = {
                             labels: ['The Guild'],
-                            colors: ['#f70094'],
+                            colors: ['#FD3F6D'],
                             dataLabels: {
                                 formatter: () => {
                                     return '420.0%';
@@ -310,7 +310,7 @@ class PlanetName {
                             }
                         };
                         planet_tip_chart.updateSeries([1312]);
-                        updatePlanetChartOptions(options, 6969)
+                        updatePlanetChartOptions(options, 6969);
                     } else {
                         getElem('planet-tip-atmo').style.transform = `rotate(0deg)`;
                         getElem('planet-tip-temp').style.transform = `rotate(0deg)`;
@@ -333,21 +333,21 @@ class PlanetName {
                     if (hasProp(planet_tree, 'children')) {
                         let planet_objects_chart_config = {
                             chart: {
-                                container: "#planet-objects-chart-container",
+                                container: '#planet-objects-chart-container',
                                 rootOrientation: 'WEST', // NORTH || EAST || WEST || SOUTH
                                 levelSeparation: 20,
                                 siblingSeparation: 5,
                                 subTeeSeparation: 10,
-                                nodeAlign: "BOTTOM",
+                                nodeAlign: 'BOTTOM',
                                 scrollbar: 'None',
                                 connectors: {
-                                    type: "step",
+                                    type: 'step',
                                     style: {
-                                        "arrow-end": 'block-wide-long',
-                                        "stroke-width": 1,
-                                        "stroke-linecap": "round",
-                                        "stroke-dasharray": '. ',
-                                        "stroke": "#777"
+                                        'arrow-end': 'block-wide-long',
+                                        'stroke-width': 1,
+                                        'stroke-linecap': 'round',
+                                        'stroke-dasharray': '. ',
+                                        'stroke': '#777'
                                     }
                                 },
                                 node: {
@@ -386,7 +386,7 @@ class PlanetName {
     }
 
     fontweight(weight) {
-        this.text.setAttribute('font-weight', weight)
+        this.text.setAttribute('font-weight', weight);
     }
 
     hide(bool) {
@@ -403,7 +403,7 @@ class PlanetName {
     }
 
     pos() {
-        return [this.hex_x + this.x_offset, this.hex_y + this.y_offset]
+        return [this.hex_x + this.x_offset, this.hex_y + this.y_offset];
     }
 }
 
@@ -423,7 +423,7 @@ class PlanetNameHighlight {
                 (box_width + 2 * padding) * w_factor,
                 0.0034
             )
-        })
+        });
     }
 }
 
@@ -436,11 +436,11 @@ class Asset {
         this.hp = asset['HP'];
         this.max_hp = asset['Max HP'];
         this.stealth = asset['ʘ'] !== 'FALSE';
-        this.status = asset["Status"];
+        this.status = asset['Status'];
         this.status_str = statuses[this.status];
-        this.inactive = this.status === "Inactive";
-        this.summoning = this.status === "Summoning";
-        this.imperial = this.status === "Imperial Asset";
+        this.inactive = this.status === 'Inactive';
+        this.summoning = this.status === 'Summoning';
+        this.imperial = this.status === 'Imperial Asset';
         this.name_str = this.name;
         if (this.imperial) {
             this.name_str = `Imperial ${this.name_str}`;
@@ -521,7 +521,7 @@ class Asset {
                                 let nav_routes = document.getElementsByClassName('nav-route');
                                 [...nav_routes].forEach(nav => {
                                     nav.style.opacity = 1;
-                                })
+                                });
                             }
                         }
                     }
@@ -537,7 +537,7 @@ class Asset {
             .attr('width', this.size)
             .attr('height', this.size);
         this.container = getElem(this.id + '-container')
-;
+        ;
         d3.select(this.container)
             .append('rect')
             .attr('id', this.id + '-color')
@@ -598,7 +598,7 @@ class Asset {
 
         // Get tooltip
         const hex_overlays = document.getElementsByClassName('hex');
-        
+
         // noinspection JSCheckFunctionSignatures
         new OpenSeadragon.MouseTracker({
             element: id + '-highlight',
@@ -664,7 +664,7 @@ class Asset {
                 tip_on = false;
                 if (!show_regions) {
                     [...hex_overlays].forEach(h => {
-                        h.style.opacity = '0'
+                        h.style.opacity = '0';
                     });
                 }
                 // let nav_routes = document.getElementsByClassName('nav_route');
@@ -776,7 +776,7 @@ class Asset {
 
                     this.menu = viewer.getOverlayById('menu');
                 }
-            },
+            }
         });
     }
 
@@ -807,8 +807,7 @@ class Asset {
                 c.style.display = 'block';
             });
             if (this.menu_on) {
-                console.log(this);
-                this.menu.update(new OpenSeadragon.Point(this.x + 0.5 * box_size, this.y + 0.5 * box_size), null)
+                this.menu.update(new OpenSeadragon.Point(this.x + 0.5 * box_size, this.y + 0.5 * box_size), null);
             }
         }
     }
@@ -908,12 +907,18 @@ class AssetHighlight {
 }
 
 function toBattleSlot(id, role) {
+    if (!show_battle_container) {
+        toggleBattleContainer();
+    }
+
     viewer.removeOverlay('menu');
     menu_on = false;
 
     let a = asset_objects[id];
     a['menu_on'] = false;
     a['menu'] = undefined;
+
+    clearBattleSlot(role);
 
     getElem(`${role}-asset-type-stattier`).innerHTML = a.isboi ? '' : a.type + ', ' + a.stat + ' ' + a.stat_tier;
     getElem(`${role}-asset-name`).innerHTML = `${a.name_str}`;
@@ -940,150 +945,495 @@ function toBattleSlot(id, role) {
 }
 
 function clearBattleSlot(role) {
-
+    fadeoutRollArrows('all');
+    disarmRollButton('all');
     getElem('fight-button').classList.remove('active');
+    getElem('fight-button').removeAttribute('onclick');
     getElem('fight-button').style.color = '#444';
     if (role === 'attacker') {
         getElem('attacker-stat').innerHTML = '-';
+        getElem('attacker-fac-name').innerHTML = 'ATTACKER';
+        attacker_advantage = false;
+    } else {
+        getElem('defender-fac-name').innerHTML = 'DEFENDER';
+        defender_advantage = false;
     }
     getElem('attacker-stat').style.color = '#444';
     getElem('defender-stat').innerHTML = '-';
     getElem('defender-stat').style.color = '#444';
     getElem('attacker-hit-chance').innerHTML = 'TO HIT: -';
     getElem('defender-evade-chance').innerHTML = 'TO EVADE: -';
+    getElem('attacker-roll-span').innerHTML = '';
+    getElem('defender-roll-span').innerHTML = '';
+    attacker_roll_result = undefined;
+    defender_roll_result = undefined;
+    getElem('attacker-reroll').removeAttribute('onclick');
+    getElem('defender-reroll').removeAttribute('onclick');
+    clearTimeout(short_timeout);
+    clearTimeout(long_timeout);
 
-    getElem(`${role}-fac-name`).innerHTML = '-';
     getElem(`${role}-fac-name`).style.color = '#444';
     getElem(`${role}-asset-active`).style.display = 'none';
     getElem(`${role}-asset-del`).style.display = 'none';
     getElem(`${role}-asset-inactive`).style.display = 'table';
+    getElem(`${role}-advantage-checkbox`).checked = false;
 }
 
 function expandFaction(short) {
     for (let fac in factions) {
         if (hasProp(factions, fac)) {
             if (short === factions[fac]['short'].toUpperCase()) {
-                return fac
+                return fac;
             }
         }
     }
 }
 
+function toggleAdvantage(role) {
+    if (role === 'attacker') {
+        attacker_advantage = !attacker_advantage;
+    } else {
+        defender_advantage = !defender_advantage;
+    }
+    parseBattleStats();
+}
+
 function parseBattleStats() {
     let atk_faction = getElem('attacker-fac-name').innerHTML;
-    if (atk_faction !== '-') {
-        let atk_str = getElem('attacker-asset-atk').innerHTML;
+    if (atk_faction !== 'ATTACKER') {
+        let atk_str = getElem('attacker-asset-atk').innerHTML.toUpperCase();
         let stats = atk_str.split(', ')[0];
-        let stat_atk = stats.split('v')[0];
-        let stat_def = stats.split('v')[1];
-        let dmg_atk = atk_str.split(', ')[1];
+        let stat_atk = stats.split('V')[0];
+        let stat_def = stats.split('V')[1];
         let bonus_atk = faction_tracker[expandFaction(atk_faction)][stat_atk];
         getElem('attacker-stat').innerHTML = bonus_atk;
 
         let def_faction = getElem('defender-fac-name').innerHTML;
-        if (def_faction !== '-') {
-            let dmg_def = getElem('defender-asset-def').innerHTML;
+        if (def_faction !== 'DEFENDER') {
             let bonus_def = faction_tracker[expandFaction(def_faction)][stat_def];
             getElem('defender-stat').innerHTML = bonus_def;
 
             let difference = parseInt(bonus_atk) - parseInt(bonus_def);
-            let chance_atk = chances[difference]['none'];
+            let chance_atk;
+            switch (true) {
+                case attacker_advantage && defender_advantage:
+                    chance_atk = chances[difference]['both'];
+                    break;
+                case attacker_advantage && !defender_advantage:
+                    chance_atk = chances[difference]['atk'];
+                    break;
+                case !attacker_advantage && defender_advantage:
+                    chance_atk = chances[difference]['def'];
+                    break;
+                case !attacker_advantage && !defender_advantage:
+                    chance_atk = chances[difference]['none'];
+                    break;
+            }
             let chance_def = 100 - chance_atk;
             getElem('attacker-hit-chance').innerHTML = `TO HIT: ${chance_atk}%`;
             getElem('defender-evade-chance').innerHTML = `TO EVADE: ${chance_def}%`;
-            armRollButton();
+            armRollButton('all');
         }
     }
 }
 
-function armRollButton() {
-    getElem('attacker-stat').style.color = '#fff';
-    getElem('defender-stat').style.color = '#fff';
-    getElem('fight-button').style.color = '#fff';
-    getElem('fight-button').classList.add('active');
-    getElem('fight-button').setAttribute('onclick', 'rollDice()');
+function armRollButton(role) {
+    if (role === 'all') {
+        getElem('attacker-stat').style.color = '#fff';
+        getElem('defender-stat').style.color = '#fff';
+        getElem('fight-button').style.color = '#fff';
+        getElem('fight-button').classList.add('active');
+        getElem('fight-button').setAttribute('onclick', 'rollDice()');
+
+        getElem('attacker-reroll').classList.add('active');
+        getElem('attacker-reroll').setAttribute('onclick', 'singleRoll(\'attacker\', \'hit\')');
+        getElem('defender-reroll').classList.add('active');
+        getElem('defender-reroll').setAttribute('onclick', 'singleRoll(\'defender\', \'hit\')');
+
+        if (getElem('attacker-asset-atk').innerText !== '-') {
+            getElem('attacker-dmg').classList.add('active');
+            getElem('attacker-dmg').setAttribute('onclick', 'singleRoll(\'attacker\', \'dmg\')');
+        }
+        if (getElem('defender-asset-def').innerText !== '-') {
+            getElem('defender-dmg').classList.add('active');
+            getElem('defender-dmg').setAttribute('onclick', 'singleRoll(\'defender\', \'dmg\')');
+        }
+
+        getElem('attacker-advantage-checkbox').removeAttribute('disabled');
+        getElem('attacker-advantage-checkmark').style.backgroundColor = '#262626';
+
+        getElem('defender-advantage-checkbox').removeAttribute('disabled');
+        getElem('defender-advantage-checkmark').style.backgroundColor = '#262626';
+    } else if (role === 'attacker') {
+        getElem('attacker-reroll').classList.add('active');
+        getElem('attacker-reroll').setAttribute('onclick', 'singleRoll(\'attacker\', \'hit\')');
+        if (getElem('attacker-asset-atk').innerText !== '-') {
+            getElem('attacker-dmg').classList.add('active');
+            getElem('attacker-dmg').setAttribute('onclick', 'singleRoll(\'attacker\', \'dmg\')');
+        }
+        getElem('attacker-advantage-checkbox').removeAttribute('disabled');
+        getElem('attacker-advantage-checkmark').style.backgroundColor = '#262626';
+    } else {
+        getElem('defender-reroll').classList.add('active');
+        getElem('defender-reroll').setAttribute('onclick', 'singleRoll(\'defender\', \'hit\')');
+        if (getElem('defender-asset-def').innerText !== '-') {
+            getElem('defender-dmg').classList.add('active');
+            getElem('defender-dmg').setAttribute('onclick', 'singleRoll(\'defender\', \'dmg\')');
+        }
+        getElem('defender-advantage-checkbox').removeAttribute('disabled');
+        getElem('defender-advantage-checkmark').style.backgroundColor = '#262626';
+    }
+}
+
+function disarmRollButton(role) {
+    getElem('fight-button').removeAttribute('onclick');
+    getElem('fight-button').classList.remove('active');
+    getElem('fight-button').style.color = '#444';
+    getElem('attacker-stat').style.color = '#444';
+    getElem('defender-stat').style.color = '#444';
+    if (role === 'all') {
+        getElem('attacker-reroll').classList.remove('active');
+        getElem('attacker-reroll').removeAttribute('onclick');
+        getElem('defender-reroll').classList.remove('active');
+        getElem('defender-reroll').removeAttribute('onclick');
+        getElem('attacker-dmg').classList.remove('active');
+        getElem('attacker-dmg').removeAttribute('onclick');
+        getElem('defender-dmg').classList.remove('active');
+        getElem('defender-dmg').removeAttribute('onclick');
+        getElem('attacker-advantage-checkmark').style.backgroundColor = '#222';
+        getElem('attacker-advantage-checkbox').setAttribute('disabled', '');
+        getElem('defender-advantage-checkmark').style.backgroundColor = '#222';
+        getElem('defender-advantage-checkbox').setAttribute('disabled', '');
+    }
+    if (role === 'attacker') {
+        getElem('attacker-reroll').classList.remove('active');
+        getElem('attacker-reroll').removeAttribute('onclick');
+        getElem('attacker-dmg').classList.remove('active');
+        getElem('attacker-dmg').removeAttribute('onclick');
+        getElem('attacker-advantage-checkmark').style.backgroundColor = '#222';
+        getElem('attacker-advantage-checkbox').setAttribute('disabled', '');
+    }
+    if (role === 'defender') {
+        getElem('defender-reroll').classList.remove('active');
+        getElem('defender-reroll').removeAttribute('onclick');
+        getElem('defender-dmg').classList.remove('active');
+        getElem('defender-dmg').removeAttribute('onclick');
+        getElem('defender-advantage-checkmark').style.backgroundColor = '#222';
+        getElem('defender-advantage-checkbox').setAttribute('disabled', '');
+    }
+}
+
+function generateSpinAnimation(name) {
+    let overshoot = Math.floor(Math.random() * 51) - 25 + 5080;
+    let spinback_point = ((overshoot - 5055) / (5105 - 5055)) * (65 - 85) + 85;
+
+    return [{
+        name: name,
+        '0%': {
+            'top': '0'
+        },
+        [spinback_point.toString() + '%']: {
+            'top': `-${overshoot}px`
+        },
+        '100%': {
+            top: '-5040px'
+        }
+    }];
 }
 
 function rollDice() {
     let atk_stat = parseInt(getElem('attacker-stat').innerText);
     let def_stat = parseInt(getElem('defender-stat').innerText);
-    console.log([atk_stat, def_stat]);
 
-
-    roll_str = '<span>';
-    for (let i=0; i<1000; i++) {
-        roll_str += (Math.floor(Math.random() * 10) + 1 + atk_stat).toString() + '<br />'
+    let store_idx = 63;
+    roll_str = '';
+    if (attacker_roll_result) {
+        roll_str += attacker_roll_result.toString() + '<br />';
+        store_idx = 62;
     }
-    roll_str += '</span>';
-    getElem('attacker-roll').innerHTML = roll_str;
-
-    roll_str = '<span>';
-    for (let i=0; i<1000; i++) {
-        roll_str += (Math.floor(Math.random() * 10) + 1 + def_stat).toString() + '<br />'
+    for (let i = 0; i < 65; i++) {
+        let roll = (Math.floor(Math.random() * 10) + 1 + atk_stat);
+        if (attacker_advantage) {
+            let adv_roll = (Math.floor(Math.random() * 10) + 1 + atk_stat);
+            roll = Math.max(roll, adv_roll);
+        }
+        roll_str += roll.toString() + '<br />';
+        if (i === store_idx) {
+            attacker_roll_result = roll;
+        }
     }
-    roll_str += '</span>';
-    getElem('defender-roll').innerHTML = roll_str;
+    getElem('attacker-roll-span').innerHTML = roll_str;
+
+    store_idx = 63;
+    roll_str = '';
+    if (defender_roll_result) {
+        roll_str += defender_roll_result.toString() + '<br />';
+        store_idx = 62;
+    }
+    for (let i = 0; i < 65; i++) {
+        let roll = (Math.floor(Math.random() * 10) + 1 + def_stat);
+        if (defender_advantage) {
+            let adv_roll = (Math.floor(Math.random() * 10) + 1 + def_stat);
+            roll = Math.max(roll, adv_roll);
+        }
+        roll_str += roll.toString() + '<br />';
+        if (i === store_idx) {
+            defender_roll_result = roll;
+        }
+    }
+    getElem('defender-roll-span').innerHTML = roll_str;
+
+    let atk_anim = generateSpinAnimation('atk_anim');
+    $.keyframe.define(atk_anim);
+
+    let def_anim = generateSpinAnimation('def_anim');
+    $.keyframe.define(def_anim);
+
+    let atk_anim_duration = Math.random() * 2 + 4;
+    $('#attacker-roll-span').playKeyframe(
+        `atk_anim ${atk_anim_duration}s ease-in-out 0s 1 forwards`
+    );
+
+    let def_anim_duration = Math.random() * 2 + 6;
+    $('#defender-roll-span').playKeyframe(
+        `atk_anim ${def_anim_duration}s ease-in-out 0s 1 forwards`
+    );
+
+    fadeoutRollArrows('all');
+    disarmRollButton('all');
+    long_timeout = setTimeout(() => {
+        fadeinRollArrow('attacker', 'hit');
+        fadeinRollArrow('defender', 'hit');
+        armRollButton('all');
+    }, Math.floor(def_anim_duration * 1000));
 }
 
-function showNavRoutes() {
+function fadeinRollArrow(role, type) {
+    if (role === 'attacker') {
+        if (type === 'hit') {
+            getElem('attacker-atk-arrow').style.opacity = '1';
+            getElem('attacker-dmg-arrow').style.opacity = '0';
+        } else {
+            getElem('attacker-atk-arrow').style.opacity = '0';
+            getElem('attacker-dmg-arrow').style.opacity = '1';
+        }
+    } else {
+        if (type === 'hit') {
+            getElem('defender-def-arrow').style.opacity = '1';
+            getElem('defender-dmg-arrow').style.opacity = '0';
+        } else {
+            getElem('defender-def-arrow').style.opacity = '0';
+            getElem('defender-dmg-arrow').style.opacity = '1';
+        }
+    }
+}
 
-        for (let a in asset_objects) {
-            if (hasProp(asset_objects, a)) {
-                let asset = asset_objects[a];
-                let hex_id = asset['hex_id'];
-                let range = asset['range'];
-                if (range > 0) {
-                    let hex_list = hexes[hex_id][range];
-                    hex_list.forEach(h => {
-                        if (hasProp(hexes[h], 'Name')) {
-                            let system = hexes[h]['Name'];
-                            let planets = system_tracker[system]['Planets'];
-                            for (let planet_id in planet_objects) {
-                                if (hasProp(planet_objects, planet_id)) {
-                                    let remote_name = planet_objects[planet_id]['planet_name'];
-                                    if (planets.indexOf(remote_name) > -1 && remote_name !== asset.location.split(' // ')[2]) {
-                                        let [target_x, target_y] = planet_objects[planet_id].pos();
-                                        let source_x = asset.x + asset.size / 2;
-                                        let source_y = asset.y + asset.size / 2;
-                                        let angle = Math.atan2(target_y - source_y, target_x - source_x) * 180 / Math.PI;
-                                        let link;
-                                        if ((angle <= 45 && angle >= -45) || (angle >= 135 && angle <= -135)) {
-                                            link = d3.linkHorizontal();
-                                        } else {
-                                            link = d3.linkVertical();
-                                        }
+function fadeoutRollArrows(role) {
+    if (role === 'all') {
+        getElem('attacker-atk-arrow').style.opacity = '0';
+        getElem('attacker-dmg-arrow').style.opacity = '0';
+        getElem('defender-def-arrow').style.opacity = '0';
+        getElem('defender-dmg-arrow').style.opacity = '0';
+    } else if (role === 'attacker') {
+        getElem('attacker-atk-arrow').style.opacity = '0';
+        getElem('attacker-dmg-arrow').style.opacity = '0';
+    } else {
+        getElem('defender-def-arrow').style.opacity = '0';
+        getElem('defender-dmg-arrow').style.opacity = '0';
+    }
+}
 
-                                        let path = {
-                                            source: [asset.x + asset.size / 2, asset.y + asset.size / 2],
-                                            target: [target_x, target_y]
-                                        };
-                                        d3.select(svg_overlay.node())
-                                            .insert('path', '.planet')
-                                            .attr('class', 'nav-route')
-                                            .attr('d', link(path))
-                                            .attr('fill', 'rgba(255,255,255,0)')
-                                            .attr('stroke', '#7c7c7c')
-                                            .style('stroke-width', 0.00065)
-                                            .style('opacity', 0);
+function singleRoll(role, type) {
+    let store_idx = 63;
+    roll_str = '';
+    // disarmRollButton(role);
+    fadeoutRollArrows(role);
+    disarmRollButton('all');
+    let num_dice;
+    let num_sides;
+    let bonus;
 
-                                        let nav_routes = document.getElementsByClassName('nav-route');
-                                        [...nav_routes].forEach(nav => {
-                                            nav.style.opacity = 1;
-                                        })
-                                    }
-                                }
-                            }
-                        }
-                    });
+    if (role === 'attacker') {
+        if (type === 'hit') {
+            num_dice = 1;
+            num_sides = 10;
+            bonus = parseInt(getElem('attacker-stat').innerText);
+        } else {
+            let dmg = getElem('attacker-asset-atk').innerHTML.split(', ')[1];
+            let dice;
+            if (dmg.includes('+')) {
+                dice = dmg.split('+')[0];
+                bonus = parseInt(dmg.split('+')[1]);
+            } else {
+                dice = dmg;
+                bonus = 0;
+            }
+            num_dice = parseInt(dice.split('d')[0]);
+            num_sides = parseInt(dice.split('d')[1]);
+        }
+
+        if (attacker_roll_result) {
+            roll_str += attacker_roll_result.toString() + '<br />';
+            store_idx = 62;
+        }
+        for (let i = 0; i < 65; i++) {
+            if (type === 'hit') {
+                let roll = (Math.floor(Math.random() * num_sides) + 1 + bonus);
+                if (attacker_advantage) {
+                    let adv_roll = (Math.floor(Math.random() * num_sides) + 1 + bonus);
+                    roll = Math.max(roll, adv_roll);
+                }
+                roll_str += roll.toString() + '<br />';
+                if (i === store_idx) {
+                    attacker_roll_result = roll;
+                }
+            } else {
+                let roll = 0;
+                for (let i = 0; i < num_dice; i++) {
+                    roll += (Math.floor(Math.random() * num_sides) + 1 + bonus);
+                }
+                roll_str += roll.toString() + '<br />';
+                if (i === store_idx) {
+                    attacker_roll_result = roll;
                 }
             }
         }
+
+        getElem('attacker-roll-span').innerHTML = roll_str;
+
+        let atk_anim = generateSpinAnimation('atk_anim');
+        $.keyframe.define(atk_anim);
+        $('#attacker-roll-span').playKeyframe(
+            'atk_anim 5s ease-in-out 0s 1 forwards'
+        );
+
+        clearTimeout(long_timeout);
+        short_timeout = setTimeout(() => {
+            fadeinRollArrow(role, type);
+            armRollButton('all');
+        }, 5000);
+    } else {
+        if (type === 'hit') {
+            num_dice = 1;
+            num_sides = 10;
+            bonus = parseInt(getElem('defender-stat').innerText);
+        } else {
+            let dmg = getElem('defender-asset-def').innerHTML;
+            let dice;
+            if (dmg.includes('+')) {
+                dice = dmg.split('+')[0];
+                bonus = parseInt(dmg.split('+')[1]);
+            } else {
+                dice = dmg;
+                bonus = 0;
+            }
+            num_dice = parseInt(dice.split('d')[0]);
+            num_sides = parseInt(dice.split('d')[1]);
+        }
+
+        if (defender_roll_result) {
+            roll_str += defender_roll_result.toString() + '<br />';
+            store_idx = 62;
+        }
+        for (let i = 0; i < 65; i++) {
+            if (type === 'hit') {
+                let roll = (Math.floor(Math.random() * num_sides) + 1 + bonus);
+                if (defender_advantage) {
+                    let adv_roll = (Math.floor(Math.random() * num_sides) + 1 + bonus);
+                    roll = Math.max(roll, adv_roll);
+                }
+                roll_str += roll.toString() + '<br />';
+                if (i === store_idx) {
+                    defender_roll_result = roll;
+                }
+            } else {
+                let roll = 0;
+                for (let i = 0; i < num_dice; i++) {
+                    roll += (Math.floor(Math.random() * num_sides) + 1 + bonus);
+                }
+                roll_str += roll.toString() + '<br />';
+                if (i === store_idx) {
+                    defender_roll_result = roll;
+                }
+            }
+        }
+
+        getElem('defender-roll-span').innerHTML = roll_str;
+
+        let def_anim = generateSpinAnimation('def_anim');
+        $.keyframe.define(def_anim);
+        $('#defender-roll-span').playKeyframe(
+            'def_anim 7s ease-in-out 0s 1 forwards'
+        );
+
+        clearTimeout(short_timeout);
+        long_timeout = setTimeout(() => {
+            fadeinRollArrow(role, type);
+            armRollButton('all');
+        }, 7000);
+    }
+
+    // console.log([num_dice, num_sides, bonus]);
+}
+
+function showNavRoutes() {
+    for (let a in asset_objects) {
+        if (hasProp(asset_objects, a)) {
+            let asset = asset_objects[a];
+            let hex_id = asset['hex_id'];
+            let range = asset['range'];
+            if (range > 0) {
+                let hex_list = hexes[hex_id][range];
+                hex_list.forEach(h => {
+                    if (hasProp(hexes[h], 'Name')) {
+                        let system = hexes[h]['Name'];
+                        let planets = system_tracker[system]['Planets'];
+                        for (let planet_id in planet_objects) {
+                            if (hasProp(planet_objects, planet_id)) {
+                                let remote_name = planet_objects[planet_id]['planet_name'];
+                                if (planets.indexOf(remote_name) > -1 && remote_name !== asset.location.split(' // ')[2]) {
+                                    let [target_x, target_y] = planet_objects[planet_id].pos();
+                                    let source_x = asset.x + asset.size / 2;
+                                    let source_y = asset.y + asset.size / 2;
+                                    let angle = Math.atan2(target_y - source_y, target_x - source_x) * 180 / Math.PI;
+                                    let link;
+                                    if ((angle <= 45 && angle >= -45) || (angle >= 135 && angle <= -135)) {
+                                        link = d3.linkHorizontal();
+                                    } else {
+                                        link = d3.linkVertical();
+                                    }
+
+                                    let path = {
+                                        source: [asset.x + asset.size / 2, asset.y + asset.size / 2],
+                                        target: [target_x, target_y]
+                                    };
+                                    d3.select(svg_overlay.node())
+                                        .insert('path', '.planet')
+                                        .attr('class', 'nav-route')
+                                        .attr('d', link(path))
+                                        .attr('fill', 'rgba(255,255,255,0)')
+                                        .attr('stroke', '#7c7c7c')
+                                        .style('stroke-width', 0.00065)
+                                        .style('opacity', 0);
+
+                                    let nav_routes = document.getElementsByClassName('nav-route');
+                                    [...nav_routes].forEach(nav => {
+                                        nav.style.opacity = 1;
+                                    });
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+    }
 }
 
 function cube_to_oddq(cube) {
     let col = cube.x;
-    let row = cube.z + (cube.x - (cube.x&1)) / 2;
-    return {'col': col, 'row': row}
+    let row = cube.z + (cube.x - (cube.x & 1)) / 2;
+    return {'col': col, 'row': row};
 }
 
 function oddq_to_cube(hex) {
@@ -1091,13 +1441,13 @@ function oddq_to_cube(hex) {
     let col = parseInt(h.slice(0, 2));
     let row = parseInt(h.slice(2));
     let x = col;
-    let z = row - (col - (col&1)) / 2;
-    let y = -x-z;
-    return {'x': x, 'y': y, 'z': z}
+    let z = row - (col - (col & 1)) / 2;
+    let y = -x - z;
+    return {'x': x, 'y': y, 'z': z};
 }
 
 function cube_distance(a, b) {
-    return (Math.abs(a.x - b.x) + Math.abs(a.y - b.y) + Math.abs(a.z - b.z)) / 2
+    return (Math.abs(a.x - b.x) + Math.abs(a.y - b.y) + Math.abs(a.z - b.z)) / 2;
 }
 
 function toggleInfluenceOverlay() {
@@ -1186,8 +1536,7 @@ function toggleInfluenceOverlay() {
         }
         show_regions = true;
         getElem('region').style.color = '#777777';
-    }
-    else {
+    } else {
         filterList();
 
         for (let sys in system_objects) {
@@ -1210,27 +1559,26 @@ function toggleInfluenceOverlay() {
     }
 }
 
-
-function hexToRGB(h,isPct) {
+function hexToRGB(h, isPct) {
     let r = 0, g = 0, b = 0;
     isPct = isPct === true;
 
     if (h.length == 4) {
-        r = "0x" + h[1] + h[1];
-        g = "0x" + h[2] + h[2];
-        b = "0x" + h[3] + h[3];
+        r = '0x' + h[1] + h[1];
+        g = '0x' + h[2] + h[2];
+        b = '0x' + h[3] + h[3];
 
     } else if (h.length == 7) {
-        r = "0x" + h[1] + h[2];
-        g = "0x" + h[3] + h[4];
-        b = "0x" + h[5] + h[6];
+        r = '0x' + h[1] + h[2];
+        g = '0x' + h[3] + h[4];
+        b = '0x' + h[5] + h[6];
     }
 
     r = +(r / 255).toFixed(1);
     g = +(g / 255).toFixed(1);
     b = +(b / 255).toFixed(1);
 
-    return [r, g, b]
+    return [r, g, b];
 }
 
 function createAssetPoolEntry(data) {
@@ -1238,11 +1586,11 @@ function createAssetPoolEntry(data) {
     let asset_class_str;
     let asset_stealth_str;
     if (!data.stealth) {
-        asset_class_str = "asset-table";
-        asset_stealth_str = "-";
+        asset_class_str = 'asset-table';
+        asset_stealth_str = '-';
     } else {
-        asset_class_str = "asset-table stealth";
-        asset_stealth_str = "stealthed";
+        asset_class_str = 'asset-table stealth';
+        asset_stealth_str = 'stealthed';
     }
 
     let color = factions[data.faction]['color'];
@@ -1250,59 +1598,59 @@ function createAssetPoolEntry(data) {
 
     let asset_div = `<div class="asset-item" id="${data.id}-pool" data-faction="${data.faction.replace('\'', '&#39;')}" data-stealth="${asset_stealth_str}" onclick="toggleHighlightAsset(this.id)" onmouseover="highlightAssetTable(this.id)" onmouseleave="stopHighlightAssetTable(this.id)">` +
         `<table id="${data.id}-pool-table" class="${asset_class_str}">` +
-        "<tr>" +
+        '<tr>' +
         `<td class="fac-color-td" rowspan="4" style="background-color: ${color}">` +
-        "</td>" +
-        "<td class='top-row-td' colspan='5'>" +
-        "<div class='location-div'>" +
+        '</td>' +
+        '<td class=\'top-row-td\' colspan=\'5\'>' +
+        '<div class=\'location-div\'>' +
         data.location +
-        "</div>" +
-        "<div class='type-stat-div'>" +
+        '</div>' +
+        '<div class=\'type-stat-div\'>' +
         type_stat_str +
-        "</div>" +
-        "</td>" +
-        "</tr>" +
-        "<tr>" +
-        "<td class='name-td' colspan='5'>" +
+        '</div>' +
+        '</td>' +
+        '</tr>' +
+        '<tr>' +
+        '<td class=\'name-td\' colspan=\'5\'>' +
         data.name +
-        "</td>" +
-        "</tr>" +
-        "<tr>" +
-        "<td class='hp-td'>" +
-        data.hp + "/" + data.max_hp +
-        "</td>" +
-        "<td class='cost-td'>" +
+        '</td>' +
+        '</tr>' +
+        '<tr>' +
+        '<td class=\'hp-td\'>' +
+        data.hp + '/' + data.max_hp +
+        '</td>' +
+        '<td class=\'cost-td\'>' +
         data.cost +
-        "</td>" +
-        "<td class='tl-td'>" +
+        '</td>' +
+        '<td class=\'tl-td\'>' +
         data.tl +
-        "</td>" +
-        "<td class='atk-td'>" +
+        '</td>' +
+        '<td class=\'atk-td\'>' +
         data.atk +
-        "</td>" +
-        "<td class='def-td'>" +
+        '</td>' +
+        '<td class=\'def-td\'>' +
         data.def +
-        "</td>" +
-        "</tr>" +
-        "<tr>" +
-        "<td class='hp-td' style='padding-bottom: 4px'>" +
-        "<img class='icon-pool' src='img/hp_icon.png' alt='' />" +
-        "</td>" +
-        "<td class='cost-td' style='padding-bottom: 4px'>" +
-        "<img class='icon-pool' src='img/cost_icon.png' alt='' />" +
-        "</td>" +
-        "<td class='tl-td' style='padding-bottom: 4px'>" +
-        "<img class='icon-pool' src='img/tl_icon.png' alt='' />" +
-        "</td>" +
-        "<td class='atk-td' style='padding-bottom: 4px'>" +
-        "<img class='icon-pool' src='img/atk_icon.png' alt='' />" +
-        "</td>" +
-        "<td class='def-td' style='padding-bottom: 4px'>" +
-        "<img class='icon-pool' src='img/def_icon.png' alt='' />" +
-        "</td>" +
-        "</tr>" +
-        "</table>" +
-        "</div>";
+        '</td>' +
+        '</tr>' +
+        '<tr>' +
+        '<td class=\'hp-td\' style=\'padding-bottom: 4px\'>' +
+        '<img class=\'icon-pool\' src=\'img/hp_icon.png\' alt=\'\' />' +
+        '</td>' +
+        '<td class=\'cost-td\' style=\'padding-bottom: 4px\'>' +
+        '<img class=\'icon-pool\' src=\'img/cost_icon.png\' alt=\'\' />' +
+        '</td>' +
+        '<td class=\'tl-td\' style=\'padding-bottom: 4px\'>' +
+        '<img class=\'icon-pool\' src=\'img/tl_icon.png\' alt=\'\' />' +
+        '</td>' +
+        '<td class=\'atk-td\' style=\'padding-bottom: 4px\'>' +
+        '<img class=\'icon-pool\' src=\'img/atk_icon.png\' alt=\'\' />' +
+        '</td>' +
+        '<td class=\'def-td\' style=\'padding-bottom: 4px\'>' +
+        '<img class=\'icon-pool\' src=\'img/def_icon.png\' alt=\'\' />' +
+        '</td>' +
+        '</tr>' +
+        '</table>' +
+        '</div>';
 
     let asset_pool = getElem('asset-pool');
     asset_pool.insertAdjacentHTML('beforeend', asset_div);
@@ -1317,14 +1665,14 @@ function getElem(id) {
 }
 
 function hasProp(obj, key) {
-    return obj.hasOwnProperty(key)
+    return obj.hasOwnProperty(key);
 }
 
 function isInactive(faction) {
-    if (faction === "The Guild" || faction === 'Unclaimed') {
-        return true
+    if (faction === 'The Guild' || faction === 'Unclaimed') {
+        return true;
     } else {
-        return faction_tracker[faction]["Status"] === "Inactive"
+        return faction_tracker[faction]['Status'] === 'Inactive';
     }
 }
 
@@ -1339,7 +1687,7 @@ function autoSearch(id) {
         if (hasProp(factions, fac)) {
             if (factions[fac]['short'] === fac_short) {
                 faction = fac;
-                break
+                break;
             }
         }
     }
@@ -1354,9 +1702,9 @@ function autoSearch(id) {
 }
 
 function filterList() {
-    let input = getElem("search-bar");
-    let filter = input.value.toUpperCase().split(" ");
-    let assets = getElem("asset-pool").getElementsByClassName("asset-item");
+    let input = getElem('search-bar');
+    let filter = input.value.toUpperCase().split(' ');
+    let assets = getElem('asset-pool').getElementsByClassName('asset-item');
 
     recolorPlanetNames();
     Object.values(planet_objects).forEach(planet => {
@@ -1366,12 +1714,12 @@ function filterList() {
             let search_name = factions[full_name]['search'];
 
             let search_hits = new Array(filter.length);
-            for (let k=0; k<search_hits.length; k++) {
+            for (let k = 0; k < search_hits.length; k++) {
                 search_hits[k] = false;
             }
 
-            for (let j=0; j<filter.length; j++) {
-                let search_term = filter[j].replace(/[^A-Za-z_]/g,"");
+            for (let j = 0; j < filter.length; j++) {
+                let search_term = filter[j].replace(/[^A-Za-z_]/g, '');
                 if (full_name.toUpperCase().indexOf(search_term) > -1 ||
                     short_name.toUpperCase().indexOf(search_term) > -1 ||
                     search_name.toLocaleString().indexOf(search_term) > -1) {
@@ -1388,45 +1736,45 @@ function filterList() {
     if (highlighted_asset !== '') {
         let asset_div = getElem(highlighted_asset + '-pool');
         let asset_table = getElem(highlighted_asset + '-pool-table');
-        asset_div.style.backgroundColor = '#222';
+        asset_div.style.backgroundColor = '#1e1e1e';
         if (asset_table.classList.contains('stealth')) {
             asset_table.style.backgroundColor = '#293e42';
         } else {
-            asset_table.style.backgroundColor = '#262626';
+            asset_table.style.backgroundColor = '#222';
         }
         highlighted_asset = '';
     }
 
-    for (let i=0; i<assets.length; i++) {
+    for (let i = 0; i < assets.length; i++) {
 
         let id = assets[i].getAttribute('id').replace('-pool', '');
 
-        let name = assets[i].getElementsByClassName("name-td")[0];
+        let name = assets[i].getElementsByClassName('name-td')[0];
         let nameValue = name.textContent || name.innerText;
 
         let facValue = assets[i].getAttribute('data-faction');
 
         let stealthValue = assets[i].getAttribute('data-stealth');
 
-        let atk = assets[i].getElementsByClassName("atk-td")[0];
+        let atk = assets[i].getElementsByClassName('atk-td')[0];
         let atkValue = atk.textContent || atk.innerText;
 
-        let loc = assets[i].getElementsByClassName("location-div")[0];
+        let loc = assets[i].getElementsByClassName('location-div')[0];
         let locValue = loc.textContent || loc.innerText;
 
-        let typestat = assets[i].getElementsByClassName("type-stat-div")[0];
+        let typestat = assets[i].getElementsByClassName('type-stat-div')[0];
         let typestatValue = typestat.textContent || typestat.innerText;
 
         let search_hits = new Array(filter.length);
-        for (let k=0; k<search_hits.length; k++) {
+        for (let k = 0; k < search_hits.length; k++) {
             search_hits[k] = false;
         }
 
-        for (let j=0; j<filter.length; j++) {
-            let search_term = filter[j].replace(/[^A-Za-z_]/g,"");
+        for (let j = 0; j < filter.length; j++) {
+            let search_term = filter[j].replace(/[^A-Za-z_]/g, '');
             if (nameValue.toUpperCase().indexOf(search_term) > -1 ||
-                facValue.toUpperCase().indexOf(search_term) > -1  ||
-                stealthValue.toUpperCase().indexOf(search_term) > -1  ||
+                facValue.toUpperCase().indexOf(search_term) > -1 ||
+                stealthValue.toUpperCase().indexOf(search_term) > -1 ||
                 typestatValue.toUpperCase().indexOf(search_term) > -1 ||
                 atkValue.toUpperCase().indexOf(search_term) > -1 ||
                 locValue.toUpperCase().indexOf(search_term) > -1) {
@@ -1435,24 +1783,24 @@ function filterList() {
         }
 
         if ((!isInactive(facValue) || show_inactive) && !search_hits.includes(false)) {
-            assets[i].style.display = "block";
+            assets[i].style.display = 'block';
             asset_objects[id].hide(false);
         } else {
-            assets[i].style.display = "none";
+            assets[i].style.display = 'none';
             asset_objects[id].hide(true);
         }
     }
 
-    if (input.value !== "") {
-        document.getElementById("del-button").style.display = "block";
+    if (input.value !== '') {
+        document.getElementById('del-button').style.display = 'block';
     } else {
-        document.getElementById("del-button").style.display = "none";
+        document.getElementById('del-button').style.display = 'none';
     }
 }
 
 function delFilter() {
-    let input = document.getElementById("search-bar");
-    input.value = "";
+    let input = document.getElementById('search-bar');
+    input.value = '';
     filterList();
     recolorPlanetNames();
 }
@@ -1461,12 +1809,27 @@ function toggleFactionTable() {
     show_faction_table = !show_faction_table;
     let col = getElem('factions-col');
     let toggle = getElem('faction-toggle');
-    if (show_faction-table) {
+    if (show_faction - table) {
         col.style.right = '10px';
         toggle.style.transform = 'rotate(0deg)';
     } else {
         col.style.right = '-210px';
         toggle.style.transform = 'rotate(-90deg)';
+    }
+}
+
+function toggleBattleContainer() {
+    show_battle_container = !show_battle_container;
+    let battle_container = getElem('battle-container');
+    let toggle = getElem('battle-container-toggle');
+    if (show_battle_container) {
+        battle_container.style.bottom = '0';
+        toggle.style.bottom = '180px';
+        toggle.style.transform = 'rotate(0deg)';
+    } else {
+        battle_container.style.bottom = '-180px';
+        toggle.style.bottom = '10px';
+        toggle.style.transform = 'rotate(180deg)';
     }
 }
 
@@ -1506,7 +1869,7 @@ function recolorPlanetNames() {
         }
         if (planet.pgov === '' || (isInactive(planet.pgov) && !show_inactive)) {
             planet.color('#7c7c7c', '#222222');
-            planet.fontweight('normal')
+            planet.fontweight('normal');
         } else {
             planet.color(factions[planet.pgov]['text'], factions[planet.pgov]['color']);
             if (planet.pgov === planet.hw) {
@@ -1570,7 +1933,7 @@ function toggleInactiveFactions() {
 function hidePlanets() {
     Object.values(planet_objects).forEach(planet => {
         planet.color('#7c7c7c', '#222222');
-    })
+    });
 }
 
 function toggleHighlightAsset(id) {
@@ -1582,20 +1945,20 @@ function toggleHighlightAsset(id) {
         if (asset_table.classList.contains('stealth')) {
             asset_table.style.backgroundColor = '#293e42';
         } else {
-            asset_table.style.backgroundColor = '#262626';
+            asset_table.style.backgroundColor = '#222';
         }
-        asset_div.style.backgroundColor = '#222';
-        recolorPlanetNames()
+        asset_div.style.backgroundColor = '#1e1e1e';
+        recolorPlanetNames();
         highlighted_asset = '';
     } else {
         if (highlighted_asset !== '') {
             let old_asset_div = getElem(highlighted_asset + '-pool');
             let old_asset_table = getElem(highlighted_asset + '-pool-table');
-            old_asset_div.style.backgroundColor = '#222';
+            old_asset_div.style.backgroundColor = '#1e1e1e';
             if (old_asset_table.classList.contains('stealth')) {
                 old_asset_table.style.backgroundColor = '#293e42';
             } else {
-                old_asset_table.style.backgroundColor = '#262626';
+                old_asset_table.style.backgroundColor = '#222';
             }
             asset_objects[highlighted_asset].stopHighlightAsset();
         }
@@ -1604,8 +1967,8 @@ function toggleHighlightAsset(id) {
             asset_table.style.backgroundColor = '#3c6974';
             asset_div.style.backgroundColor = '#3c6974';
         } else {
-            asset_table.style.backgroundColor = '#404040';
-            asset_div.style.backgroundColor = '#404040';
+            asset_table.style.backgroundColor = '#262626';
+            asset_div.style.backgroundColor = '#262626';
         }
         hidePlanets();
         highlighted_asset = asset_id;
@@ -1619,7 +1982,7 @@ function highlightAssetTable(id) {
         if (asset_table.classList.contains('stealth')) {
             asset_table.style.backgroundColor = '#2e5058';
         } else {
-            asset_table.style.backgroundColor = '#2f2f2f';
+            asset_table.style.backgroundColor = '#262626';
         }
     }
 }
@@ -1631,13 +1994,13 @@ function stopHighlightAssetTable(id) {
         if (asset_table.classList.contains('stealth')) {
             asset_table.style.backgroundColor = '#293e42';
         } else {
-            asset_table.style.backgroundColor = '#262626';
+            asset_table.style.backgroundColor = '#222';
         }
     }
 }
 
 function sortBy(col) {
-    let asset_pool = document.getElementById("asset-pool");
+    let asset_pool = document.getElementById('asset-pool');
     let temp_assets = Object.values(asset_objects);
     for (let direction in dir) {
         if (direction === col) {
@@ -1652,11 +2015,11 @@ function sortBy(col) {
             let inflA = parseFloat(faction_tracker[a['faction']]['INFL']);
             let inflB = parseFloat(faction_tracker[b['faction']]['INFL']);
             return inflA < inflB ? dir[col] :
-                inflA === inflB ? (a['name'] > b['name'] ? 1 : -1) : -dir[col]
+                inflA === inflB ? (a['name'] > b['name'] ? 1 : -1) : -dir[col];
         } else {
             let valA = a[col].toUpperCase();
             let valB = b[col].toUpperCase();
-            return valA > valB ? dir[col] : -dir[col]
+            return valA > valB ? dir[col] : -dir[col];
         }
     };
 
@@ -1772,7 +2135,7 @@ function displayFactionInfo(faction) {
     getElem('info-goal').innerHTML = goal;
     getElem('info-goal-desc').innerHTML = goal_desc;
     getElem('info-tag').innerHTML = faction_tracker[faction]['Tag'];
-    getElem('info-tag-desc').innerHTML = tags[faction_tracker[faction]['Tag']]["desc"];
+    getElem('info-tag-desc').innerHTML = tags[faction_tracker[faction]['Tag']]['desc'];
     getElem('info-notes').innerHTML = faction_tracker[faction]['Notes'];
     getElem('info-infl-abs').innerHTML = (faction_tracker[faction]['INFL']).toFixed(1);
     getElem('info-infl-rel').innerHTML =
@@ -1797,7 +2160,7 @@ function tsvJSON(tsv) {
         headers.forEach((h, i) => {
             obj[h.replace('\r', '')] = currentline[i].replace('\r', '');
         });
-        return obj
+        return obj;
     });
     return result;
 }
@@ -1931,7 +2294,7 @@ function processChart(iterable) {
             colors: ['#ffffff']
         };
     }
-    return [values, options]
+    return [values, options];
 }
 
 function updateSectorChart() {
@@ -1962,7 +2325,7 @@ function updateSectorChart() {
             let planetary_influence = influence_tracker[planet_name]['Factions'];
             let [values, options] = processChart(planetary_influence);
             let total_influence = values.reduce((a, b) => a + b, 0);
-            planetwise.push({'planet_name': planet_name, 'INFL': total_influence})
+            planetwise.push({'planet_name': planet_name, 'INFL': total_influence});
         }
     }
 
@@ -1970,9 +2333,13 @@ function updateSectorChart() {
         return ((a.INFL < b.INFL) ? 1 : ((a.INFL === b.INFL) ? 0 : -1));
     });
 
-    sectorinfluence_chart_inner.updateSeries(planetwise.map(p => { return p.INFL}));
+    sectorinfluence_chart_inner.updateSeries(planetwise.map(p => {
+        return p.INFL;
+    }));
     sectorinfluence_chart_inner.updateOptions({
-        labels: planetwise.map(p => { return p.planet_name}),
+        labels: planetwise.map(p => {
+            return p.planet_name;
+        }),
         dataLabels: {
             formatter: (val, opt) => {
                 return `${opt.w.globals.seriesNames[opt.seriesIndex]}`;
@@ -1981,7 +2348,7 @@ function updateSectorChart() {
     });
 }
 
-function updateSectorChartOptions(opts, infl=null) {
+function updateSectorChartOptions(opts, infl = null) {
     sectorinfluence_chart_outer.updateOptions(opts);
     if (infl) {
         let display_infl = Math.round(infl * 10) / 10;
@@ -1999,7 +2366,7 @@ function updateSystemChart(system_name) {
     let total_infl = values.reduce((a, b) => a + b, 0);
     updateSystemChartOptions({
         title: {
-            text: ':)',
+            text: ':)'
         },
         dataLabels: {
             formatter: (val) => {
@@ -2009,7 +2376,7 @@ function updateSystemChart(system_name) {
                     return '';
                 }
             }
-        },
+        }
     }, total_infl);
 
     // Update inner
@@ -2019,16 +2386,20 @@ function updateSystemChart(system_name) {
         let planetary_influence = influence_tracker[planet_name]['Factions'];
         let [values, options] = processChart(planetary_influence);
         let total_influence = values.reduce((a, b) => a + b, 0);
-        planetwise.push({'planet_name': planet_name, 'INFL': total_influence})
+        planetwise.push({'planet_name': planet_name, 'INFL': total_influence});
     });
 
     planetwise.sort((a, b) => {
         return ((a.INFL < b.INFL) ? 1 : ((a.INFL === b.INFL) ? 0 : -1));
     });
 
-    system_tip_chart_inner.updateSeries(planetwise.map(p => { return p.INFL}));
+    system_tip_chart_inner.updateSeries(planetwise.map(p => {
+        return p.INFL;
+    }));
     system_tip_chart_inner.updateOptions({
-        labels: planetwise.map(p => { return p.planet_name}),
+        labels: planetwise.map(p => {
+            return p.planet_name;
+        }),
         dataLabels: {
             formatter: (val, opt) => {
                 if (val > 5) {
@@ -2041,7 +2412,7 @@ function updateSystemChart(system_name) {
     });
 }
 
-function updateSystemChartOptions(opts, infl=null) {
+function updateSystemChartOptions(opts, infl = null) {
     system_tip_chart_outer.updateOptions(opts);
     if (infl) {
         let display_infl = Math.round(infl * 10) / 10;
@@ -2079,7 +2450,7 @@ function updatePlanetChart(planet_name) {
     }, total_infl);
 }
 
-function updatePlanetChartOptions(opts, infl=null) {
+function updatePlanetChartOptions(opts, infl = null) {
     planet_tip_chart.updateOptions(opts);
     if (infl) {
         let display_infl = Math.round(infl * 10) / 10;
@@ -2089,12 +2460,12 @@ function updatePlanetChartOptions(opts, infl=null) {
 }
 
 function pointCoords(hex_x, hex_y, hex_w, hex_h) {
-    A = {'x': hex_x - hex_w/2, 'y': hex_y};
-    B = {'x': hex_x - hex_w/4, 'y': hex_y - hex_h/2};
-    C = {'x': hex_x + hex_w/4, 'y': hex_y - hex_h/2};
-    D = {'x': hex_x + hex_w/2, 'y': hex_y};
-    E = {'x': hex_x + hex_w/4, 'y': hex_y + hex_h/2};
-    F = {'x': hex_x - hex_w/4, 'y': hex_y + hex_h/2};
+    A = {'x': hex_x - hex_w / 2, 'y': hex_y};
+    B = {'x': hex_x - hex_w / 4, 'y': hex_y - hex_h / 2};
+    C = {'x': hex_x + hex_w / 4, 'y': hex_y - hex_h / 2};
+    D = {'x': hex_x + hex_w / 2, 'y': hex_y};
+    E = {'x': hex_x + hex_w / 4, 'y': hex_y + hex_h / 2};
+    F = {'x': hex_x - hex_w / 4, 'y': hex_y + hex_h / 2};
     return `${A.x},${A.y} ${B.x},${B.y} ${C.x},${C.y} ${D.x},${D.y} ${E.x},${E.y} ${F.x},${F.y}`;
 }
 
@@ -2111,7 +2482,7 @@ function makeHexOverlays(key) {
         .attr('id', key)
         .attr('class', 'hex')
         .attr('fill', '#ffffff')
-        .attr('points', points)
+        .attr('points', points);
 }
 
 function getInfluence() {
@@ -2147,7 +2518,7 @@ function getInfluence() {
             if (hasProp(factions, fac)) {
                 factions[fac]['INFL'] += infl;
             } else {
-                factions[fac] = {"INFL": infl};
+                factions[fac] = {'INFL': infl};
             }
         });
 
@@ -2185,11 +2556,11 @@ function getInfluence() {
         }
 
         influence_tracker[name] = {
-            "Hex": hex,
-            "System": sys,
-            "PCVI": pcvi,
-            "Factions": factions
-        }
+            'Hex': hex,
+            'System': sys,
+            'PCVI': pcvi,
+            'Factions': factions
+        };
     });
 
     Object.values(influence_tracker).forEach(planet => {
@@ -2284,42 +2655,6 @@ function drawAssets() {
     sortBy('influence');
 }
 
-function drawPlanets() {
-    // TODO: make Planet circles into class
-
-    planet_tracker.forEach(planet => {
-        planet["Local Assets"] = [];
-        let hex_id = 'hex-' + planet['Hex'];
-        let current_idx = planet['idx'];
-        let hex_x = hexes[hex_id]['X'];
-        let hex_y = hexes[hex_id]['Y'];
-        let num_planets = planet['total'];
-        let x_offset = planet_to_hex_offsets[num_planets][current_idx]['X'];
-        let y_offset = planet_to_hex_offsets[num_planets][current_idx]['Y'];
-
-        // Planet Circle
-        let circle_id = planet['Name'] + '-circle';
-        let planet_circle = getElem(circle_id);
-        if (!planet_circle) {
-            let circle_color = '#404040';
-            if (hex_id === 'hex-0808') {
-                circle_color = factions['The Guild']['color'];
-            }
-
-            d3.select(svg_overlay.node())
-                // .insert('circle', '.hex')
-                .append('circle')
-                .attr('id', circle_id)
-                .attr('fill', 'rgba(255,255,255,0)')
-                .attr('stroke', circle_color)
-                .style('stroke-width', 0.00065)
-                .attr('cx', hex_x + x_offset)
-                .attr('cy', hex_y + y_offset)
-                .attr('r', 0.011);
-        }
-    });
-}
-
 function getFactions() {
     let url_faction_tracker =
         'https://docs.google.com/spreadsheets/d/e/2PACX-1vRCK-QRRccgk3_twQSIyfGU3qzuqyPB6WSb4_KktKyV6AzAmm7ioUBf-wddvLuaToxr5CVWy4tRiAS7/pub?gid=1760255261&single=true&output=tsv';
@@ -2363,7 +2698,7 @@ function getPlanets() {
             planet_tracker.forEach(p => {
                 p['Local Assets'] = [];
                 p['Tags'] = p['Tags'].split(',').map(tag => {
-                    return tag.trim()
+                    return tag.trim();
                 });
 
                 let tl_mod = infl_tl_mod[p['TL']];
@@ -2387,13 +2722,17 @@ function getPlanets() {
                             }
                         } else {
                             pcvi_mod = pcvi_mod.map(m => {
-                                return m + mod
+                                return m + mod;
                             });
                         }
                     }
                 });
-                pcvi_mod = pcvi_mod.map(m => {return Math.max(m, 0)});
-                p['PCVI'] = pcvi_mod.map(m => {return parseFloat((m * tl_mod * pop_mod).toFixed(1))});
+                pcvi_mod = pcvi_mod.map(m => {
+                    return Math.max(m, 0);
+                });
+                p['PCVI'] = pcvi_mod.map(m => {
+                    return parseFloat((m * tl_mod * pop_mod).toFixed(1));
+                });
                 if (!hasProp(system_tracker, p['System'])) {
                     system_tracker[p['System']] = {
                         'Planets': [p['Name']],
@@ -2423,10 +2762,9 @@ function getPlanets() {
                             p['idx'] = local_counter;
                             local_counter++;
                         }
-                    })
+                    });
                 }
             }
-            // drawPlanets();
             getAssets();
         }
     };
@@ -2441,12 +2779,12 @@ function onViewerOpen() {
     home.parentNode.insertBefore(home, zoomout);
 
     document.addEventListener('keydown', event => {
-       if (event.keyCode === 27) {
-           delFilter();
-           if (show_sidebar) {
-               toggleSidebar();
-           }
-       }
+        if (event.keyCode === 27) {
+            delFilter();
+            if (show_sidebar) {
+                toggleSidebar();
+            }
+        }
     });
 
     for (let key in hexes) {
