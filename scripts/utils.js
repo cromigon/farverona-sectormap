@@ -1268,7 +1268,7 @@ function singleRoll(role, type) {
             num_dice = 1;
             num_sides = 10;
             bonus = parseInt(getElem('attacker-stat').innerText);
-        } else {
+        } else if (type === 'dmg') {
             let dmg = getElem('attacker-asset-atk').innerHTML.split(', ')[1];
             let dice;
             if (dmg.includes('+')) {
@@ -1297,11 +1297,12 @@ function singleRoll(role, type) {
                 if (i === store_idx) {
                     attacker_roll_result = roll;
                 }
-            } else {
+            } else if (type === 'dmg') {
                 let roll = 0;
                 for (let i = 0; i < num_dice; i++) {
-                    roll += (Math.floor(Math.random() * num_sides) + 1 + bonus);
+                    roll += (Math.floor(Math.random() * num_sides) + 1);
                 }
+                roll += bonus;
                 roll_str += roll.toString() + '<br />';
                 if (i === store_idx) {
                     attacker_roll_result = roll;
@@ -1327,7 +1328,7 @@ function singleRoll(role, type) {
             num_dice = 1;
             num_sides = 10;
             bonus = parseInt(getElem('defender-stat').innerText);
-        } else {
+        } else if (type === 'dmg') {
             let dmg = getElem('defender-asset-def').innerHTML;
             let dice;
             if (dmg.includes('+')) {
@@ -1356,11 +1357,12 @@ function singleRoll(role, type) {
                 if (i === store_idx) {
                     defender_roll_result = roll;
                 }
-            } else {
+            } else if (type === 'dmg') {
                 let roll = 0;
                 for (let i = 0; i < num_dice; i++) {
-                    roll += (Math.floor(Math.random() * num_sides) + 1 + bonus);
+                    roll += (Math.floor(Math.random() * num_sides) + 1);
                 }
+                roll += bonus;
                 roll_str += roll.toString() + '<br />';
                 if (i === store_idx) {
                     defender_roll_result = roll;

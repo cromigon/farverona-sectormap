@@ -268,11 +268,13 @@ window.onload = () => {
             let scale_h = tip_h.map(h => Math.min(viewport_h / h, 1));
             tips.forEach((t, index) => t.style.transform = `scale(${scale_h[index]})`);
 
-            if (x_offset) {
-                tips.forEach(t => t.style.left = mouse_x - t.offsetWidth - 20 + 'px')
-            } else {
-                tips.forEach(t => t.style.left = mouse_x + 20 + 'px');
-            }
+            tips.forEach(t => {
+                if (x_offset) {
+                    tips.forEach(t => t.style.left = mouse_x - t.offsetWidth - 20 + 'px')
+                } else {
+                    tips.forEach(t => t.style.left = mouse_x + 20 + 'px');
+                }
+            });
 
             if (y_offset) {
                 tips.forEach((t, index) => {
@@ -287,7 +289,7 @@ window.onload = () => {
             } else {
                 tips.forEach((t, index) => {
                     if (scale_h[index] === 1) {
-                        t.style.top = Math.min(mouse_y + 20, viewport_h - tip.offsetHeight - 5) + 'px';
+                        t.style.top = Math.min(mouse_y + 20, viewport_h - t.offsetHeight - 5) + 'px';
                     } else {
                         t.style.top = '0';
                         let rect = t.getBoundingClientRect();
