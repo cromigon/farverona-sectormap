@@ -953,10 +953,10 @@ function clearBattleSlot(role) {
     if (role === 'attacker') {
         getElem('attacker-stat').innerHTML = '-';
         getElem('attacker-fac-name').innerHTML = 'ATTACKER';
-        attacker_advantage = false;
+        advantage['attacker'] = false;
     } else {
         getElem('defender-fac-name').innerHTML = 'DEFENDER';
-        defender_advantage = false;
+        advantage['defender'] = false;
     }
     getElem('attacker-stat').style.color = '#444';
     getElem('defender-stat').innerHTML = '-';
@@ -969,8 +969,9 @@ function clearBattleSlot(role) {
     defender_roll_result = undefined;
     getElem('attacker-reroll').removeAttribute('onclick');
     getElem('defender-reroll').removeAttribute('onclick');
-    clearTimeout(short_timeout);
-    clearTimeout(long_timeout);
+    // clearTimeout(short_timeout);
+    // clearTimeout(long_timeout);
+    clearTimeout(timeout);
 
     getElem(`${role}-fac-name`).style.color = '#444';
     getElem(`${role}-asset-active`).style.display = 'none';
@@ -979,7 +980,7 @@ function clearBattleSlot(role) {
     getElem(`${role}-advantage-checkbox`).checked = false;
 }
 
-function expandFaction(short) {
+function expandFactionName(short) {
     for (let fac in factions) {
         if (hasProp(factions, fac)) {
             if (short === factions[fac]['short'].toUpperCase()) {
@@ -990,11 +991,7 @@ function expandFaction(short) {
 }
 
 function toggleAdvantage(role) {
-    if (role === 'attacker') {
-        attacker_advantage = !attacker_advantage;
-    } else {
-        defender_advantage = !defender_advantage;
-    }
+    advantage[role] = !advantage[role];
     parseBattleStats();
 }
 
@@ -1005,27 +1002,27 @@ function parseBattleStats() {
         let stats = atk_str.split(', ')[0];
         let stat_atk = stats.split('V')[0];
         let stat_def = stats.split('V')[1];
-        let bonus_atk = faction_tracker[expandFaction(atk_faction)][stat_atk];
+        let bonus_atk = faction_tracker[expandFactionName(atk_faction)][stat_atk];
         getElem('attacker-stat').innerHTML = bonus_atk;
 
         let def_faction = getElem('defender-fac-name').innerHTML;
         if (def_faction !== 'DEFENDER') {
-            let bonus_def = faction_tracker[expandFaction(def_faction)][stat_def];
+            let bonus_def = faction_tracker[expandFactionName(def_faction)][stat_def];
             getElem('defender-stat').innerHTML = bonus_def;
 
             let difference = parseInt(bonus_atk) - parseInt(bonus_def);
             let chance_atk;
             switch (true) {
-                case attacker_advantage && defender_advantage:
+                case advantage['attacker'] && advantage['defender']:
                     chance_atk = chances[difference]['both'];
                     break;
-                case attacker_advantage && !defender_advantage:
+                case advantage['attacker'] && !advantage['defender']:
                     chance_atk = chances[difference]['atk'];
                     break;
-                case !attacker_advantage && defender_advantage:
+                case !advantage['attacker'] && advantage['defender']:
                     chance_atk = chances[difference]['def'];
                     break;
-                case !attacker_advantage && !defender_advantage:
+                case !advantage['attacker'] && !advantage['defender']:
                     chance_atk = chances[difference]['none'];
                     break;
             }
@@ -1043,7 +1040,7 @@ function armRollButton(role) {
         getElem('defender-stat').style.color = '#fff';
         getElem('fight-button').style.color = '#fff';
         getElem('fight-button').classList.add('active');
-        getElem('fight-button').setAttribute('onclick', 'rollDice()');
+        getElem('fight-button').setAttribute('onclick', 'fightButton()');
 
         getElem('attacker-reroll').classList.add('active');
         getElem('attacker-reroll').setAttribute('onclick', 'singleRoll(\'attacker\', \'hit\')');
@@ -1151,71 +1148,156 @@ function generateSpinAnimation(name) {
     }];
 }
 
-function rollDice() {
-    let atk_stat = parseInt(getElem('attacker-stat').innerText);
-    let def_stat = parseInt(getElem('defender-stat').innerText);
+function currentTime() {
+    let now = new Date();
+    let hours = now.getHours();
+    let ampm = hours >= 12 ? 'PM' : 'AM';
+    let mins = now.getMinutes();
+    let secs = now.getSeconds();
+    hours = hours % 12;
+    hours = hours === 0 ? 12 : hours;
+    return hours.toString().padStart(2, '0') + ':'
+        + mins.toString().padStart(2, '0') + ':'
+        + secs.toString().padStart(2, '0') + ' '
+        + ampm
+}
 
-    let store_idx = 63;
-    roll_str = '';
-    if (attacker_roll_result) {
-        roll_str += attacker_roll_result.toString() + '<br />';
-        store_idx = 62;
-    }
-    for (let i = 0; i < 65; i++) {
-        let roll = (Math.floor(Math.random() * 10) + 1 + atk_stat);
-        if (attacker_advantage) {
-            let adv_roll = (Math.floor(Math.random() * 10) + 1 + atk_stat);
-            roll = Math.max(roll, adv_roll);
-        }
-        roll_str += roll.toString() + '<br />';
-        if (i === store_idx) {
-            attacker_roll_result = roll;
-        }
-    }
-    getElem('attacker-roll-span').innerHTML = roll_str;
+function recordRoll(role, faction, asset, type, num_dice, num_sides, bonus, roll, advantage) {
 
-    store_idx = 63;
-    roll_str = '';
-    if (defender_roll_result) {
-        roll_str += defender_roll_result.toString() + '<br />';
-        store_idx = 62;
-    }
-    for (let i = 0; i < 65; i++) {
-        let roll = (Math.floor(Math.random() * 10) + 1 + def_stat);
-        if (defender_advantage) {
-            let adv_roll = (Math.floor(Math.random() * 10) + 1 + def_stat);
-            roll = Math.max(roll, adv_roll);
-        }
-        roll_str += roll.toString() + '<br />';
-        if (i === store_idx) {
-            defender_roll_result = roll;
+    let table = getElem('roll-history-table');
+    let entry = document.createElement('tr');
+    let tds = [];
+
+    tds.push(document.createElement('td'));
+    tds[0].innerHTML = currentTime();
+    tds.push(document.createElement('td'));
+    tds[1].innerHTML = role === 'attacker' ? 'ATK' : 'DEF';
+    tds.push(document.createElement('td'));
+    tds[2].innerHTML = faction;
+    tds.push(document.createElement('td'));
+    tds[3].innerHTML = asset;
+    tds.push(document.createElement('td'));
+    if (type === 'dmg') {
+        tds[4].innerHTML = 'DAMAGE';
+    } else {
+        if (role === 'attacker') {
+            tds[4].innerHTML = 'ATTACK';
+        } else {
+            tds[4].innerHTML = 'DEFENSE';
         }
     }
-    getElem('defender-roll-span').innerHTML = roll_str;
+    tds.push(document.createElement('td'));
+    tds[5].innerHTML = advantage ? 'TRUE' : 'FALSE';
+    tds.push(document.createElement('td'));
+    tds[6].innerHTML = `${num_dice}d${num_sides}`;
+    if (bonus > 0) {
+        tds[6].innerHTML += ` <span style="color: #777777">+ ${bonus}</span>`;
+    }
+    tds.push(document.createElement('td'));
+    if (advantage) {
+        tds[7].innerHTML = `max(${roll['rolls'][0]}, ${advantage['rolls'][0]}) <span style="color: #777777">+ ${bonus}</span> = ${roll['result']}`;
+    } else {
+        tds[7].innerHTML = roll['rolls'].join(' + ');
+        if (bonus > 0) {
+            tds[7].innerHTML += ` <span style="color: #777777">+ ${bonus}</span>`;
+        }
+        tds[7].innerHTML += ` = ${roll['result']}`;
+    }
 
-    let atk_anim = generateSpinAnimation('atk_anim');
-    $.keyframe.define(atk_anim);
+    tds.forEach(td => {
+        entry.appendChild(td)
+    });
 
-    let def_anim = generateSpinAnimation('def_anim');
-    $.keyframe.define(def_anim);
+    table.insertBefore(entry, table.firstElementChild.nextSibling);
+}
 
-    let atk_anim_duration = Math.random() * 2 + 4;
-    $('#attacker-roll-span').playKeyframe(
-        `atk_anim ${atk_anim_duration}s ease-in-out 0s 1 forwards`
-    );
+function rollDice(num_dice, num_sides, bonus) {
+    let rolls = [];
+    let result;
+    for (let i=0; i<num_dice; i++) {
+        rolls.push(Math.floor(Math.random() * num_sides) + 1);
+    }
+    if (rolls.length > 1) {
+        result = rolls.reduce((a, b) => a + b, 0) + bonus;
+    } else {
+        result = rolls[0] + bonus;
+    }
+    return {'result': result, 'rolls': rolls}
+}
 
-    let def_anim_duration = Math.random() * 2 + 6;
-    $('#defender-roll-span').playKeyframe(
-        `atk_anim ${def_anim_duration}s ease-in-out 0s 1 forwards`
-    );
+function fightButton() {
 
-    fadeoutRollArrows('all');
-    disarmRollButton('all');
-    long_timeout = setTimeout(() => {
-        fadeinRollArrow('attacker', 'hit');
-        fadeinRollArrow('defender', 'hit');
-        armRollButton('all');
-    }, Math.floor(def_anim_duration * 1000));
+    singleRoll('attacker', 'hit');
+    singleRoll('defender', 'hit');
+
+    // let atk_stat = parseInt(getElem('attacker-stat').innerText);
+    // let def_stat = parseInt(getElem('defender-stat').innerText);
+    // let atk_roll = {};
+    // let def_roll = {};
+    //
+    // let store_idx = 63;
+    // roll_str = '';
+    // if (attacker_roll_result) {
+    //     roll_str += attacker_roll_result.toString() + '<br />';
+    //     store_idx = 62;
+    // }
+    // for (let i = 0; i < 65; i++) {
+    //     let flat_roll = Math.floor(Math.random() * 10) + 1;
+    //     let roll = flat_roll + atk_stat;
+    //     if (advantage['attacker']) {
+    //         let adv_flat_roll = Math.floor(Math.random() * 10) + 1;
+    //         let adv_roll = adv_flat_roll + atk_stat;
+    //         roll = Math.max(roll, adv_roll);
+    //     }
+    //     roll_str += roll.toString() + '<br />';
+    //     if (i === store_idx) {
+    //         attacker_roll_result = roll;
+    //     }
+    // }
+    // getElem('attacker-roll-span').innerHTML = roll_str;
+    //
+    // store_idx = 63;
+    // roll_str = '';
+    // if (defender_roll_result) {
+    //     roll_str += defender_roll_result.toString() + '<br />';
+    //     store_idx = 62;
+    // }
+    // for (let i = 0; i < 65; i++) {
+    //     let roll = (Math.floor(Math.random() * 10) + 1 + def_stat);
+    //     if (advantage['defender']) {
+    //         let adv_roll = (Math.floor(Math.random() * 10) + 1 + def_stat);
+    //         roll = Math.max(roll, adv_roll);
+    //     }
+    //     roll_str += roll.toString() + '<br />';
+    //     if (i === store_idx) {
+    //         defender_roll_result = roll;
+    //     }
+    // }
+    // getElem('defender-roll-span').innerHTML = roll_str;
+    //
+    // let atk_anim = generateSpinAnimation('atk_anim');
+    // $.keyframe.define(atk_anim);
+    //
+    // let def_anim = generateSpinAnimation('def_anim');
+    // $.keyframe.define(def_anim);
+    //
+    // let atk_anim_duration = Math.random() * 2 + 4;
+    // $('#attacker-roll-span').playKeyframe(
+    //     `atk_anim ${atk_anim_duration}s ease-in-out 0s 1 forwards`
+    // );
+    //
+    // let def_anim_duration = Math.random() * 2 + 6;
+    // $('#defender-roll-span').playKeyframe(
+    //     `atk_anim ${def_anim_duration}s ease-in-out 0s 1 forwards`
+    // );
+    //
+    // fadeoutRollArrows('all');
+    // disarmRollButton('all');
+    // long_timeout = setTimeout(() => {
+    //     fadeinRollArrow('attacker', 'hit');
+    //     fadeinRollArrow('defender', 'hit');
+    //     armRollButton('all');
+    // }, Math.floor(def_anim_duration * 1000));
 }
 
 function fadeinRollArrow(role, type) {
@@ -1254,139 +1336,83 @@ function fadeoutRollArrows(role) {
 }
 
 function singleRoll(role, type) {
-    let store_idx = 63;
-    roll_str = '';
-    // disarmRollButton(role);
     fadeoutRollArrows(role);
     disarmRollButton('all');
+    let store_idx = 63;
+    let roll_str = '';
     let num_dice;
     let num_sides;
     let bonus;
+    let field = role === 'attacker' ? 'atk' : 'def';
+    let duration = role === 'attacker' ? 5 : 7;
 
-    if (role === 'attacker') {
-        if (type === 'hit') {
-            num_dice = 1;
-            num_sides = 10;
-            bonus = parseInt(getElem('attacker-stat').innerText);
-        } else if (type === 'dmg') {
-            let dmg = getElem('attacker-asset-atk').innerHTML.split(', ')[1];
-            let dice;
-            if (dmg.includes('+')) {
-                dice = dmg.split('+')[0];
-                bonus = parseInt(dmg.split('+')[1]);
-            } else {
-                dice = dmg;
-                bonus = 0;
-            }
-            num_dice = parseInt(dice.split('d')[0]);
-            num_sides = parseInt(dice.split('d')[1]);
+    if (type === 'hit') {
+        num_dice = 1;
+        num_sides = 10;
+        bonus = parseInt(getElem(`${role}-stat`).innerText);
+    } else if (type === 'dmg') {
+        let dmg = getElem(`${role}-asset-${field}`).innerHTML;
+        dmg = role === 'attacker' ? dmg.split(', ')[1] : dmg;
+        let dice;
+        if (dmg.includes('+')) {
+            dice = dmg.split('+')[0];
+            bonus = parseInt(dmg.split('+')[1]);
+        } else {
+            dice = dmg;
+            bonus = 0;
         }
-
-        if (attacker_roll_result) {
-            roll_str += attacker_roll_result.toString() + '<br />';
-            store_idx = 62;
-        }
-        for (let i = 0; i < 65; i++) {
-            if (type === 'hit') {
-                let roll = (Math.floor(Math.random() * num_sides) + 1 + bonus);
-                if (attacker_advantage) {
-                    let adv_roll = (Math.floor(Math.random() * num_sides) + 1 + bonus);
-                    roll = Math.max(roll, adv_roll);
-                }
-                roll_str += roll.toString() + '<br />';
-                if (i === store_idx) {
-                    attacker_roll_result = roll;
-                }
-            } else if (type === 'dmg') {
-                let roll = 0;
-                for (let i = 0; i < num_dice; i++) {
-                    roll += (Math.floor(Math.random() * num_sides) + 1);
-                }
-                roll += bonus;
-                roll_str += roll.toString() + '<br />';
-                if (i === store_idx) {
-                    attacker_roll_result = roll;
-                }
-            }
-        }
-
-        getElem('attacker-roll-span').innerHTML = roll_str;
-
-        let atk_anim = generateSpinAnimation('atk_anim');
-        $.keyframe.define(atk_anim);
-        $('#attacker-roll-span').playKeyframe(
-            'atk_anim 5s ease-in-out 0s 1 forwards'
-        );
-
-        clearTimeout(long_timeout);
-        short_timeout = setTimeout(() => {
-            fadeinRollArrow(role, type);
-            armRollButton('all');
-        }, 5000);
-    } else {
-        if (type === 'hit') {
-            num_dice = 1;
-            num_sides = 10;
-            bonus = parseInt(getElem('defender-stat').innerText);
-        } else if (type === 'dmg') {
-            let dmg = getElem('defender-asset-def').innerHTML;
-            let dice;
-            if (dmg.includes('+')) {
-                dice = dmg.split('+')[0];
-                bonus = parseInt(dmg.split('+')[1]);
-            } else {
-                dice = dmg;
-                bonus = 0;
-            }
-            num_dice = parseInt(dice.split('d')[0]);
-            num_sides = parseInt(dice.split('d')[1]);
-        }
-
-        if (defender_roll_result) {
-            roll_str += defender_roll_result.toString() + '<br />';
-            store_idx = 62;
-        }
-        for (let i = 0; i < 65; i++) {
-            if (type === 'hit') {
-                let roll = (Math.floor(Math.random() * num_sides) + 1 + bonus);
-                if (defender_advantage) {
-                    let adv_roll = (Math.floor(Math.random() * num_sides) + 1 + bonus);
-                    roll = Math.max(roll, adv_roll);
-                }
-                roll_str += roll.toString() + '<br />';
-                if (i === store_idx) {
-                    defender_roll_result = roll;
-                }
-            } else if (type === 'dmg') {
-                let roll = 0;
-                for (let i = 0; i < num_dice; i++) {
-                    roll += (Math.floor(Math.random() * num_sides) + 1);
-                }
-                roll += bonus;
-                roll_str += roll.toString() + '<br />';
-                if (i === store_idx) {
-                    defender_roll_result = roll;
-                }
-            }
-        }
-
-        getElem('defender-roll-span').innerHTML = roll_str;
-
-        let def_anim = generateSpinAnimation('def_anim');
-        $.keyframe.define(def_anim);
-        $('#defender-roll-span').playKeyframe(
-            'def_anim 7s ease-in-out 0s 1 forwards'
-        );
-
-        clearTimeout(short_timeout);
-        long_timeout = setTimeout(() => {
-            fadeinRollArrow(role, type);
-            armRollButton('all');
-        }, 7000);
+        num_dice = parseInt(dice.split('d')[0]);
+        num_sides = parseInt(dice.split('d')[1]);
     }
 
-    // console.log([num_dice, num_sides, bonus]);
+    if (roll_results[role]) {
+        roll_str += roll_results[role].toString() + '<br />';
+        store_idx = 62;
+    }
+
+    for (let i=0; i<65; i++) {
+        let roll;
+        let adv_roll;
+        if (type === 'hit') {
+            roll = rollDice(num_dice, num_sides, bonus);
+            if (advantage[role]) {
+                adv_roll = rollDice(num_dice, num_sides, bonus);
+                roll['result'] = Math.max(roll['result'], adv_roll['result'])
+            }
+        } else if (type === 'dmg') {
+            roll = rollDice(num_dice, num_sides, bonus);
+        }
+        roll_str += roll['result'].toString() + '<br />';
+        if (i === store_idx) {
+            roll_results[role] = roll['result'];
+            recordRoll(
+                role,
+                getElem(`${role}-fac-name`).innerText,
+                getElem(`${role}-asset-name`).innerText,
+                type,
+                num_dice,
+                num_sides,
+                bonus,
+                roll,
+                adv_roll
+            );
+        }
+    }
+
+    getElem(`${role}-roll-span`).innerHTML = roll_str;
+    let anim = generateSpinAnimation(`${role}_anim`);
+    $.keyframe.define(anim);
+    $(`#${role}-roll-span`).playKeyframe(
+        `${role}_anim ${duration}s ease-in-out 0s 1 forwards`
+    );
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+        fadeinRollArrow(role, type);
+        armRollButton('all');
+    }, duration * 1000);
 }
+
+// function recordRoll(role, faction, asset, type, num_dice, num_sides, bonus, roll, advantage) {
 
 function showNavRoutes() {
     for (let a in asset_objects) {
@@ -1839,9 +1865,37 @@ function toggleBattleContainer() {
         toggle.style.bottom = '180px';
         toggle.style.transform = 'rotate(0deg)';
     } else {
-        battle_container.style.bottom = '-180px';
-        toggle.style.bottom = '10px';
-        toggle.style.transform = 'rotate(180deg)';
+        if (show_roll_histoy) {
+            toggleRollHistory();
+            setTimeout(() => {
+                battle_container.style.bottom = '-180px';
+                toggle.style.bottom = '10px';
+                toggle.style.transform = 'rotate(180deg)';
+            }, 500);
+        } else {
+            battle_container.style.bottom = '-180px';
+            toggle.style.bottom = '10px';
+            toggle.style.transform = 'rotate(180deg)';
+        }
+    }
+}
+
+function toggleRollHistory() {
+    show_roll_histoy = !show_roll_histoy;
+    let battle_container = getElem('battle-container');
+    let toggle = getElem('battle-container-toggle');
+    let roll_history = getElem('roll-history');
+    let roll_histoy_occlusion = getElem('roll-history-occlusion');
+    if (show_roll_histoy) {
+        battle_container.style.bottom = '180px';
+        toggle.style.bottom = '360px';
+        roll_history.style.bottom = '0';
+        roll_histoy_occlusion.style.bottom = '178px';
+    } else {
+        roll_history.style.bottom = '-180px';
+        roll_histoy_occlusion.style.bottom = '-2px';
+        battle_container.style.bottom = '0';
+        toggle.style.bottom = '180px';
     }
 }
 
@@ -2708,6 +2762,8 @@ function getPlanets() {
             planet_tracker = tsvJSON(this.responseText);
 
             planet_tracker.forEach(p => {
+                p['Hex'] = p['Parent Sector'].split(' / ')[0];
+                p['System'] = p['Parent Sector'].split(' / ')[1];
                 p['Local Assets'] = [];
                 p['Tags'] = p['Tags'].split(',').map(tag => {
                     return tag.trim();
@@ -2722,7 +2778,7 @@ function getPlanets() {
                         if (hasProp(p_tags, t)) {
                             mod = p_tags[t]['infl_mod'];
                         } else {
-                            mod = 1;
+                            mod = 0;
                         }
                         if (mod < -1) {
                             if (t === 'Secret Masters') {
@@ -2752,7 +2808,6 @@ function getPlanets() {
                         'num_planets': 1,
                         'Factions': {}
                     };
-
                     hexes['hex-' + p['Hex']]['Name'] = p['System'];
                 } else {
                     system_tracker[p['System']]['Planets'].push(p['Name']);

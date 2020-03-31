@@ -25,12 +25,10 @@ set_variables = () => {
     window.asset_objects = {};
     window.influence_tracker = {};
     window.show_battle_container = false;
-    window.attacker_roll_result = null;
-    window.defender_roll_result = null;
-    window.attacker_advantage = false;
-    window.defender_advantage = false;
-    window.short_timeout = null;
-    window.long_timeout = null;
+    window.show_roll_histoy = false;
+    window.roll_results = {'attacker': null, 'defender': null};
+    window.advantage = {'attacker': false, 'defender': false};
+    window.timeout = null;
     window.dir = {influence: -1, faction: -1, name: -1, location: -1};
     window.viewport_w = window.innerWidth;
     window.viewport_h = window.innerHeight;
@@ -297,7 +295,7 @@ window.onload = () => {
                     }
                 });
             }
-
+            
         } else {
             x_offset = mouse_x > viewport_w * 0.5;
             y_offset = mouse_y > viewport_h * 0.5;
