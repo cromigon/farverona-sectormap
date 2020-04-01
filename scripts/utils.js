@@ -441,6 +441,7 @@ class Asset {
         this.inactive = this.status === 'Inactive';
         this.summoning = this.status === 'Summoning';
         this.imperial = this.status === 'Imperial Asset';
+        this.mercenary = faction_tracker[this.faction]['Tag'] === 'Mercenary Group';
         this.name_str = this.name;
         if (this.imperial) {
             this.name_str = `Imperial ${this.name_str}`;
@@ -458,7 +459,7 @@ class Asset {
         this.perm = this.isboi ? '' : assets[this.name]['PERM'] !== '' ? 'Needs governmental permission.' : '';
         this.special = this.isboi ? '' : assets[this.name]['SPECIAL'];
         this.range = this.isboi ? 0 : assets[this.name]['RANGE'];
-        if (!this.isboi && this.range === 0 && faction_tracker[this.faction]['Tag'] === 'Mercenary Group') {
+        if (!this.isboi && this.range === 0 && this.mercenary) {
             this.range = 1;
         }
         this.hex_id = hex_id;
@@ -627,6 +628,11 @@ class Asset {
                         getElem('tip-row-special').style.display = 'table-row';
                     } else {
                         getElem('tip-row-special').style.display = 'none';
+                    }
+                    if (!this.isboi && this.mercenary) {
+                        getElem('tip-row-merc').style.display = 'table-row';
+                    } else {
+                        getElem('tip-row-merc').style.display = 'none';
                     }
                     if (this.status !== '') {
                         getElem('tip-row-status').style.display = 'table-row';
@@ -1047,11 +1053,11 @@ function armRollButton(role) {
         getElem('defender-reroll').classList.add('active');
         getElem('defender-reroll').setAttribute('onclick', 'singleRoll(\'defender\', \'hit\')');
 
-        if (getElem('attacker-asset-atk').innerText !== '-') {
+        if (getElem('attacker-asset-atk').innerText !== '-' && !getElem('attacker-asset-atk').innerText.includes('Special')) {
             getElem('attacker-dmg').classList.add('active');
             getElem('attacker-dmg').setAttribute('onclick', 'singleRoll(\'attacker\', \'dmg\')');
         }
-        if (getElem('defender-asset-def').innerText !== '-') {
+        if (getElem('defender-asset-def').innerText !== '-' && !getElem('defender-asset-def').innerText.includes('Special')) {
             getElem('defender-dmg').classList.add('active');
             getElem('defender-dmg').setAttribute('onclick', 'singleRoll(\'defender\', \'dmg\')');
         }
@@ -1067,7 +1073,7 @@ function armRollButton(role) {
     } else if (role === 'attacker') {
         getElem('attacker-reroll').classList.add('active');
         getElem('attacker-reroll').setAttribute('onclick', 'singleRoll(\'attacker\', \'hit\')');
-        if (getElem('attacker-asset-atk').innerText !== '-') {
+        if (getElem('attacker-asset-atk').innerText !== '-' && !getElem('attacker-asset-atk').innerText.includes('Special')) {
             getElem('attacker-dmg').classList.add('active');
             getElem('attacker-dmg').setAttribute('onclick', 'singleRoll(\'attacker\', \'dmg\')');
         }
@@ -1077,7 +1083,7 @@ function armRollButton(role) {
     } else {
         getElem('defender-reroll').classList.add('active');
         getElem('defender-reroll').setAttribute('onclick', 'singleRoll(\'defender\', \'hit\')');
-        if (getElem('defender-asset-def').innerText !== '-') {
+        if (getElem('defender-asset-def').innerText !== '-' && !getElem('defender-asset-def').innerText.includes('Special')) {
             getElem('defender-dmg').classList.add('active');
             getElem('defender-dmg').setAttribute('onclick', 'singleRoll(\'defender\', \'dmg\')');
         }
@@ -1226,78 +1232,8 @@ function rollDice(num_dice, num_sides, bonus) {
 }
 
 function fightButton() {
-
     singleRoll('attacker', 'hit');
     singleRoll('defender', 'hit');
-
-    // let atk_stat = parseInt(getElem('attacker-stat').innerText);
-    // let def_stat = parseInt(getElem('defender-stat').innerText);
-    // let atk_roll = {};
-    // let def_roll = {};
-    //
-    // let store_idx = 63;
-    // roll_str = '';
-    // if (attacker_roll_result) {
-    //     roll_str += attacker_roll_result.toString() + '<br />';
-    //     store_idx = 62;
-    // }
-    // for (let i = 0; i < 65; i++) {
-    //     let flat_roll = Math.floor(Math.random() * 10) + 1;
-    //     let roll = flat_roll + atk_stat;
-    //     if (advantage['attacker']) {
-    //         let adv_flat_roll = Math.floor(Math.random() * 10) + 1;
-    //         let adv_roll = adv_flat_roll + atk_stat;
-    //         roll = Math.max(roll, adv_roll);
-    //     }
-    //     roll_str += roll.toString() + '<br />';
-    //     if (i === store_idx) {
-    //         attacker_roll_result = roll;
-    //     }
-    // }
-    // getElem('attacker-roll-span').innerHTML = roll_str;
-    //
-    // store_idx = 63;
-    // roll_str = '';
-    // if (defender_roll_result) {
-    //     roll_str += defender_roll_result.toString() + '<br />';
-    //     store_idx = 62;
-    // }
-    // for (let i = 0; i < 65; i++) {
-    //     let roll = (Math.floor(Math.random() * 10) + 1 + def_stat);
-    //     if (advantage['defender']) {
-    //         let adv_roll = (Math.floor(Math.random() * 10) + 1 + def_stat);
-    //         roll = Math.max(roll, adv_roll);
-    //     }
-    //     roll_str += roll.toString() + '<br />';
-    //     if (i === store_idx) {
-    //         defender_roll_result = roll;
-    //     }
-    // }
-    // getElem('defender-roll-span').innerHTML = roll_str;
-    //
-    // let atk_anim = generateSpinAnimation('atk_anim');
-    // $.keyframe.define(atk_anim);
-    //
-    // let def_anim = generateSpinAnimation('def_anim');
-    // $.keyframe.define(def_anim);
-    //
-    // let atk_anim_duration = Math.random() * 2 + 4;
-    // $('#attacker-roll-span').playKeyframe(
-    //     `atk_anim ${atk_anim_duration}s ease-in-out 0s 1 forwards`
-    // );
-    //
-    // let def_anim_duration = Math.random() * 2 + 6;
-    // $('#defender-roll-span').playKeyframe(
-    //     `atk_anim ${def_anim_duration}s ease-in-out 0s 1 forwards`
-    // );
-    //
-    // fadeoutRollArrows('all');
-    // disarmRollButton('all');
-    // long_timeout = setTimeout(() => {
-    //     fadeinRollArrow('attacker', 'hit');
-    //     fadeinRollArrow('defender', 'hit');
-    //     armRollButton('all');
-    // }, Math.floor(def_anim_duration * 1000));
 }
 
 function fadeinRollArrow(role, type) {
@@ -1407,12 +1343,12 @@ function singleRoll(role, type) {
     );
     clearTimeout(timeout);
     timeout = setTimeout(() => {
-        fadeinRollArrow(role, type);
         armRollButton('all');
     }, duration * 1000);
+    setTimeout(() => {
+        fadeinRollArrow(role, type);
+    }, duration * 1000);
 }
-
-// function recordRoll(role, faction, asset, type, num_dice, num_sides, bonus, roll, advantage) {
 
 function showNavRoutes() {
     for (let a in asset_objects) {
